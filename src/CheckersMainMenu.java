@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This is the class that the main interface will run off of.
@@ -6,21 +9,30 @@ import javax.swing.*;
  */
 
 // Main GUI interface for interacting with the program
-    // Will need to implement a Gameboard object that draws board and checker piece objects
+// Will need to implement a Gameboard object that draws board and checker piece objects
 
-public class CheckersMainMenu {
+public class CheckersMainMenu extends JFrame {
 
     // Main containers/components initialization
-    private JFrame frame;
+    GameBoard board;
 
     public CheckersMainMenu() {
-        frame = new JFrame("Checkers Program");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super("Checkers Program");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        GridBagConstraints c = new GridBagConstraints();
+
+        // Sets up the game board
+        board = new GameBoard();
+        board.setUpGameBoard();
+
+
+        add(board);
     }
 
+
     public void display() {
-        frame.pack();
-        frame.setVisible(true);
+        pack();
+        setVisible(true);
     }
 }
