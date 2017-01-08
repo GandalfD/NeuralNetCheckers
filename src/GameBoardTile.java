@@ -9,7 +9,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Darwin on 1/6/2017.
+ * Represents one tile in the whole gameboard
+ * Is JLabel with tile as an ImageIcon
+ * Tiles can be occupied by checker piece
+ * Hovering the mouse over a tile will give debug information
  */
 public class GameBoardTile extends JLabel {
 

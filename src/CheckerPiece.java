@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Darwin on 1/7/2017.
+ * Represents one checker piece in the whole game
+ * A checker piece has an assigned team and starting position
+ * It can move around the board
+ * Is JLabel with piece as an ImageIcon
  */
 public class CheckerPiece extends JLabel {
 

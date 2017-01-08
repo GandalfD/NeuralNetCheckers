@@ -2,7 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by Darwin on 1/7/2017.
+ * Represents the whole gameboard
+ * Utilizes the CheckerPiece and GameBoardTile classes
  */
 public class GameBoard extends JPanel {
 
@@ -23,6 +24,7 @@ public class GameBoard extends JPanel {
         setLayout(new GridBagLayout());
     }
 
+    // Set up the tiles on the gameboard (not the pieces)
     public void setUpGameBoard() {
 
         // Loops through each row

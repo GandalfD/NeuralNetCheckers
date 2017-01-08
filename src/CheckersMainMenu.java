@@ -23,7 +23,7 @@ public class CheckersMainMenu extends JFrame {
         super("Checkers Program");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setLayout(new GridLayout(2, 2));
+        setLayout(new FlowLayout());
 
         // Sets up the game board
         board = new GameBoard();
