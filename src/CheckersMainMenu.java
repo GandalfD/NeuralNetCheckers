@@ -43,6 +43,7 @@ public class CheckersMainMenu extends JFrame {
         setVisible(true);
     }
 
+    // Temporary test class to demonstrate a semi-working movement mechanic
     private class testclass implements ActionListener{
 
         @Override

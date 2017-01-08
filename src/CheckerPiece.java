@@ -1,6 +1,5 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -41,18 +40,22 @@ public class CheckerPiece extends JLabel {
         setIcon(new ImageIcon(image));
     }
 
-    public GameBoardTile getCurrentTile() {
-        return currentTile;
-    }
-
     // Method to move checker piece to new tile
     public void movePiece(GameBoardTile tile) {
-        tile.movePiece(this);
-        currentTile = tile;
+        try {
+            tile.movePiece(this);
+            currentTile = tile;
+        } catch (InvalidMoveException ime) {
+            ime.printCustomError();
+        }
     }
 
     @Override
     public String toString() {
         return ("Team " + color + " \t Tile: (Row: " + currentTile.returnY() + " Col: " + currentTile.returnX() + ") Piece Num: " + pieceNum);
+    }
+
+    public GameBoardTile getCurrentTile() {
+        return currentTile;
     }
 }

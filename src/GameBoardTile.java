@@ -48,15 +48,7 @@ public class GameBoardTile extends JLabel {
         setLayout(new GridBagLayout());
     }
 
-    public int returnX() {
-        return xGrid;
-    }
-
-    public int returnY() {
-        return yGrid;
-    }
-
-    public void movePiece(CheckerPiece piece) {
+    public void movePiece(CheckerPiece piece) throws InvalidMoveException {
         // Get the tile the piece was on before and remove it
         GameBoardTile previousTile = piece.getCurrentTile();
         previousTile.removePiece(piece);
@@ -68,11 +60,15 @@ public class GameBoardTile extends JLabel {
         repaint();
     }
 
-    public void removePiece(CheckerPiece piece) {
-        isOccupied = false;
-        currentPiece = null;
-        remove(piece);
-        repaint();
+    // Removes the piece from this tile
+    public void removePiece(CheckerPiece piece) throws InvalidMoveException {
+        if (isOccupied) {
+            isOccupied = false;
+            currentPiece = null;
+            remove(piece);
+            repaint();
+        } else
+            throw new InvalidMoveException("Attempted to remove unoccupied tile");
     }
 
     // Setup method for resetting board. SHOULD ONLY BE CALLED ONCE DURING BOARD SETUP
@@ -80,6 +76,14 @@ public class GameBoardTile extends JLabel {
         isOccupied = true;
         currentPiece = piece;
         add(piece);
+    }
+
+    public int returnX() {
+        return xGrid;
+    }
+
+    public int returnY() {
+        return yGrid;
     }
 
     private class MouseComponentListener implements MouseListener {
