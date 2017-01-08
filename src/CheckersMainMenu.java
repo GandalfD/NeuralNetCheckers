@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,19 +16,24 @@ import java.io.IOException;
 public class CheckersMainMenu extends JFrame {
 
     // Main containers/components initialization
-    GameBoard board;
+    static GameBoard board;
+    private JButton test = new JButton("Move");
 
     public CheckersMainMenu() {
         super("Checkers Program");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        GridBagConstraints c = new GridBagConstraints();
+        setLayout(new GridLayout(2, 2));
 
         // Sets up the game board
         board = new GameBoard();
         board.setUpGameBoard();
 
+        test.addActionListener(new testclass());
+        JPanel testPane = new JPanel();
+        testPane.add(test);
 
+        add(testPane);
         add(board);
     }
 
@@ -34,5 +41,13 @@ public class CheckersMainMenu extends JFrame {
     public void display() {
         pack();
         setVisible(true);
+    }
+
+    private class testclass implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            board.getBlueTeam()[5].movePiece(board.getTile()[4][2]);
+        }
     }
 }

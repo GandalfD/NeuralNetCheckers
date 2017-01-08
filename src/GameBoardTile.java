@@ -1,6 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,24 +11,27 @@ import java.io.IOException;
 /**
  * Created by Darwin on 1/6/2017.
  */
-public class GameBoardTile {
+public class GameBoardTile extends JLabel {
 
-    private GameColors tilecolor;
+    private TileColors tilecolor;
     private JLabel label;
 
     private int yGrid;
     private int xGrid;
 
+    private boolean isOccupied = false;
+    private CheckerPiece currentPiece;
+
+
     BufferedImage tile;
-    public GameBoardTile(GameColors color, int xGrid, int yGrid) {
+    public GameBoardTile(TileColors color, int yGrid, int xGrid) {
         tilecolor = color;
         this.yGrid = yGrid;
         this.xGrid = xGrid;
-    }
 
-    public JLabel returnJLabel() {
+        // Set image based on color tile
         try {
-            if (tilecolor.equals(GameColors.BLACK)) {
+            if (tilecolor.equals(TileColors.BLACK)) {
                 tile = ImageIO.read(new File("BlackTile.png"));
             } else {
                 tile = ImageIO.read(new File("GreyTile.png"));
@@ -34,9 +40,9 @@ public class GameBoardTile {
             io.printStackTrace();
         }
 
-        label = new JLabel(new ImageIcon(tile));
-        label.setLayout(new GridBagLayout());
-        return label;
+        setIcon(new ImageIcon(tile));
+        addMouseListener(new MouseComponentListener());
+        setLayout(new GridBagLayout());
     }
 
     public int returnX() {
@@ -45,6 +51,61 @@ public class GameBoardTile {
 
     public int returnY() {
         return yGrid;
+    }
+
+    public void movePiece(CheckerPiece piece) {
+        // Get the tile the piece was on before and remove it
+        GameBoardTile previousTile = piece.getCurrentTile();
+        previousTile.removePiece(piece);
+
+        // Move the piece the new tile
+        isOccupied = true;
+        currentPiece = piece;
+        add(piece);
+        repaint();
+    }
+
+    public void removePiece(CheckerPiece piece) {
+        isOccupied = false;
+        currentPiece = null;
+        remove(piece);
+        repaint();
+    }
+
+    // Setup method for resetting board. SHOULD ONLY BE CALLED ONCE DURING BOARD SETUP
+    public void setUp(CheckerPiece piece) {
+        isOccupied = true;
+        currentPiece = piece;
+        add(piece);
+    }
+
+    private class MouseComponentListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        // Displays information on the current tile the mouse is hovering over
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
     }
 
 }

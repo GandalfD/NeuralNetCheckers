@@ -1,0 +1,55 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Created by Darwin on 1/7/2017.
+ */
+public class CheckerPiece extends JLabel {
+
+    // Team and Color
+    private PieceType type;
+    private PieceColors color;
+    private GameBoardTile currentTile;
+
+    // Image icon
+    private BufferedImage image;
+
+    private int pieceNum;
+
+    public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum) {
+        this.color = color;
+        this.currentTile = currentTile;
+        this.pieceNum = pieceNum;
+
+        // Set image based on team
+        try {
+            if (color.equals(PieceColors.BLUE))
+                image = ImageIO.read(new File("BluePiece.png"));
+            else
+                image = ImageIO.read(new File("RedPiece.png"));
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        setIcon(new ImageIcon(image));
+    }
+
+    public GameBoardTile getCurrentTile() {
+        return currentTile;
+    }
+
+    // Method to move checker piece to new tile
+    public void movePiece(GameBoardTile tile) {
+        tile.movePiece(this);
+        currentTile = tile;
+    }
+
+    @Override
+    public String toString() {
+        return ("Team " + color + " \t Tile: (Row: " + currentTile.returnY() + " Col: " + currentTile.returnX() + ") Piece Num: " + pieceNum);
+    }
+}
