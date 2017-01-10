@@ -61,7 +61,10 @@ public class CheckerPiece extends JLabel {
     public void makeKing() {
         isKing = true;
         add(kingLabel);
+
+        // Update GUI
         repaint();
+        validate();
     }
 
     @Override
