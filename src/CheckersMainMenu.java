@@ -19,6 +19,9 @@ public class CheckersMainMenu extends JFrame {
     static GameBoard board;
     private JButton test = new JButton("Move");
 
+    RedPlayer redPlayer = new RedPlayer();
+    BluePlayer bluePlayer = new BluePlayer();
+
     public CheckersMainMenu() {
         super("Checkers Program");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,9 +29,10 @@ public class CheckersMainMenu extends JFrame {
         setLayout(new FlowLayout());
 
         // Sets up the game board
-        board = new GameBoard();
+        board = new GameBoard(redPlayer.getPieces(), bluePlayer.getPieces());
         board.setUpGameBoard();
 
+        // Button to test different features
         test.addActionListener(new testclass());
         JPanel testPane = new JPanel();
         testPane.add(test);
@@ -43,12 +47,14 @@ public class CheckersMainMenu extends JFrame {
         setVisible(true);
     }
 
-    // Temporary test class to demonstrate a semi-working movement mechanic
+    // Temporary test class to test features
     private class testclass implements ActionListener{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            board.getBlueTeam()[5].movePiece(board.getTile()[4][2]);
+            bluePlayer.getPieces()[5].movePiece(board.getTile()[4][3]);
+            redPlayer.getPieces()[5].makeKing();
+            redPlayer.getPieces()[11].movePiece(board.getTile()[3][6]);
         }
     }
 }

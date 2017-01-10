@@ -4,6 +4,7 @@ import java.awt.*;
 /**
  * Represents the whole gameboard
  * Utilizes the CheckerPiece and GameBoardTile classes
+ * Gets checkerpieces from player classes and initializes them
  */
 public class GameBoard extends JPanel {
 
@@ -13,14 +14,18 @@ public class GameBoard extends JPanel {
     private GameBoardTile[][] tile = new GameBoardTile[ROWS][COLUMNS];
 
     // Arrays to hold pieces
-    private CheckerPiece[] bluePieces = new CheckerPiece[12];
-    private CheckerPiece[] redPieces = new CheckerPiece[12];
+    private CheckerPiece[] bluePieces;
+    private CheckerPiece[] redPieces;
+
 
     // Layout manager *DONT USE GRIDLAYOUT*
     private GridBagConstraints c = new GridBagConstraints();
 
     // Constructor
-    public GameBoard() {
+    public GameBoard(CheckerPiece[] redPieces, CheckerPiece[] bluePieces) {
+        this.bluePieces = bluePieces;
+        this.redPieces = redPieces;
+
         setLayout(new GridBagLayout());
     }
 
@@ -138,13 +143,5 @@ public class GameBoard extends JPanel {
 
     public GameBoardTile[][] getTile() {
         return tile;
-    }
-
-    public CheckerPiece[] getRedTeam() {
-        return redPieces;
-    }
-
-    public CheckerPiece[] getBlueTeam() {
-        return bluePieces;
     }
 }
