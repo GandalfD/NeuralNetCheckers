@@ -80,6 +80,10 @@ public class GameBoardTile extends JLabel {
         return isOccupied;
     }
 
+    public CheckerPiece getCurrentPiece() {
+        return currentPiece;
+    }
+
     public int returnX() {
         return xGrid;
     }

@@ -62,38 +62,154 @@ public class CheckerPiece extends JLabel {
         }
     }
 
-    private ArrayList<GameBoardTile> checkAvailableTiles() {
+    private ArrayList<GameBoardTile> checkAvailableTiles(CheckerPiece piece) {
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
             availableTiles.clear();
             availableTileClearFlag = false;
         }
 
-        // Find available tiles
-        if (color == PieceColors.BLUE) {
-            if (isKing) {
-                if (GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()-1].getIsOccupied() == false) // Is top-left tile clear
-                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()-1]);
-                else
+        // Find available pieces if piece is king
+        if (isKing) {
+            if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1]);
 
-                if (GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()+1].getIsOccupied() == false) // Is top-right tile clear
-                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()+1]);
-                if (GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()-1].getIsOccupied() == false) // Is bottom-left tile clear
-                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()-1]);
-                if (GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()+1].getIsOccupied() == false) // Is bottom-right tile clear
-                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()+1]);
-            } else {
-                // Normal Piece
+            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1])) {
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1]);
+                // Check
 
             }
-        } else {
-            // Red Team
 
+            if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1])) {
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+                // Check
+            }
+
+            if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1])) {
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+                // Check
+            }
+
+            if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1])) {
+                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+                // Check
+            }
+        } else {
+
+            // Find available tiles for normal pieces
+            if (color == PieceColors.BLUE) {
+                if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1]);
+                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1])) {
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1]);
+                    // Check
+                }
+
+                if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1])) {
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+                    // Check
+                }
+
+            } else {
+                // Red Team
+                if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1])) {
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+                    // Check
+                }
+
+                if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1])) {
+                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+                    // Check
+                }
+            }
         }
         availableTileClearFlag = true;
         return availableTiles;
     }
 
+    // Returns whether occupied tile can be jumped
+    // Assumes that tile being inputted is adjacent
+    private boolean canJump(GameBoardTile tile) {
+        int row = tile.returnY();
+        int col = tile.returnX();
+        int moveSign;
+        final int UP_LEFT = 0;
+        final int UP_RIGHT = 1;
+        final int DOWN_LEFT = 2;
+        final int DOWN_RIGHT = 3;
+
+        int currentRow = currentTile.returnY();
+        int currentCol = currentTile.returnX();
+
+        if (row == 0 || row == 7 || col == 0 || col == 7) // Game piece to check on edge of board
+            return false;
+
+        if (row < currentRow) { // Move Up
+            if (col < currentCol) // Move left
+                moveSign = UP_LEFT;
+            else
+                moveSign = UP_RIGHT;
+        } else { // Move down
+            if (col < currentCol)
+                moveSign = DOWN_LEFT;
+            else
+                moveSign = DOWN_RIGHT;
+        }
+
+        if (color == PieceColors.RED) {
+            if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
+                if (isKing) {
+                    if (moveSign == UP_LEFT)
+                        return !(GameBoard.getTile()[row-1][col-1].getIsOccupied()); // Check upper left tile
+                    else if (moveSign == UP_RIGHT)
+                        return !(GameBoard.getTile()[row-1][col+1].getIsOccupied()); // Check upper right tile
+                    else if (moveSign == DOWN_LEFT)
+                        return !(GameBoard.getTile()[row+1][col-1].getIsOccupied()); // Check lower left tile
+                    else
+                        return !(GameBoard.getTile()[row+1][col+1].getIsOccupied()); // Has to be lower right
+                } else { // Not king, check for default movement positions
+                    if (moveSign == DOWN_LEFT)
+                        return !(GameBoard.getTile()[row+1][col-1].getIsOccupied());
+                    else
+                        return !(GameBoard.getTile()[row+1][col+1].getIsOccupied());
+                }
+            } else {
+                return false; // Friendly piece / invalid piece
+            }
+        } else { // Blue team
+            if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
+                if (isKing) {
+                    if (moveSign == UP_LEFT)
+                        return !(GameBoard.getTile()[row-1][col-1].getIsOccupied()); // Check upper left tile
+                    else if (moveSign == UP_RIGHT)
+                        return !(GameBoard.getTile()[row-1][col+1].getIsOccupied()); // Check upper right tile
+                    else if (moveSign == DOWN_LEFT)
+                        return !(GameBoard.getTile()[row+1][col-1].getIsOccupied()); // Check lower left tile
+                    else
+                        return !(GameBoard.getTile()[row+1][col+1].getIsOccupied()); // Has to be lower right
+                } else { // Not king, check for default movement positions
+                    if (moveSign == UP_LEFT)
+                        return !(GameBoard.getTile()[row-1][col-1].getIsOccupied());
+                    else
+                        return !(GameBoard.getTile()[row-1][col+1].getIsOccupied());
+                }
+            } else {
+                return false; // Friendly piece / invalid piece
+            }
+        }
+    }
 
     public void makeKing() {
         isKing = true;
@@ -111,5 +227,9 @@ public class CheckerPiece extends JLabel {
 
     public GameBoardTile getCurrentTile() {
         return currentTile;
+    }
+
+    public PieceColors getColor() {
+        return color;
     }
 }
