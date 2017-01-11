@@ -11,7 +11,7 @@ public class GameBoard extends JPanel {
     // Sets up game board via multidimensional array of gameboard tiles (8 rows and 8 columns)
     private static final int ROWS = 8;
     private static final int COLUMNS = 8;
-    private GameBoardTile[][] tile = new GameBoardTile[ROWS][COLUMNS];
+    private static GameBoardTile[][] tile = new GameBoardTile[ROWS][COLUMNS];
 
     // Arrays to hold pieces
     private CheckerPiece[] bluePieces;
@@ -141,7 +141,7 @@ public class GameBoard extends JPanel {
 
     }
 
-    public GameBoardTile[][] getTile() {
+    public static GameBoardTile[][] getTile() {
         return tile;
     }
 }

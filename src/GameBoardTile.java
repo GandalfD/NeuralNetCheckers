@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.io.IOException;
 public class GameBoardTile extends JLabel {
 
     private TileColors tilecolor;
-    private JLabel label;
 
     private int yGrid;
     private int xGrid;
@@ -26,7 +24,7 @@ public class GameBoardTile extends JLabel {
     private CheckerPiece currentPiece;
 
 
-    BufferedImage tile;
+    private BufferedImage tile;
     public GameBoardTile(TileColors color, int yGrid, int xGrid) {
         tilecolor = color;
         this.yGrid = yGrid;
@@ -76,6 +74,10 @@ public class GameBoardTile extends JLabel {
         isOccupied = true;
         currentPiece = piece;
         add(piece);
+    }
+
+    public boolean getIsOccupied() {
+        return isOccupied;
     }
 
     public int returnX() {

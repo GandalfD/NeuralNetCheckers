@@ -52,9 +52,9 @@ public class CheckersMainMenu extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            bluePlayer.getPieces()[5].movePiece(board.getTile()[4][3]);
+            bluePlayer.getPieces()[5].movePiece(GameBoard.getTile()[4][3]);
             redPlayer.getPieces()[5].makeKing();
-            redPlayer.getPieces()[11].movePiece(board.getTile()[3][6]);
+            redPlayer.getPieces()[11].movePiece(GameBoard.getTile()[3][6]);
         }
     }
 }

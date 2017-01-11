@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents one checker piece in the whole game
@@ -25,6 +26,9 @@ public class CheckerPiece extends JLabel {
     // Data about piece
     private int pieceNum;
     private boolean isKing = false;
+
+    private ArrayList<GameBoardTile> availableTiles = new ArrayList<>();
+    private boolean availableTileClearFlag = false;
 
     public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum) {
         this.color = color;
@@ -57,6 +61,39 @@ public class CheckerPiece extends JLabel {
             ime.printCustomError();
         }
     }
+
+    private ArrayList<GameBoardTile> checkAvailableTiles() {
+        if (availableTileClearFlag) {
+            // Clear array to find new available tiles
+            availableTiles.clear();
+            availableTileClearFlag = false;
+        }
+
+        // Find available tiles
+        if (color == PieceColors.BLUE) {
+            if (isKing) {
+                if (GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()-1].getIsOccupied() == false) // Is top-left tile clear
+                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()-1]);
+                else
+
+                if (GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()+1].getIsOccupied() == false) // Is top-right tile clear
+                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()-1][currentTile.returnX()+1]);
+                if (GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()-1].getIsOccupied() == false) // Is bottom-left tile clear
+                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()-1]);
+                if (GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()+1].getIsOccupied() == false) // Is bottom-right tile clear
+                    availableTiles.add(GameBoard.getTile()[currentTile.returnY()+1][currentTile.returnX()+1]);
+            } else {
+                // Normal Piece
+
+            }
+        } else {
+            // Red Team
+
+        }
+        availableTileClearFlag = true;
+        return availableTiles;
+    }
+
 
     public void makeKing() {
         isKing = true;
