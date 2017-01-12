@@ -43,11 +43,11 @@ public class CheckerPiece extends JLabel {
                 pieceImage = ImageIO.read(new File("RedPiece.png"));
 
             kingImage = ImageIO.read(new File("TestKing.png"));
-            kingLabel.setIcon(new ImageIcon(kingImage));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 
+        kingLabel.setIcon(new ImageIcon(kingImage));
         setIcon(new ImageIcon(pieceImage));
         setLayout(new GridBagLayout());
     }
@@ -62,7 +62,7 @@ public class CheckerPiece extends JLabel {
         }
     }
 
-    private ArrayList<GameBoardTile> checkAvailableTiles(CheckerPiece piece) {
+    public ArrayList<GameBoardTile> checkAvailableTiles(GameBoardTile tile) {
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
             availableTiles.clear();
@@ -71,66 +71,65 @@ public class CheckerPiece extends JLabel {
 
         // Find available pieces if piece is king
         if (isKing) {
-            if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1]);
+            if (!GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
+                availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]);
 
-            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1])) {
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()-1]);
-                // Check
-
-            }
-
-            if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
-            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1])) {
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+            else if (canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1])) {
+                availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2]);
                 // Check
             }
 
-            if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
-            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1])) {
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+            if (!GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+            else if (canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1])) {
+                availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
                 // Check
             }
 
-            if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
-            else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1])) {
-                availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+            if (!GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+            else if (canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1])) {
+                availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
+                // Check
+            }
+
+            if (!GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+            else if (canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1])) {
+                availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
                 // Check
             }
         } else {
 
             // Find available tiles for normal pieces
             if (color == PieceColors.BLUE) {
-                if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1]);
-                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1])) {
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() - 1]);
+                if (!GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
+                    availableTiles.add(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
+                else if (canJump(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1])) {
+                    availableTiles.add(GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2]);
                     // Check
                 }
 
-                if (!GameBoard.getTile()[piece.currentTile.returnY() - 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
-                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1])) {
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()-1][piece.currentTile.returnX()+1]);
+                if (!GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                else if (canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1])) {
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
                     // Check
                 }
 
             } else {
                 // Red Team
-                if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
-                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1])) {
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()-1]);
+                if (!GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                else if (canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1])) {
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
                     // Check
                 }
 
-                if (!GameBoard.getTile()[piece.currentTile.returnY() + 1][piece.currentTile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
-                else if (canJump(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1])) {
-                    availableTiles.add(GameBoard.getTile()[piece.currentTile.returnY()+1][piece.currentTile.returnX()+1]);
+                if (!GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+                else if (canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1])) {
+                    availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
                     // Check
                 }
             }

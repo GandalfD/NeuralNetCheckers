@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This is the class that the main interface will run off of.
@@ -55,6 +56,16 @@ public class CheckersMainMenu extends JFrame {
             bluePlayer.getPieces()[5].movePiece(GameBoard.getTile()[4][3]);
             redPlayer.getPieces()[5].makeKing();
             redPlayer.getPieces()[11].movePiece(GameBoard.getTile()[3][6]);
+            bluePlayer.getPieces()[7].movePiece(GameBoard.getTile()[4][5]);
+            bluePlayer.getPieces()[5].makeKing();
+
+            for (int i = 0; i < 10; i++) {
+                System.out.print("Waiting\n");
+            }
+
+            for (GameBoardTile list : redPlayer.getPieces()[8].checkAvailableTiles(redPlayer.getPieces()[8].getCurrentTile()))
+                System.out.println(list);
         }
     }
 }
+// TODO: fix out of bounds checking

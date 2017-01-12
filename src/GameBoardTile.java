@@ -25,6 +25,10 @@ public class GameBoardTile extends JLabel {
 
 
     private BufferedImage tile;
+
+    private JLabel selectedLabel = new JLabel();
+    private BufferedImage selected;
+    private boolean isSelected = false;
     public GameBoardTile(TileColors color, int yGrid, int xGrid) {
         tilecolor = color;
         this.yGrid = yGrid;
@@ -37,10 +41,12 @@ public class GameBoardTile extends JLabel {
             } else {
                 tile = ImageIO.read(new File("GreyTile.png"));
             }
+            selected = ImageIO.read(new File("Selected.png"));
         } catch (IOException io) {
             io.printStackTrace();
         }
 
+        selectedLabel.setIcon(new ImageIcon(selected));
         setIcon(new ImageIcon(tile));
         addMouseListener(new MouseComponentListener());
         setLayout(new GridBagLayout());
@@ -56,6 +62,24 @@ public class GameBoardTile extends JLabel {
         currentPiece = piece;
         add(piece);
         repaint();
+    }
+
+    private void selectTile() {
+        isSelected = true;
+        add(selectedLabel);
+        repaint();
+        validate();
+    }
+
+    private void unselectTile() {
+        if (!isSelected)
+            System.out.println("Tile already clear");
+        else {
+            remove(selectedLabel);
+            repaint();
+            validate();
+            isSelected = false;
+        }
     }
 
     // Removes the piece from this tile
@@ -92,6 +116,11 @@ public class GameBoardTile extends JLabel {
         return yGrid;
     }
 
+    @Override
+    public String toString() {
+        return ("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
+    }
+
     private class MouseComponentListener implements MouseListener {
 
         @Override
@@ -101,7 +130,15 @@ public class GameBoardTile extends JLabel {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON3) // Mouse2
+                unselectTile();
 
+            else if (e.getButton() == MouseEvent.BUTTON1) // Mouse1
+                for (GameBoardTile tile : currentPiece.checkAvailableTiles(currentPiece.getCurrentTile()))
+                    tile.selectTile();
+
+             else if (e.getButton() == MouseEvent.BUTTON2) // Middle Mouse Button
+                System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
         }
 
         @Override
@@ -109,10 +146,10 @@ public class GameBoardTile extends JLabel {
 
         }
 
-        // Displays information on the current tile the mouse is hovering over
+
         @Override
         public void mouseEntered(MouseEvent e) {
-            System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
+            // System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
         }
 
         @Override
