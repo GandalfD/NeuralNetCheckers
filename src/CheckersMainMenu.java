@@ -58,6 +58,9 @@ public class CheckersMainMenu extends JFrame {
             redPlayer.getPieces()[11].movePiece(GameBoard.getTile()[3][6]);
             bluePlayer.getPieces()[7].movePiece(GameBoard.getTile()[4][5]);
             bluePlayer.getPieces()[5].makeKing();
+            redPlayer.getPieces()[9].movePiece(GameBoard.getTile()[3][4]);
+            redPlayer.getPieces()[6].movePiece(GameBoard.getTile()[3][2]);
+            redPlayer.getPieces()[6].movePiece(GameBoard.getTile()[2][3]);
 
             for (int i = 0; i < 10; i++) {
                 System.out.print("Waiting\n");

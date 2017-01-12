@@ -62,6 +62,8 @@ public class CheckerPiece extends JLabel {
         }
     }
 
+    // Grabs all the available moves and piece on a specific tile can make
+    // TODO hard code in checks for out of bounds
     public ArrayList<GameBoardTile> checkAvailableTiles(GameBoardTile tile) {
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
@@ -76,6 +78,7 @@ public class CheckerPiece extends JLabel {
 
             else if (canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1])) {
                 availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2]);
+                checkAvailableTiles(GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2]);
                 // Check
             }
 
@@ -107,6 +110,7 @@ public class CheckerPiece extends JLabel {
                     availableTiles.add(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
                 else if (canJump(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1])) {
                     availableTiles.add(GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2]);
+                    checkAvailableTiles(GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2]);
                     // Check
                 }
 
