@@ -153,11 +153,12 @@ public class CheckerPiece extends JLabel {
     }
 
     private void checkAvailableTilesRecursion(GameBoardTile oldTile, GameBoardTile newTile) {
+        boolean edgePiece = false;
         ArrayList<GameBoardTile> recursiveCheck = new ArrayList<>();
         int oldRow = oldTile.returnY();
         int oldCol = oldTile.returnX();
         int newRow = newTile.returnY();
-        int newCol = newTile.returnY();
+        int newCol = newTile.returnX();
         final int UP_LEFT = 0;
         final int UP_RIGHT = 1;
         final int DOWN_LEFT = 2;
@@ -165,35 +166,92 @@ public class CheckerPiece extends JLabel {
         int moveSign = 1000; // temporary garbage value
 
         if (newRow > oldRow) { // Move down
-
+            if (newCol > oldCol) { // Move right
+                moveSign = DOWN_RIGHT;
+            } else {
+                moveSign = DOWN_LEFT;
+            }
         } else {
             if (newCol > oldCol) { // Move right
                 moveSign = UP_RIGHT;
+            } else {
+                moveSign = UP_LEFT;
             }
         }
 
-        if (newTile.returnX() == 7 || newTile.returnX() == 0 || newTile.returnY() == 7 || newTile.returnX() == 0)
-            return; // border piece: get out
+        if (newRow == 7 || newRow == 0 || newCol == 7 || newCol == 0) {
+            //availableTiles.add(newTile);
+            edgePiece = true;
+        }
+
 
         // Find available pieces if piece is king
-        if (isKing) {
+        if (!edgePiece) {
+            GameBoardTile upRight = GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() + 1];
+            GameBoardTile upLeft = GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() - 1];
+            GameBoardTile downRight = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() + 1];
+            GameBoardTile downLeft = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() - 1];
+            if (isKing) {
+                // Up right
+                if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
+                    availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
+                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
+                }
+                // Up left
+                if (moveSign != DOWN_RIGHT && upLeft.getIsOccupied() && canJump(newTile, upLeft) == 1) {
+                    availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                }
 
-        } else {
+                // Down right
+                if (moveSign != UP_LEFT && downRight.getIsOccupied() && canJump(newTile, downRight) == 1) {
+                    availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                }
 
-            // Find available tiles for normal pieces
-            if (color == PieceColors.BLUE) {
-                if (moveSign == UP_RIGHT) {
-                    if (canJump(GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() + 1]) == 1) {
+                //Down left
+                if (moveSign != UP_RIGHT && downLeft.getIsOccupied() && canJump(newTile, downLeft) == 1) {
+                    availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                }
+
+            } else {
+
+                // Find available tiles for normal pieces
+                if (color == PieceColors.BLUE) {
+
+                    // Up right
+                    if (upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
                         availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
                         recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
                     }
+                    // Up left
+                    if (upLeft.getIsOccupied() && canJump(newTile, upLeft) == 1) {
+                        availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                    }
+
+                } else {
+                    // Red Team
+                    // Down right
+                    if (downRight.getIsOccupied() && canJump(newTile, downRight) == 1) {
+                        availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                    }
+
+                    //Down left
+                    if (downLeft.getIsOccupied() && canJump(newTile, downLeft) == 1) {
+                        availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                    }
                 }
-            } else {
-                // Red Team
             }
         }
-        for (GameBoardTile tileToCheck : recursiveCheck) {
-            checkAvailableTilesRecursion(newTile, tileToCheck);
+
+        if (recursiveCheck.size() > 0) {
+            for (GameBoardTile tileToCheck : recursiveCheck) {
+                checkAvailableTilesRecursion(newTile, tileToCheck);
+            }
         }
     }
 
@@ -245,6 +303,102 @@ public class CheckerPiece extends JLabel {
                             if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
                                 return 1;
                         }
+
+                } else { // Not king, check for default movement positions
+                    if (moveSign == DOWN_LEFT) {
+                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied()))
+                            return 1;
+                    }
+                    else {
+                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied()))
+                            return 1;
+                    }
+                }
+            } else {
+                return 0; // Friendly piece / invalid piece
+            }
+        } else { // Blue team
+            if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
+                if (isKing) {
+                    if (moveSign == UP_LEFT) {
+                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                            return 1;
+                    }
+                    else if (moveSign == UP_RIGHT) {
+                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                            return 1;
+                    }
+                    else if (moveSign == DOWN_LEFT) {
+                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                            return 1;
+                    }
+                    else {
+                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                            return 1;
+                    }
+                } else { // Not king, check for default movement positions
+                    if (moveSign == UP_LEFT) {
+                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied()))
+                            return 1;
+                    }
+                    else {
+                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied()))
+                            return 1;
+                    }
+                }
+            } else {
+                return 0; // Friendly piece / invalid piece
+            }
+        }
+        return 420; // something bad happened
+    }
+
+    private int canJump(GameBoardTile oldTile, GameBoardTile tile) {
+        int row = tile.returnY();
+        int col = tile.returnX();
+        int moveSign;
+        final int UP_LEFT = 0;
+        final int UP_RIGHT = 1;
+        final int DOWN_LEFT = 2;
+        final int DOWN_RIGHT = 3;
+
+        int currentRow = currentTile.returnY();
+        int currentCol = currentTile.returnX();
+
+        if (row == 0 || row == 7 || col == 0 || col == 7) // Game piece to check on edge of board
+            return 666;
+
+        if (row < oldTile.returnY()) { // Move Up
+            if (col < oldTile.returnX()) // Move left
+                moveSign = UP_LEFT;
+            else
+                moveSign = UP_RIGHT;
+        } else { // Move down
+            if (col < oldTile.returnX())
+                moveSign = DOWN_LEFT;
+            else
+                moveSign = DOWN_RIGHT;
+        }
+
+        if (color == PieceColors.RED) {
+            if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
+                if (isKing) {
+                    if (moveSign == UP_LEFT) {
+                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                            return 1;
+                    }
+                    else if (moveSign == UP_RIGHT) {
+                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                            return 1;
+                    }
+                    else if (moveSign == DOWN_LEFT) {
+                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                            return 1;
+                    }
+                    else {
+                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                            return 1;
+                    }
 
                 } else { // Not king, check for default movement positions
                     if (moveSign == DOWN_LEFT) {
