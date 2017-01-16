@@ -37,11 +37,11 @@ public class GameBoardTile extends JLabel {
         // Set image based on color tile
         try {
             if (tilecolor.equals(TileColors.BLACK)) {
-                tile = ImageIO.read(new File("BlackTile.png"));
+                tile = ImageIO.read(getClass().getResource("BlackTile.png"));
             } else {
-                tile = ImageIO.read(new File("GreyTile.png"));
+                tile = ImageIO.read(getClass().getResource("GreyTile.png"));
             }
-            selected = ImageIO.read(new File("Selected.png"));
+            selected = ImageIO.read(getClass().getResource("Selected.png"));
         } catch (IOException io) {
             io.printStackTrace();
         }
@@ -133,9 +133,12 @@ public class GameBoardTile extends JLabel {
             if (e.getButton() == MouseEvent.BUTTON3) // Mouse2
                 unselectTile();
 
-            else if (e.getButton() == MouseEvent.BUTTON1) // Mouse1
-                for (GameBoardTile tile : currentPiece.checkAvailableTiles(currentPiece.getCurrentTile()))
+            else if (e.getButton() == MouseEvent.BUTTON1) { // Mouse1
+                for (GameBoardTile tile : CheckerPiece.checkAvailableTiles(currentPiece.getCurrentTile())) {
+                    System.out.println("Legal Move: " + tile);
                     tile.selectTile();
+                }
+            }
 
              else if (e.getButton() == MouseEvent.BUTTON2) // Middle Mouse Button
                 System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);

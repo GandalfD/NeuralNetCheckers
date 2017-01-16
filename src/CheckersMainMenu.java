@@ -85,4 +85,3 @@ public class CheckersMainMenu extends JFrame {
         }
     }
 }
-// TODO: fix out of bounds checking

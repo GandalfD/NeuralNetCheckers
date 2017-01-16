@@ -27,8 +27,10 @@ public class CheckerPiece extends JLabel {
     private int pieceNum;
     private boolean isKing = false;
 
-    private ArrayList<GameBoardTile> availableTiles = new ArrayList<>();
-    private boolean availableTileClearFlag = false;
+    // Variables for checking all legal moves
+    private static ArrayList<GameBoardTile> availableTiles = new ArrayList<>();
+    private static boolean availableTileClearFlag = false;
+    private static CheckerPiece legalMoveCheckerPiece;
 
     public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum) {
         this.color = color;
@@ -38,11 +40,11 @@ public class CheckerPiece extends JLabel {
         // Set pieceImage based on team
         try {
             if (color.equals(PieceColors.BLUE))
-                pieceImage = ImageIO.read(new File("BluePiece.png"));
+                pieceImage = ImageIO.read(getClass().getResource("BluePiece.png"));
             else
-                pieceImage = ImageIO.read(new File("RedPiece.png"));
+                pieceImage = ImageIO.read(getClass().getResource("RedPiece.png"));
 
-            kingImage = ImageIO.read(new File("TestKing.png"));
+            kingImage = ImageIO.read(getClass().getResource("TestKing.png"));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -63,7 +65,7 @@ public class CheckerPiece extends JLabel {
     }
 
     // Grabs all the available moves and piece on a specific tile can make
-    public ArrayList<GameBoardTile> checkAvailableTiles(GameBoardTile tile) {
+    public static ArrayList<GameBoardTile> checkAvailableTiles(GameBoardTile tile) {
         ArrayList<GameBoardTile> recursiveCheck = new ArrayList<>();
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
@@ -71,9 +73,9 @@ public class CheckerPiece extends JLabel {
             availableTileClearFlag = false;
         }
 
+        legalMoveCheckerPiece = tile.getCurrentPiece();
         // Find available pieces if piece is king
-
-        if (isKing) {
+        if (tile.getCurrentPiece().getIsKing()) {
             if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
                 availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]);
 
@@ -109,7 +111,7 @@ public class CheckerPiece extends JLabel {
         } else {
 
             // Find available tiles for normal pieces
-            if (color == PieceColors.BLUE) {
+            if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) {
                 if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear and not off board
                     availableTiles.add(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
                 else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]) == 1) { // Else check if can jump
@@ -146,13 +148,13 @@ public class CheckerPiece extends JLabel {
             }
         }
         for (GameBoardTile tileToCheck : recursiveCheck) {
-            checkAvailableTilesRecursion(tile, tileToCheck); // todo fix this probably wrong
+            checkAvailableTilesRecursion(tile, tileToCheck);
         }
         availableTileClearFlag = true;
         return availableTiles;
     }
 
-    private void checkAvailableTilesRecursion(GameBoardTile oldTile, GameBoardTile newTile) {
+    private static void checkAvailableTilesRecursion(GameBoardTile oldTile, GameBoardTile newTile) {
         boolean edgePiece = false;
         ArrayList<GameBoardTile> recursiveCheck = new ArrayList<>();
         int oldRow = oldTile.returnY();
@@ -191,7 +193,7 @@ public class CheckerPiece extends JLabel {
             GameBoardTile upLeft = GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() - 1];
             GameBoardTile downRight = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() + 1];
             GameBoardTile downLeft = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() - 1];
-            if (isKing) {
+            if (legalMoveCheckerPiece.getIsKing()) {
                 // Up right
                 if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
                     availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
@@ -218,7 +220,7 @@ public class CheckerPiece extends JLabel {
             } else {
 
                 // Find available tiles for normal pieces
-                if (color == PieceColors.BLUE) {
+                if (legalMoveCheckerPiece.getColor() == PieceColors.BLUE) {
 
                     // Up right
                     if (upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
@@ -257,7 +259,7 @@ public class CheckerPiece extends JLabel {
 
     // Returns whether occupied tile can be jumped
     // Assumes that tile being inputted is adjacent
-    private int canJump(GameBoardTile tile) {
+    private static int canJump(GameBoardTile tile) {
         int row = tile.returnY();
         int col = tile.returnX();
         int moveSign;
@@ -266,8 +268,8 @@ public class CheckerPiece extends JLabel {
         final int DOWN_LEFT = 2;
         final int DOWN_RIGHT = 3;
 
-        int currentRow = currentTile.returnY();
-        int currentCol = currentTile.returnX();
+        int currentRow = legalMoveCheckerPiece.getCurrentTile().returnY();
+        int currentCol = legalMoveCheckerPiece.getCurrentTile().returnX();
 
         if (row == 0 || row == 7 || col == 0 || col == 7) // Game piece to check on edge of board
             return 666;
@@ -284,9 +286,9 @@ public class CheckerPiece extends JLabel {
                 moveSign = DOWN_RIGHT;
         }
 
-        if (color == PieceColors.RED) {
+        if (legalMoveCheckerPiece.getColor() == PieceColors.RED) {
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
-                if (isKing) {
+                if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
                         if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
@@ -319,7 +321,7 @@ public class CheckerPiece extends JLabel {
             }
         } else { // Blue team
             if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
-                if (isKing) {
+                if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
                         if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
@@ -353,7 +355,7 @@ public class CheckerPiece extends JLabel {
         return 420; // something bad happened
     }
 
-    private int canJump(GameBoardTile oldTile, GameBoardTile tile) {
+    private static int canJump(GameBoardTile oldTile, GameBoardTile tile) {
         int row = tile.returnY();
         int col = tile.returnX();
         int moveSign;
@@ -361,9 +363,6 @@ public class CheckerPiece extends JLabel {
         final int UP_RIGHT = 1;
         final int DOWN_LEFT = 2;
         final int DOWN_RIGHT = 3;
-
-        int currentRow = currentTile.returnY();
-        int currentCol = currentTile.returnX();
 
         if (row == 0 || row == 7 || col == 0 || col == 7) // Game piece to check on edge of board
             return 666;
@@ -380,9 +379,9 @@ public class CheckerPiece extends JLabel {
                 moveSign = DOWN_RIGHT;
         }
 
-        if (color == PieceColors.RED) {
+        if (legalMoveCheckerPiece.getColor() == PieceColors.RED) {
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
-                if (isKing) {
+                if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
                         if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
@@ -415,7 +414,7 @@ public class CheckerPiece extends JLabel {
             }
         } else { // Blue team
             if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
-                if (isKing) {
+                if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
                         if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
@@ -469,5 +468,9 @@ public class CheckerPiece extends JLabel {
 
     public PieceColors getColor() {
         return color;
+    }
+
+    public boolean getIsKing() {
+        return isKing;
     }
 }
