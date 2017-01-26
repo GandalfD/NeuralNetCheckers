@@ -2,7 +2,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -28,9 +27,9 @@ public class CheckerPiece extends JLabel {
     private boolean isKing = false;
 
     // Variables for checking all legal moves
-    private static ArrayList<GameBoardTile> availableTiles = new ArrayList<>();
-    private static boolean availableTileClearFlag = false;
-    private static CheckerPiece legalMoveCheckerPiece;
+    private ArrayList<LegalMove> availableLegalMoves = new ArrayList<>();
+    private boolean availableTileClearFlag = false;
+    private CheckerPiece legalMoveCheckerPiece;
 
     public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum) {
         this.color = color;
@@ -64,12 +63,15 @@ public class CheckerPiece extends JLabel {
         }
     }
 
+    public ArrayList<LegalMove> getAllMoves() {
+        return checkAvailableTiles(getCurrentTile());
+    }
     // Grabs all the available moves and piece on a specific tile can make
-    public static ArrayList<GameBoardTile> checkAvailableTiles(GameBoardTile tile) {
-        ArrayList<GameBoardTile> recursiveCheck = new ArrayList<>();
+    private ArrayList<LegalMove> checkAvailableTiles(GameBoardTile tile) {
+        ArrayList<LegalMove> recursiveCheck = new ArrayList<>();
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
-            availableTiles.clear();
+            availableLegalMoves.clear();
             availableTileClearFlag = false;
         }
 
@@ -77,35 +79,39 @@ public class CheckerPiece extends JLabel {
         // Find available pieces if piece is king
         if (tile.getCurrentPiece().getIsKing()) {
             if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
-                availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]);
+                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1], null, null));
 
             else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]) == 1) { // Else check if can jump
-                availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2]);
-                recursiveCheck.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2]);
+                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]);
+                availableLegalMoves.add(move);
+                recursiveCheck.add(move);
                 // Check
             }
 
             if (tile.returnY() != 0 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
             else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
-                availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
-                recursiveCheck.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
+                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                availableLegalMoves.add(move);
+                recursiveCheck.add(move);
                 // Check
             }
 
             if (tile.returnY() != 7 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
             else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
-                availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
-                recursiveCheck.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
+                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                availableLegalMoves.add(move);
+                recursiveCheck.add(move);
                 // Check
             }
 
             if (tile.returnY() != 7 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
             else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
-                availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
-                recursiveCheck.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
+                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+                availableLegalMoves.add(move);
+                recursiveCheck.add(move);
                 // Check
             }
         } else {
@@ -113,54 +119,59 @@ public class CheckerPiece extends JLabel {
             // Find available tiles for normal pieces
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) {
                 if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear and not off board
-                    availableTiles.add(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
+                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1], null, null));
                 else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]) == 1) { // Else check if can jump
-                    availableTiles.add(GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2]);
-                    recursiveCheck.add(GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2]);
+                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2], null, null, GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                     // Check
                 }
 
                 if (tile.returnY() != 0 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
                 else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
-                    recursiveCheck.add(GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2]);
+                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                     // Check
                 }
 
             } else {
                 // Red Team
                 if (tile.returnY() != 7 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
                 else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
-                    recursiveCheck.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2]);
+                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                     // Check
                 }
 
                 if (tile.returnY() != 7 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
-                else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump todo fix this
-                    availableTiles.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
-                    recursiveCheck.add(GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2]);
+                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
+                else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
+                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                     // Check
                 }
             }
         }
-        for (GameBoardTile tileToCheck : recursiveCheck) {
+        for (LegalMove tileToCheck : recursiveCheck) {
             checkAvailableTilesRecursion(tile, tileToCheck);
         }
         availableTileClearFlag = true;
-        return availableTiles;
+
+        return availableLegalMoves;
     }
 
-    private static void checkAvailableTilesRecursion(GameBoardTile oldTile, GameBoardTile newTile) {
+    private void checkAvailableTilesRecursion(GameBoardTile oldTile, LegalMove newMove) {
         boolean edgePiece = false;
-        ArrayList<GameBoardTile> recursiveCheck = new ArrayList<>();
+        ArrayList<LegalMove> recursiveCheck = new ArrayList<>();
         int oldRow = oldTile.returnY();
         int oldCol = oldTile.returnX();
-        int newRow = newTile.returnY();
-        int newCol = newTile.returnX();
+        int newRow = newMove.returnNewY();
+        int newCol = newMove.returnNewX();
         final int UP_LEFT = 0;
         final int UP_RIGHT = 1;
         final int DOWN_LEFT = 2;
@@ -182,39 +193,47 @@ public class CheckerPiece extends JLabel {
         }
 
         if (newRow == 7 || newRow == 0 || newCol == 7 || newCol == 0) {
-            //availableTiles.add(newTile);
+            //availableLegalMoves.add(newTile);
             edgePiece = true;
         }
 
 
         // Find available pieces if piece is king
         if (!edgePiece) {
-            GameBoardTile upRight = GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() + 1];
-            GameBoardTile upLeft = GameBoard.getTile()[newTile.returnY() - 1][newTile.returnX() - 1];
-            GameBoardTile downRight = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() + 1];
-            GameBoardTile downLeft = GameBoard.getTile()[newTile.returnY() + 1][newTile.returnX() - 1];
+            GameBoardTile upRight = GameBoard.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
+            GameBoardTile upLeft = GameBoard.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
+            GameBoardTile downRight = GameBoard.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
+            GameBoardTile downLeft = GameBoard.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
             if (legalMoveCheckerPiece.getIsKing()) {
                 // Up right
-                if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
-                    availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
-                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
+                if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
+                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
+                    newMove.setMoveAfter(move);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                 }
                 // Up left
-                if (moveSign != DOWN_RIGHT && upLeft.getIsOccupied() && canJump(newTile, upLeft) == 1) {
-                    availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
-                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                if (moveSign != DOWN_RIGHT && upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
+                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
+                    newMove.setMoveAfter(move);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                 }
 
                 // Down right
-                if (moveSign != UP_LEFT && downRight.getIsOccupied() && canJump(newTile, downRight) == 1) {
-                    availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
-                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                if (moveSign != UP_LEFT && downRight.getIsOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
+                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
+                    newMove.setMoveAfter(move);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                 }
 
                 //Down left
-                if (moveSign != UP_RIGHT && downLeft.getIsOccupied() && canJump(newTile, downLeft) == 1) {
-                    availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
-                    recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                if (moveSign != UP_RIGHT && downLeft.getIsOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
+                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
+                    newMove.setMoveAfter(move);
+                    availableLegalMoves.add(move);
+                    recursiveCheck.add(move);
                 }
 
             } else {
@@ -223,43 +242,51 @@ public class CheckerPiece extends JLabel {
                 if (legalMoveCheckerPiece.getColor() == PieceColors.BLUE) {
 
                     // Up right
-                    if (upRight.getIsOccupied() && canJump(newTile, upRight) == 1) {
-                        availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
-                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() + 2]);
+                    if (upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
+                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
+                        newMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        recursiveCheck.add(move);
                     }
                     // Up left
-                    if (upLeft.getIsOccupied() && canJump(newTile, upLeft) == 1) {
-                        availableTiles.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
-                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() - 2][newTile.returnX() - 2]);
+                    if (upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
+                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
+                        newMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        recursiveCheck.add(move);
                     }
 
                 } else {
                     // Red Team
                     // Down right
-                    if (downRight.getIsOccupied() && canJump(newTile, downRight) == 1) {
-                        availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
-                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() + 2]);
+                    if (downRight.getIsOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
+                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
+                        newMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        recursiveCheck.add(move);
                     }
 
                     //Down left
-                    if (downLeft.getIsOccupied() && canJump(newTile, downLeft) == 1) {
-                        availableTiles.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
-                        recursiveCheck.add(GameBoard.getTile()[newTile.returnY() + 2][newTile.returnX() - 2]);
+                    if (downLeft.getIsOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
+                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
+                        newMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        recursiveCheck.add(move);
                     }
                 }
             }
         }
 
         if (recursiveCheck.size() > 0) {
-            for (GameBoardTile tileToCheck : recursiveCheck) {
-                checkAvailableTilesRecursion(newTile, tileToCheck);
+            for (LegalMove moveToCheck : recursiveCheck) {
+                checkAvailableTilesRecursion(newMove.getNewTile(), moveToCheck);
             }
         }
     }
 
     // Returns whether occupied tile can be jumped
     // Assumes that tile being inputted is adjacent
-    private static int canJump(GameBoardTile tile) {
+    private int canJump(GameBoardTile tile) {
         int row = tile.returnY();
         int col = tile.returnX();
         int moveSign;
@@ -355,7 +382,7 @@ public class CheckerPiece extends JLabel {
         return 420; // something bad happened
     }
 
-    private static int canJump(GameBoardTile oldTile, GameBoardTile tile) {
+    private int canJump(GameBoardTile oldTile, GameBoardTile tile) {
         int row = tile.returnY();
         int col = tile.returnX();
         int moveSign;

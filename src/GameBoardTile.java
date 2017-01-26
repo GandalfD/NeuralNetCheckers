@@ -29,6 +29,8 @@ public class GameBoardTile extends JLabel {
     private JLabel selectedLabel = new JLabel();
     private BufferedImage selected;
     private boolean isSelected = false;
+    private LegalMove possibleTileMove;
+
     public GameBoardTile(TileColors color, int yGrid, int xGrid) {
         tilecolor = color;
         this.yGrid = yGrid;
@@ -64,7 +66,8 @@ public class GameBoardTile extends JLabel {
         repaint();
     }
 
-    private void selectTile() {
+    private void selectTile(LegalMove possibleTileMove) {
+        this.possibleTileMove = possibleTileMove;
         isSelected = true;
         add(selectedLabel);
         repaint();
@@ -75,6 +78,7 @@ public class GameBoardTile extends JLabel {
         if (!isSelected)
             System.out.println("Tile already clear");
         else {
+            possibleTileMove = null;
             remove(selectedLabel);
             repaint();
             validate();
@@ -134,14 +138,19 @@ public class GameBoardTile extends JLabel {
                 unselectTile();
 
             else if (e.getButton() == MouseEvent.BUTTON1) { // Mouse1
-                for (GameBoardTile tile : CheckerPiece.checkAvailableTiles(currentPiece.getCurrentTile())) {
-                    System.out.println("Legal Move: " + tile);
-                    tile.selectTile();
+                if (possibleTileMove == null) { // Should I check for tiles, or should I examine a LegalMove
+                    for (LegalMove move : currentPiece.getAllMoves()) {
+                        System.out.println("Legal Move: " + move.getNewTile());
+                        move.getNewTile().selectTile(move);
+                    }
+                } else {
+                    System.out.println(possibleTileMove.getPastMoves());
                 }
             }
 
-             else if (e.getButton() == MouseEvent.BUTTON2) // Middle Mouse Button
+             else if (e.getButton() == MouseEvent.BUTTON2) { // Middle Mouse Button
                 System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
+            }
         }
 
         @Override

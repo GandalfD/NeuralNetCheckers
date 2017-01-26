@@ -19,6 +19,12 @@
  * 1/16/17 - Fully working legal tile checker
  *         - Many annoying bugs fixed
  *
+ * 1/25/17 - Added LegalMove Class
+ *         - Moves placed in a a weird single noded tree data structure
+ *         - Can trace moves back and forward
+ *         - Can analyze all possible moves of a piece and player, with what pieces will be captured
+ *         - No longer static beause it doesn't make sense anymore
+ *
  */
 public class MainDriver {
 
@@ -28,3 +34,6 @@ public class MainDriver {
     }
 }
 
+
+// Legal Move Class
+// When a new legal move is added, add an array/ArrayList of moves to get to current piece
