@@ -11,7 +11,7 @@ public class GameBoard extends JPanel {
     // Sets up game board via multidimensional array of gameboard tiles (8 rows and 8 columns)
     private static final int ROWS = 8;
     private static final int COLUMNS = 8;
-    private static GameBoardTile[][] tile = new GameBoardTile[ROWS][COLUMNS];
+    private GameBoardTile[][] tile = new GameBoardTile[ROWS][COLUMNS];
 
     // Arrays to hold pieces
     private CheckerPiece[] bluePieces;
@@ -70,20 +70,20 @@ public class GameBoard extends JPanel {
         displayFirstRowPattern(0);
 
         // https://www.youtube.com/watch?v=gH476CxJxfg
-        redPieces[4] = new CheckerPiece(PieceColors.RED, tile[1][0], 4);
-        redPieces[5] = new CheckerPiece(PieceColors.RED, tile[1][2], 5);
-        redPieces[6] = new CheckerPiece(PieceColors.RED, tile[1][4], 6);
-        redPieces[7] = new CheckerPiece(PieceColors.RED, tile[1][6], 7);
+        redPieces[4] = new CheckerPiece(PieceColors.RED, tile[1][0], 4, this);
+        redPieces[5] = new CheckerPiece(PieceColors.RED, tile[1][2], 5, this);
+        redPieces[6] = new CheckerPiece(PieceColors.RED, tile[1][4], 6, this);
+        redPieces[7] = new CheckerPiece(PieceColors.RED, tile[1][6], 7, this);
         tile[1][0].setUp(redPieces[4]);
         tile[1][2].setUp(redPieces[5]);
         tile[1][4].setUp(redPieces[6]);
         tile[1][6].setUp(redPieces[7]);
 
         // lol screw it, I'm just gonna hardcode everything from here on out with no loops
-        redPieces[8] = new CheckerPiece(PieceColors.RED, tile[2][1], 8);
-        redPieces[9] = new CheckerPiece(PieceColors.RED, tile[2][3], 9);
-        redPieces[10] = new CheckerPiece(PieceColors.RED, tile[2][5], 10);
-        redPieces[11] = new CheckerPiece(PieceColors.RED, tile[2][7], 11);
+        redPieces[8] = new CheckerPiece(PieceColors.RED, tile[2][1], 8, this);
+        redPieces[9] = new CheckerPiece(PieceColors.RED, tile[2][3], 9, this);
+        redPieces[10] = new CheckerPiece(PieceColors.RED, tile[2][5], 10, this);
+        redPieces[11] = new CheckerPiece(PieceColors.RED, tile[2][7], 11, this);
         tile[2][1].setUp(redPieces[8]);
         tile[2][3].setUp(redPieces[9]);
         tile[2][5].setUp(redPieces[10]);
@@ -100,19 +100,19 @@ public class GameBoard extends JPanel {
 
         //Black Team Row
         displayFirstRowPatternBlue(6);
-        bluePieces[4] = new CheckerPiece(PieceColors.BLUE, tile[5][0], 4);
-        bluePieces[5] = new CheckerPiece(PieceColors.BLUE, tile[5][2], 5);
-        bluePieces[6] = new CheckerPiece(PieceColors.BLUE, tile[5][4], 6);
-        bluePieces[7] = new CheckerPiece(PieceColors.BLUE, tile[5][6], 7);
+        bluePieces[4] = new CheckerPiece(PieceColors.BLUE, tile[5][0], 4, this);
+        bluePieces[5] = new CheckerPiece(PieceColors.BLUE, tile[5][2], 5, this);
+        bluePieces[6] = new CheckerPiece(PieceColors.BLUE, tile[5][4], 6, this);
+        bluePieces[7] = new CheckerPiece(PieceColors.BLUE, tile[5][6], 7, this);
         tile[5][0].setUp(bluePieces[4]);
         tile[5][2].setUp(bluePieces[5]);
         tile[5][4].setUp(bluePieces[6]);
         tile[5][6].setUp(bluePieces[7]);
 
-        bluePieces[8] = new CheckerPiece(PieceColors.BLUE, tile[7][0], 8);
-        bluePieces[9] = new CheckerPiece(PieceColors.BLUE, tile[7][2], 9);
-        bluePieces[10] = new CheckerPiece(PieceColors.BLUE, tile[7][4], 10);
-        bluePieces[11] = new CheckerPiece(PieceColors.BLUE, tile[7][6], 11);
+        bluePieces[8] = new CheckerPiece(PieceColors.BLUE, tile[7][0], 8, this);
+        bluePieces[9] = new CheckerPiece(PieceColors.BLUE, tile[7][2], 9, this);
+        bluePieces[10] = new CheckerPiece(PieceColors.BLUE, tile[7][4], 10, this);
+        bluePieces[11] = new CheckerPiece(PieceColors.BLUE, tile[7][6], 11, this);
         tile[7][0].setUp(bluePieces[8]);
         tile[7][2].setUp(bluePieces[9]);
         tile[7][4].setUp(bluePieces[10]);
@@ -123,7 +123,7 @@ public class GameBoard extends JPanel {
     private void displayFirstRowPattern(int rowIndex) {
         int counter = 0; // <-- lol worse programming ever
         for (int j = 1; j < 8; j += 2) {
-            redPieces[counter] = new CheckerPiece(PieceColors.RED, tile[rowIndex][j], counter);
+            redPieces[counter] = new CheckerPiece(PieceColors.RED, tile[rowIndex][j], counter, this);
             tile[rowIndex][j].setUp(redPieces[counter]);
             System.out.println(counter);
             counter++;
@@ -133,7 +133,7 @@ public class GameBoard extends JPanel {
     private void displayFirstRowPatternBlue(int rowIndex) {
         int counter = 0; // <-- lol worse programming ever
         for (int j = 1; j < 8; j+=2) {
-            bluePieces[counter] = new CheckerPiece(PieceColors.BLUE, tile[rowIndex][j], counter);
+            bluePieces[counter] = new CheckerPiece(PieceColors.BLUE, tile[rowIndex][j], counter, this);
             tile[rowIndex][j].setUp(bluePieces[counter]);
             System.out.println(counter);
             counter++;
@@ -141,7 +141,7 @@ public class GameBoard extends JPanel {
 
     }
 
-    public static GameBoardTile[][] getTile() {
+    public GameBoardTile[][] getTile() {
         return tile;
     }
 }

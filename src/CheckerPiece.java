@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class CheckerPiece extends JLabel {
 
+    private GameBoard board;
+
     // Team and Color
     private PieceColors color;
     private GameBoardTile currentTile;
@@ -25,16 +27,18 @@ public class CheckerPiece extends JLabel {
     // Data about piece
     private int pieceNum;
     private boolean isKing = false;
+    private boolean isCaptured = false;
 
     // Variables for checking all legal moves
     private ArrayList<LegalMove> availableLegalMoves = new ArrayList<>();
     private boolean availableTileClearFlag = false;
     private CheckerPiece legalMoveCheckerPiece;
 
-    public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum) {
+    public CheckerPiece(PieceColors color, GameBoardTile currentTile, int pieceNum, GameBoard board) {
         this.color = color;
         this.currentTile = currentTile;
         this.pieceNum = pieceNum;
+        this.board = board;
 
         // Set pieceImage based on team
         try {
@@ -63,6 +67,16 @@ public class CheckerPiece extends JLabel {
         }
     }
 
+    // Current piece is "captured"
+    public void capturePiece() {
+        try {
+            isCaptured = true;
+            getCurrentTile().removePiece(this);
+        } catch (InvalidMoveException ime) {
+            ime.printCustomError();
+        }
+    }
+
     public ArrayList<LegalMove> getAllMoves() {
         return checkAvailableTiles(getCurrentTile());
     }
@@ -78,38 +92,38 @@ public class CheckerPiece extends JLabel {
         legalMoveCheckerPiece = tile.getCurrentPiece();
         // Find available pieces if piece is king
         if (tile.getCurrentPiece().getIsKing()) {
-            if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
-                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1], null, null));
+            if (tile.returnY() != 0 && tile.returnX() != 0 && !board.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear
+                availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()-1][tile.returnX()-1], null, null));
 
-            else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]) == 1) { // Else check if can jump
-                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()-1]);
+            else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(board.getTile()[tile.returnY()-1][tile.returnX()-1]) == 1) { // Else check if can jump
+                LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()-2][tile.returnX()-2], null, null, board.getTile()[tile.returnY()-1][tile.returnX()-1]);
                 availableLegalMoves.add(move);
                 recursiveCheck.add(move);
                 // Check
             }
 
-            if (tile.returnY() != 0 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
-            else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
-                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+            if (tile.returnY() != 0 && tile.returnX() != 7 && !board.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
+            else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(board.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
+                LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, board.getTile()[tile.returnY()-1][tile.returnX()+1]);
                 availableLegalMoves.add(move);
                 recursiveCheck.add(move);
                 // Check
             }
 
-            if (tile.returnY() != 7 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
-            else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
-                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+            if (tile.returnY() != 7 && tile.returnX() != 0 && !board.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
+            else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(board.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
+                LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, board.getTile()[tile.returnY()+1][tile.returnX()-1]);
                 availableLegalMoves.add(move);
                 recursiveCheck.add(move);
                 // Check
             }
 
-            if (tile.returnY() != 7 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
-            else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
-                LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+            if (tile.returnY() != 7 && tile.returnX() != 7 && !board.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
+            else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(board.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
+                LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, board.getTile()[tile.returnY()+1][tile.returnX()+1]);
                 availableLegalMoves.add(move);
                 recursiveCheck.add(move);
                 // Check
@@ -118,19 +132,19 @@ public class CheckerPiece extends JLabel {
 
             // Find available tiles for normal pieces
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) {
-                if (tile.returnY() != 0 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear and not off board
-                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1], null, null));
-                else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]) == 1) { // Else check if can jump
-                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY() - 2][tile.returnX() - 2], null, null, GameBoard.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
+                if (tile.returnY() != 0 && tile.returnX() != 0 && !board.getTile()[tile.returnY() - 1][tile.returnX() - 1].getIsOccupied()) // Is top-left tile clear and not off board
+                    availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY() - 1][tile.returnX() - 1], null, null));
+                else if (tile.returnY() != 0 && tile.returnX() != 0 && canJump(board.getTile()[tile.returnY() - 1][tile.returnX() - 1]) == 1) { // Else check if can jump
+                    LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY() - 2][tile.returnX() - 2], null, null, board.getTile()[tile.returnY() - 1][tile.returnX() - 1]);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
                     // Check
                 }
 
-                if (tile.returnY() != 0 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
-                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
-                else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
-                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()-1][tile.returnX()+1]);
+                if (tile.returnY() != 0 && tile.returnX() != 7 && !board.getTile()[tile.returnY() - 1][tile.returnX() + 1].getIsOccupied()) // Is top-right tile clear
+                    availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()-1][tile.returnX()+1], null, null));
+                else if (tile.returnY() != 0 && tile.returnX() != 7 && canJump(board.getTile()[tile.returnY()-1][tile.returnX()+1]) == 1) { // Else check if can jump
+                    LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()-2][tile.returnX()+2], null, null, board.getTile()[tile.returnY()-1][tile.returnX()+1]);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
                     // Check
@@ -138,19 +152,19 @@ public class CheckerPiece extends JLabel {
 
             } else {
                 // Red Team
-                if (tile.returnY() != 7 && tile.returnX() != 0 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
-                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
-                else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
-                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()-1]);
+                if (tile.returnY() != 7 && tile.returnX() != 0 && !board.getTile()[tile.returnY() + 1][tile.returnX() - 1].getIsOccupied()) // Is bottom-left tile clear
+                    availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()+1][tile.returnX()-1], null, null));
+                else if (tile.returnY() != 7 && tile.returnX() != 0 && canJump(board.getTile()[tile.returnY()+1][tile.returnX()-1]) == 1) { // Else check if can jump
+                    LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()+2][tile.returnX()-2], null, null, board.getTile()[tile.returnY()+1][tile.returnX()-1]);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
                     // Check
                 }
 
-                if (tile.returnY() != 7 && tile.returnX() != 7 && !GameBoard.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
-                    availableLegalMoves.add(new LegalMove(tile, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
-                else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
-                    LegalMove move = new LegalMove(tile, GameBoard.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, GameBoard.getTile()[tile.returnY()+1][tile.returnX()+1]);
+                if (tile.returnY() != 7 && tile.returnX() != 7 && !board.getTile()[tile.returnY() + 1][tile.returnX() + 1].getIsOccupied()) // Is bottom-right tile clear
+                    availableLegalMoves.add(new LegalMove(tile, board.getTile()[tile.returnY()+1][tile.returnX()+1], null, null));
+                else if (tile.returnY() != 7 && tile.returnX() != 7 && canJump(board.getTile()[tile.returnY()+1][tile.returnX()+1]) == 1) { // Else check if can jump
+                    LegalMove move = new LegalMove(tile, board.getTile()[tile.returnY()+2][tile.returnX()+2], null, null, board.getTile()[tile.returnY()+1][tile.returnX()+1]);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
                     // Check
@@ -200,21 +214,21 @@ public class CheckerPiece extends JLabel {
 
         // Find available pieces if piece is king
         if (!edgePiece) {
-            GameBoardTile upRight = GameBoard.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
-            GameBoardTile upLeft = GameBoard.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
-            GameBoardTile downRight = GameBoard.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
-            GameBoardTile downLeft = GameBoard.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
+            GameBoardTile upRight = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
+            GameBoardTile upLeft = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
+            GameBoardTile downRight = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
+            GameBoardTile downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
             if (legalMoveCheckerPiece.getIsKing()) {
                 // Up right
                 if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
+                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
                 }
                 // Up left
                 if (moveSign != DOWN_RIGHT && upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
+                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
@@ -222,7 +236,7 @@ public class CheckerPiece extends JLabel {
 
                 // Down right
                 if (moveSign != UP_LEFT && downRight.getIsOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
+                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
@@ -230,7 +244,7 @@ public class CheckerPiece extends JLabel {
 
                 //Down left
                 if (moveSign != UP_RIGHT && downLeft.getIsOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
+                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
                     recursiveCheck.add(move);
@@ -243,14 +257,14 @@ public class CheckerPiece extends JLabel {
 
                     // Up right
                     if (upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
+                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
                         recursiveCheck.add(move);
                     }
                     // Up left
                     if (upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
+                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
                         recursiveCheck.add(move);
@@ -260,7 +274,7 @@ public class CheckerPiece extends JLabel {
                     // Red Team
                     // Down right
                     if (downRight.getIsOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
+                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
                         recursiveCheck.add(move);
@@ -268,7 +282,7 @@ public class CheckerPiece extends JLabel {
 
                     //Down left
                     if (downLeft.getIsOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), GameBoard.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
+                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
                         recursiveCheck.add(move);
@@ -317,29 +331,29 @@ public class CheckerPiece extends JLabel {
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
                 if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
                     }
                     else if (moveSign == UP_RIGHT) {
-                            if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                            if (!(board.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
                                 return 1;
                         }
                     else if (moveSign == DOWN_LEFT) {
-                            if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                            if (!(board.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
                                 return 1;
                         }
                     else {
-                            if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                            if (!(board.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
                                 return 1;
                         }
 
                 } else { // Not king, check for default movement positions
                     if (moveSign == DOWN_LEFT) {
-                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied()))
+                        if (!(board.getTile()[row + 1][col - 1].getIsOccupied()))
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied()))
+                        if (!(board.getTile()[row + 1][col + 1].getIsOccupied()))
                             return 1;
                     }
                 }
@@ -350,28 +364,28 @@ public class CheckerPiece extends JLabel {
             if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
                 if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
                     }
                     else if (moveSign == UP_RIGHT) {
-                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                        if (!(board.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
                             return 1;
                     }
                     else if (moveSign == DOWN_LEFT) {
-                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                        if (!(board.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                        if (!(board.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
                             return 1;
                     }
                 } else { // Not king, check for default movement positions
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied()))
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied()))
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied()))
+                        if (!(board.getTile()[row - 1][col + 1].getIsOccupied()))
                             return 1;
                     }
                 }
@@ -410,29 +424,29 @@ public class CheckerPiece extends JLabel {
             if (tile.getCurrentPiece().getColor() == PieceColors.BLUE) { // Valid Enemy piece to jump
                 if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
                     }
                     else if (moveSign == UP_RIGHT) {
-                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                        if (!(board.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
                             return 1;
                     }
                     else if (moveSign == DOWN_LEFT) {
-                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                        if (!(board.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                        if (!(board.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
                             return 1;
                     }
 
                 } else { // Not king, check for default movement positions
                     if (moveSign == DOWN_LEFT) {
-                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied()))
+                        if (!(board.getTile()[row + 1][col - 1].getIsOccupied()))
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied()))
+                        if (!(board.getTile()[row + 1][col + 1].getIsOccupied()))
                             return 1;
                     }
                 }
@@ -443,28 +457,28 @@ public class CheckerPiece extends JLabel {
             if (tile.getCurrentPiece().getColor() == PieceColors.RED) { // Valid Enemy piece to jump
                 if (legalMoveCheckerPiece.getIsKing()) {
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied())) // Check upper left tile
                             return 1;
                     }
                     else if (moveSign == UP_RIGHT) {
-                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
+                        if (!(board.getTile()[row - 1][col + 1].getIsOccupied())) // Check upper right tile
                             return 1;
                     }
                     else if (moveSign == DOWN_LEFT) {
-                        if (!(GameBoard.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
+                        if (!(board.getTile()[row + 1][col - 1].getIsOccupied())) // Check lower left tile
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
+                        if (!(board.getTile()[row + 1][col + 1].getIsOccupied())) // Has to be lower right
                             return 1;
                     }
                 } else { // Not king, check for default movement positions
                     if (moveSign == UP_LEFT) {
-                        if (!(GameBoard.getTile()[row - 1][col - 1].getIsOccupied()))
+                        if (!(board.getTile()[row - 1][col - 1].getIsOccupied()))
                             return 1;
                     }
                     else {
-                        if (!(GameBoard.getTile()[row - 1][col + 1].getIsOccupied()))
+                        if (!(board.getTile()[row - 1][col + 1].getIsOccupied()))
                             return 1;
                     }
                 }
@@ -499,5 +513,9 @@ public class CheckerPiece extends JLabel {
 
     public boolean getIsKing() {
         return isKing;
+    }
+
+    public boolean isCaptured () {
+        return isCaptured;
     }
 }

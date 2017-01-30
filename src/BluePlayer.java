@@ -21,13 +21,14 @@ public class BluePlayer {
 
         for (CheckerPiece piece : bluePieces) {
             ArrayList<LegalMove> temp = piece.getAllMoves();
-            if (!temp.isEmpty())
+            if (!temp.isEmpty() && !piece.isCaptured())
                 allPossibleMoves.add(temp);
         }
 
         return allPossibleMoves;
     }
 
+    // Returns array of valid moves (factoring in force jumping)
     public ArrayList<LegalMove> getAllPossibleValidMoves() {
         ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
 
@@ -39,5 +40,14 @@ public class BluePlayer {
         }
 
         return allPossibleValidMoves;
+    }
+
+    public void movePiece(LegalMove move) throws InvalidMoveException {
+        if (getAllPossibleValidMoves().contains(move)) { // Valid Move
+            move.captureJumpedPieces();
+            move.getRootMove().getOldPiece().movePiece(move.getNewTile());
+        } else { // Not valid
+            throw new InvalidMoveException("Move is not valid!");
+        }
     }
 }

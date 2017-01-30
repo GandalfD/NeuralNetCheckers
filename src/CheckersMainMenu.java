@@ -20,6 +20,8 @@ public class CheckersMainMenu extends JFrame {
     static GameBoard board;
     private JButton test = new JButton("Move");
     private JButton getAllBlue = new JButton("Blue Moves");
+    private JButton generation = new JButton("Generation");
+    private JButton capture = new JButton("Capture");
 
     RedPlayer redPlayer = new RedPlayer();
     BluePlayer bluePlayer = new BluePlayer();
@@ -37,11 +39,15 @@ public class CheckersMainMenu extends JFrame {
         // Button to test different features
         test.addActionListener(new testclass());
         getAllBlue.addActionListener(new testclass());
+        capture.addActionListener(new testclass());
         JPanel testPane = new JPanel();
 
         testPane.add(getAllBlue);
         testPane.add(test);
+        testPane.add(capture);
 
+        generation.addActionListener(new ButtonListener());
+        add(generation);
         add(testPane);
         add(board);
     }
@@ -58,28 +64,28 @@ public class CheckersMainMenu extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == test) {
-                bluePlayer.getPieces()[5].movePiece(GameBoard.getTile()[4][3]);
+                bluePlayer.getPieces()[5].movePiece(board.getTile()[4][3]);
                 redPlayer.getPieces()[5].makeKing();
-                redPlayer.getPieces()[11].movePiece(GameBoard.getTile()[3][6]);
-                bluePlayer.getPieces()[7].movePiece(GameBoard.getTile()[4][5]);
+                redPlayer.getPieces()[11].movePiece(board.getTile()[3][6]);
+                bluePlayer.getPieces()[7].movePiece(board.getTile()[4][5]);
                 bluePlayer.getPieces()[5].makeKing();
-                redPlayer.getPieces()[9].movePiece(GameBoard.getTile()[3][4]);
-                redPlayer.getPieces()[6].movePiece(GameBoard.getTile()[3][2]);
-                redPlayer.getPieces()[6].movePiece(GameBoard.getTile()[2][3]);
+                redPlayer.getPieces()[9].movePiece(board.getTile()[3][4]);
+                redPlayer.getPieces()[6].movePiece(board.getTile()[3][2]);
+                redPlayer.getPieces()[6].movePiece(board.getTile()[2][3]);
                 redPlayer.getPieces()[3].makeKing();
-                redPlayer.getPieces()[8].movePiece(GameBoard.getTile()[4][1]);
+                redPlayer.getPieces()[8].movePiece(board.getTile()[4][1]);
 
-                bluePlayer.getPieces()[5].movePiece(GameBoard.getTile()[3][2]);
-                redPlayer.getPieces()[9].movePiece(GameBoard.getTile()[5][2]);
-                redPlayer.getPieces()[10].movePiece(GameBoard.getTile()[3][4]);
-                redPlayer.getPieces()[3].movePiece(GameBoard.getTile()[1][7]);
+                bluePlayer.getPieces()[5].movePiece(board.getTile()[3][2]);
+                redPlayer.getPieces()[9].movePiece(board.getTile()[5][2]);
+                redPlayer.getPieces()[10].movePiece(board.getTile()[3][4]);
+                redPlayer.getPieces()[3].movePiece(board.getTile()[1][7]);
 
 
-                redPlayer.getPieces()[1].movePiece(GameBoard.getTile()[2][1]);
-                redPlayer.getPieces()[6].movePiece(GameBoard.getTile()[1][4]);
+                redPlayer.getPieces()[1].movePiece(board.getTile()[2][1]);
+                redPlayer.getPieces()[6].movePiece(board.getTile()[1][4]);
                 bluePlayer.getPieces()[0].makeKing();
-                bluePlayer.getPieces()[2].movePiece(GameBoard.getTile()[5][6]);
-                bluePlayer.getPieces()[10].movePiece(GameBoard.getTile()[3][0]);
+                bluePlayer.getPieces()[2].movePiece(board.getTile()[5][6]);
+                bluePlayer.getPieces()[10].movePiece(board.getTile()[3][0]);
 
                 for (int i = 0; i < 10; i++) {
                     System.out.print("Waiting\n");
@@ -97,11 +103,29 @@ public class CheckersMainMenu extends JFrame {
 
                 for (LegalMove move : bluePlayer.getAllPossibleValidMoves()) {
                     System.out.print(move);
+                    System.out.print("Root: " + move.getRootMove());
                     System.out.print("Jump Tiles: ");
                     for (GameBoardTile jumpedTile : move.getTotalJumpedTiles())
                         System.out.println("\n\t" + jumpedTile);
                     System.out.println();
                 }
+            } else if (e.getSource() == capture) {
+                try {
+                    bluePlayer.movePiece(bluePlayer.getAllPossibleValidMoves().get(0));
+                } catch (InvalidMoveException ime) {
+                    ime.printCustomError();
+                }
+            }
+        }
+    }
+
+    private class ButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == generation) {
+                GenerationViewer view = new GenerationViewer();
+                view.display();
             }
         }
     }

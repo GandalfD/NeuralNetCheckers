@@ -9,6 +9,6 @@ public class InvalidMoveException extends Exception {
     }
 
     public void printCustomError() {
-        System.out.println(errorMsg);
+        System.out.println("Exception: " + errorMsg);
     }
 }

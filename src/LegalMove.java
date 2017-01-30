@@ -56,6 +56,10 @@ public class LegalMove {
         return newTile;
     }
 
+    public GameBoardTile getOldTile() {
+        return oldTile;
+    }
+
     public void setMoveAfter(LegalMove moveAfter) {
         this.moveAfter = moveAfter;
     }
@@ -87,4 +91,37 @@ public class LegalMove {
         else
             return "\nOld: BEGINNING" + "\nNew: " + newTile + "\n";
     }
+
+    // Returns the first that needs to be made in this move tree
+    public LegalMove getRootMove() {
+        LegalMove moveToCheck = this;
+        while(moveToCheck.getMoveBefore() != null) {
+            moveToCheck = moveToCheck.getMoveBefore();
+        }
+
+        return moveToCheck;
+    }
+
+    // Captures all "jumped" pieces up to this legal move
+    // Returns ArrayList of pieces captured
+    public ArrayList<CheckerPiece> captureJumpedPieces() {
+        ArrayList<CheckerPiece> jumpedPieces = new ArrayList<>();
+        LegalMove moveToCheck = getRootMove();
+
+        while (moveToCheck != this) {
+            if (moveToCheck.getJumpedTile() != null) {
+                jumpedPieces.add(moveToCheck.getJumpedTile().getCurrentPiece());
+                moveToCheck.getJumpedTile().getCurrentPiece().capturePiece();
+            } else {
+                System.out.println("Move " + this + " has no jumped pieces");
+            }
+        }
+
+        return jumpedPieces;
+    }
+
+    public CheckerPiece getOldPiece() {
+        return oldTile.getCurrentPiece();
+    }
+
 }
