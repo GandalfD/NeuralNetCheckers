@@ -519,3 +519,5 @@ public class CheckerPiece extends JLabel {
         return isCaptured;
     }
 }
+
+//TODO make the legal tile checker an actual binary tree

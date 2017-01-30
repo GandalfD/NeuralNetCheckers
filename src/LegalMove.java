@@ -112,6 +112,8 @@ public class LegalMove {
             if (moveToCheck.getJumpedTile() != null) {
                 jumpedPieces.add(moveToCheck.getJumpedTile().getCurrentPiece());
                 moveToCheck.getJumpedTile().getCurrentPiece().capturePiece();
+
+                moveToCheck = moveToCheck.getMoveAfter();
             } else {
                 System.out.println("Move " + this + " has no jumped pieces");
             }
@@ -123,5 +125,10 @@ public class LegalMove {
     public CheckerPiece getOldPiece() {
         return oldTile.getCurrentPiece();
     }
+
+    public boolean equals(LegalMove move) {
+        return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile);
+    }
+
 
 }

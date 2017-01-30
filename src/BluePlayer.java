@@ -43,7 +43,18 @@ public class BluePlayer {
     }
 
     public void movePiece(LegalMove move) throws InvalidMoveException {
-        if (getAllPossibleValidMoves().contains(move)) { // Valid Move
+        boolean isValid = false;
+
+        if (getAllPossibleValidMoves().isEmpty())
+            throw new InvalidMoveException("Blue Player has no possible moves");
+
+        for (LegalMove validMove : getAllPossibleValidMoves()) {
+            if (validMove.equals(move)) {
+                isValid = true;
+                break;
+            }
+        }
+        if (isValid) { // Valid Move
             move.captureJumpedPieces();
             move.getRootMove().getOldPiece().movePiece(move.getNewTile());
         } else { // Not valid
