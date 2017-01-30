@@ -11,13 +11,13 @@ public class LegalMove {
     private GameBoardTile jumpedTile;
 
     private LegalMove moveBefore;
-    private LegalMove moveAfter;
+    private ArrayList<LegalMove> moveAfter = new ArrayList<>();
 
     public LegalMove(GameBoardTile oldTile, GameBoardTile newTile, LegalMove moveBefore, LegalMove moveAfter, GameBoardTile jumpedTile) {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
-        this.moveAfter = moveAfter;
+        this.moveAfter.add(moveAfter);
         this.jumpedTile = jumpedTile;
     }
 
@@ -25,7 +25,7 @@ public class LegalMove {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
-        this.moveAfter = moveAfter;
+        this.moveAfter.add(moveAfter);
     }
 
     public ArrayList<GameBoardTile> getTotalJumpedTiles() {
@@ -61,7 +61,7 @@ public class LegalMove {
     }
 
     public void setMoveAfter(LegalMove moveAfter) {
-        this.moveAfter = moveAfter;
+        this.moveAfter.add(moveAfter);
     }
 
     public ArrayList<LegalMove> getPastMoves() {
@@ -81,7 +81,7 @@ public class LegalMove {
         return moveBefore;
     }
 
-    public LegalMove getMoveAfter() {
+    public ArrayList<LegalMove> getMoveAfter() {
         return moveAfter;
     }
 
@@ -106,16 +106,17 @@ public class LegalMove {
     // Returns ArrayList of pieces captured
     public ArrayList<CheckerPiece> captureJumpedPieces() {
         ArrayList<CheckerPiece> jumpedPieces = new ArrayList<>();
-        LegalMove moveToCheck = getRootMove();
+        LegalMove moveToCheck = this;
 
-        while (moveToCheck != this) {
+        while (moveToCheck != null) {
             if (moveToCheck.getJumpedTile() != null) {
                 jumpedPieces.add(moveToCheck.getJumpedTile().getCurrentPiece());
                 moveToCheck.getJumpedTile().getCurrentPiece().capturePiece();
 
-                moveToCheck = moveToCheck.getMoveAfter();
+                moveToCheck = moveToCheck.getMoveBefore();
             } else {
                 System.out.println("Move " + this + " has no jumped pieces");
+                moveToCheck = moveToCheck.getMoveBefore();
             }
         }
 

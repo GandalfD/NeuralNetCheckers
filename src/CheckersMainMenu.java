@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This is the class that the main interface will run off of.
@@ -25,6 +26,9 @@ public class CheckersMainMenu extends JFrame {
 
     RedPlayer redPlayer = new RedPlayer();
     BluePlayer bluePlayer = new BluePlayer();
+
+    // temp variable to control whose turn it is
+    private boolean isRed = false;
 
     public CheckersMainMenu() {
         super("Checkers Program");
@@ -95,9 +99,6 @@ public class CheckersMainMenu extends JFrame {
                 System.out.println(list);
                 */
             } else if (e.getSource() == getAllBlue) {
-                for (ArrayList<LegalMove> moveSet : bluePlayer.getAllPossibleMoves()) {
-                    System.out.println(moveSet + "\n");
-                }
 
                 System.out.println("MEME!");
 
@@ -110,8 +111,22 @@ public class CheckersMainMenu extends JFrame {
                     System.out.println();
                 }
             } else if (e.getSource() == capture) {
+                Random rng = new Random();
                 try {
-                    bluePlayer.movePiece(bluePlayer.getAllPossibleValidMoves().get(0));
+                    if (!isRed) {
+                        ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
+                        int upperBound = possibleMoves.size();
+                        LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                        bluePlayer.movePiece(randomMove); // executes random move
+                        isRed = !isRed;
+                    } else {
+                        ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
+                        int upperBound = possibleMoves.size();
+                        LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                        redPlayer.movePiece(randomMove); // executes random move
+                        isRed = !isRed;
+                    }
+
                 } catch (InvalidMoveException ime) {
                     ime.printCustomError();
                 }

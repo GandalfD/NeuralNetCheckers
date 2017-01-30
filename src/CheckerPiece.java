@@ -59,11 +59,13 @@ public class CheckerPiece extends JLabel {
 
     // Method to move checker piece to new tile
     public void movePiece(GameBoardTile tile) {
-        try {
-            tile.movePiece(this);
-            currentTile = tile;
-        } catch (InvalidMoveException ime) {
-            ime.printCustomError();
+        if (!isCaptured) {
+            try {
+                tile.movePiece(this);
+                currentTile = tile;
+            } catch (InvalidMoveException ime) {
+                ime.printCustomError();
+            }
         }
     }
 
@@ -78,7 +80,9 @@ public class CheckerPiece extends JLabel {
     }
 
     public ArrayList<LegalMove> getAllMoves() {
-        return checkAvailableTiles(getCurrentTile());
+        if (!isCaptured)
+            return checkAvailableTiles(getCurrentTile());
+        else return null;
     }
     // Grabs all the available moves and piece on a specific tile can make
     private ArrayList<LegalMove> checkAvailableTiles(GameBoardTile tile) {
@@ -520,4 +524,3 @@ public class CheckerPiece extends JLabel {
     }
 }
 
-//TODO make the legal tile checker an actual binary tree

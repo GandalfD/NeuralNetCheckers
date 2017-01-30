@@ -16,12 +16,16 @@ public class BluePlayer {
     }
 
     // Returns every single move that every single piece can make
-    public ArrayList<ArrayList<LegalMove>> getAllPossibleMoves() {
+    private ArrayList<ArrayList<LegalMove>> getAllPossibleMoves() {
         ArrayList<ArrayList<LegalMove>> allPossibleMoves = new ArrayList<>();
 
         for (CheckerPiece piece : bluePieces) {
             ArrayList<LegalMove> temp = piece.getAllMoves();
-            if (!temp.isEmpty() && !piece.isCaptured())
+
+            if (temp == null) {
+                System.out.println("Null moves");
+
+            } else if (!temp.isEmpty() && !piece.isCaptured())
                 allPossibleMoves.add(temp);
         }
 
@@ -34,7 +38,7 @@ public class BluePlayer {
 
         for (ArrayList<LegalMove> movesArray : getAllPossibleMoves()) {
             for (LegalMove moves : movesArray) {
-                if (moves.getMoveAfter() == null)
+                if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1)
                     allPossibleValidMoves.add(moves);
             }
         }
@@ -55,8 +59,15 @@ public class BluePlayer {
             }
         }
         if (isValid) { // Valid Move
+            CheckerPiece currentPiece = move.getRootMove().getOldPiece();
+
             move.captureJumpedPieces();
-            move.getRootMove().getOldPiece().movePiece(move.getNewTile());
+            currentPiece.movePiece(move.getNewTile());
+
+            // Piece has reached king spot!
+            if (move.getNewTile().returnY() == 0) {
+                currentPiece.makeKing();
+            }
         } else { // Not valid
             throw new InvalidMoveException("Move is not valid!");
         }
