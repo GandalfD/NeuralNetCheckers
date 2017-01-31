@@ -18,7 +18,7 @@ import java.util.Random;
 public class CheckersMainMenu extends JFrame {
 
     // Main containers/components initialization
-    static GameBoard board;
+    private GameBoard board;
     private JButton test = new JButton("Move");
     private JButton getAllBlue = new JButton("Blue Moves");
     private JButton generation = new JButton("Generation");
