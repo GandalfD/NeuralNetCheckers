@@ -22,9 +22,9 @@ public class GameBoard extends JPanel {
     private GridBagConstraints c = new GridBagConstraints();
 
     // Constructor
-    public GameBoard(CheckerPiece[] redPieces, CheckerPiece[] bluePieces) {
-        this.bluePieces = bluePieces;
-        this.redPieces = redPieces;
+    public GameBoard(Player redPlayer, Player bluePlayer) {
+        this.bluePieces = bluePlayer.getPieces();
+        this.redPieces = redPlayer.getPieces();
 
         setLayout(new GridBagLayout());
     }

@@ -37,7 +37,7 @@ public class CheckersMainMenu extends JFrame {
         setLayout(new FlowLayout());
 
         // Sets up the game board
-        board = new GameBoard(redPlayer.getPieces(), bluePlayer.getPieces());
+        board = new GameBoard(redPlayer, bluePlayer);
         board.setUpGameBoard();
 
         // Button to test different features

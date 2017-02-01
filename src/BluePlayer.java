@@ -3,9 +3,10 @@ import java.util.ArrayList;
 /**
  * Represents the Blue Player
  */
-public class BluePlayer {
+public class BluePlayer implements Player {
 
     private CheckerPiece[] bluePieces = new CheckerPiece[12];
+    private boolean canJump = false;
 
     public BluePlayer() {
 
@@ -25,8 +26,23 @@ public class BluePlayer {
             if (temp == null) {
                 System.out.println("Null moves");
 
-            } else if (!temp.isEmpty() && !piece.isCaptured())
+            } else if (!temp.isEmpty() && !piece.isCaptured()) {
                 allPossibleMoves.add(temp);
+
+                for (LegalMove move : temp) {
+                    if (move.getJumpedTile() != null) { //Is there a jumped move
+                        canJump = true;
+                        break;
+                    }
+                }
+            } else {
+                for (LegalMove move : temp) {
+                    if (move.getJumpedTile() != null) { //Is there a jumped move
+                        canJump = true;
+                        break;
+                    }
+                }
+            }
         }
 
         return allPossibleMoves;
@@ -38,11 +54,19 @@ public class BluePlayer {
 
         for (ArrayList<LegalMove> movesArray : getAllPossibleMoves()) {
             for (LegalMove moves : movesArray) {
-                if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1)
-                    allPossibleValidMoves.add(moves);
+                if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1) // If move is "final move" (has no more jumps)
+                    if (canJump) { //Am I forced to jump or not
+                        if (moves.getJumpedTile() != null) { // Am forced to jump, only add pieces that can jump
+                            allPossibleValidMoves.add(moves);
+                        }
+                    } else {
+                        allPossibleValidMoves.add(moves); // Not forced to jump, add non jumped piece
+                    }
             }
         }
 
+        // Return values and reset jump flag
+        canJump = false;
         return allPossibleValidMoves;
     }
 
