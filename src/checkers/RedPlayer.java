@@ -1,5 +1,6 @@
 package checkers;
 
+import org.encog.ml.MLMethod;
 import org.encog.neural.neat.NEATNetwork;
 
 import java.util.ArrayList;
@@ -117,4 +118,5 @@ public class RedPlayer implements Player {
     public PieceColors getTeamColor() {
         return teamColor;
     }
+
 }

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class NeuralNet {
 
-    public LegalMove getMoveNN(NEATNetwork network, double[] board, Player player) {
+    public static LegalMove getMoveNN(NEATNetwork network, double[] board, Player player) {
         ArrayList<LegalMove> possibleValidMoves = player.getAllPossibleValidMoves();
 
         MLData boardData = new BasicMLData(board);
