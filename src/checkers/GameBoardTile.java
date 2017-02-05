@@ -1,10 +1,11 @@
+package checkers;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -138,7 +139,7 @@ public class GameBoardTile extends JLabel {
                 unselectTile();
 
             else if (e.getButton() == MouseEvent.BUTTON1) { // Mouse1
-                if (!isSelected) { // Should I check for tiles, or should I examine a LegalMove
+                if (!isSelected) { // Should I check for tiles, or should I examine a checkers.LegalMove
                     for (LegalMove move : currentPiece.getAllMoves()) {
                         System.out.println("Legal Move: " + move.getNewTile());
                         move.getNewTile().selectTile(move);

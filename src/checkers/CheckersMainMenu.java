@@ -1,9 +1,9 @@
+package checkers;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -24,8 +24,8 @@ public class CheckersMainMenu extends JFrame {
     private JButton generation = new JButton("Generation");
     private JButton capture = new JButton("Capture");
 
-    RedPlayer redPlayer = new RedPlayer();
-    BluePlayer bluePlayer = new BluePlayer();
+    RedPlayer redPlayer = new RedPlayer(board);
+    BluePlayer bluePlayer = new BluePlayer(board);
 
     // temp variable to control whose turn it is
     private boolean isRed = false;
@@ -95,7 +95,7 @@ public class CheckersMainMenu extends JFrame {
                     System.out.print("Waiting\n");
                 }
 
-            /*for (GameBoardTile list : redPlayer.getPieces()[8].checkAvailableTiles(redPlayer.getPieces()[8].getCurrentTile()))
+            /*for (checkers.GameBoardTile list : redPlayer.getPieces()[8].checkAvailableTiles(redPlayer.getPieces()[8].getCurrentTile()))
                 System.out.println(list);
                 */
             } else if (e.getSource() == getAllBlue) {

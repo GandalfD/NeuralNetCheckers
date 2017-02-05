@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+package checkers;
+
 import java.util.ArrayList;
 import java.util.Collections;
 

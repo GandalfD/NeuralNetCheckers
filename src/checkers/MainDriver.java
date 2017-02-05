@@ -1,3 +1,5 @@
+package checkers;
+
 /**
  * Created by Darwin on 1/3/2017.
  *
@@ -19,7 +21,7 @@
  * 1/16/17 - Fully working legal tile checker
  *         - Many annoying bugs fixed
  *
- * 1/25/17 - Added LegalMove Class
+ * 1/25/17 - Added checkers.LegalMove Class
  *         - Moves placed in a a weird single noded tree data structure
  *         - Can trace moves back and forward
  *         - Can analyze all possible moves of a piece and player, with what pieces will be captured

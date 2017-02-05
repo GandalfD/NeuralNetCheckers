@@ -1,9 +1,11 @@
+package checkers;
+
 import javax.swing.*;
 import java.awt.*;
 
 /**
  * Represents the whole gameboard
- * Utilizes the CheckerPiece and GameBoardTile classes
+ * Utilizes the checkers.CheckerPiece and checkers.GameBoardTile classes
  * Gets checkerpieces from player classes and initializes them
  */
 public class GameBoard extends JPanel {
@@ -91,7 +93,7 @@ public class GameBoard extends JPanel {
         // THE ABOVE WORKS BUT YOU DON'T WHY???!!?!?!?
         /* int counter = 0; // bad
          for (int i = 0; i < 4; i+=2) {
-            redPieces[4 + counter] = new CheckerPiece(PieceColors.RED, tile[1][i]);
+            redPieces[4 + counter] = new checkers.CheckerPiece(checkers.PieceColors.RED, tile[1][i]);
             tile[1][i].setUp(redPieces[counter]);
             System.out.println("Second " + counter);
             counter++;
@@ -142,5 +144,19 @@ public class GameBoard extends JPanel {
 
     public GameBoardTile[][] getTile() {
         return tile;
+    }
+
+    public GameBoardTile[] getTileOneArray() {
+        GameBoardTile[] oneDTile = new GameBoardTile[ROWS * COLUMNS];
+
+        int index = 0;
+        for (GameBoardTile[] row : tile) {
+            for (GameBoardTile rowTile : row) {
+                oneDTile[index] = rowTile;
+                index++;
+            }
+        }
+
+        return oneDTile;
     }
 }

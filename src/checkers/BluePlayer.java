@@ -1,17 +1,27 @@
+package checkers;
+
+import org.encog.neural.neat.NEATNetwork;
+
 import java.util.ArrayList;
 
 /**
- * Represents the Blue Player
+ * Represents the Blue checkers.Player
  */
 public class BluePlayer implements Player {
 
     private CheckerPiece[] bluePieces = new CheckerPiece[12];
+    private GameBoard board;
     private boolean canJump = false;
 
-    public BluePlayer() {
+    private final PieceColors teamColor = PieceColors.BLUE;
 
+    private NEATNetwork network;
+
+    public BluePlayer(GameBoard board) {
+        this.board = board;
     }
 
+    @Override
     public CheckerPiece[] getPieces() {
         return bluePieces;
     }
@@ -49,6 +59,7 @@ public class BluePlayer implements Player {
     }
 
     // Returns array of valid moves (factoring in force jumping)
+    @Override
     public ArrayList<LegalMove> getAllPossibleValidMoves() {
         ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
 
@@ -70,11 +81,16 @@ public class BluePlayer implements Player {
         return allPossibleValidMoves;
     }
 
+    @Override
+    public GameBoard getBoard() {
+        return board;
+    }
+
     public void movePiece(LegalMove move) throws InvalidMoveException {
         boolean isValid = false;
 
         if (getAllPossibleValidMoves().isEmpty())
-            throw new InvalidMoveException("Blue Player has no possible moves");
+            throw new InvalidMoveException("Blue checkers.Player has no possible moves");
 
         for (LegalMove validMove : getAllPossibleValidMoves()) {
             if (validMove.equals(move)) {
@@ -97,5 +113,8 @@ public class BluePlayer implements Player {
         }
     }
 
+    public PieceColors getTeamColor() {
+        return teamColor;
+    }
 
 }
