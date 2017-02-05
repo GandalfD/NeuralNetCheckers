@@ -96,4 +96,6 @@ public class BluePlayer implements Player {
             throw new InvalidMoveException("Move is not valid!");
         }
     }
+
+
 }

@@ -17,7 +17,6 @@ public class GameBoard extends JPanel {
     private CheckerPiece[] bluePieces;
     private CheckerPiece[] redPieces;
 
-
     // Layout manager *DONT USE GRIDLAYOUT*
     private GridBagConstraints c = new GridBagConstraints();
 
