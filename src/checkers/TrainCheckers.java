@@ -44,7 +44,7 @@ public class TrainCheckers extends JFrame {
         int redGamesWon = 0;
         int blueGamesWon = 0;
         int tieGameScenario = 0;
-        while (i != 1500) {
+        while (i != 500) {
             int winner = -2;
             redPlayer = new RedPlayer(board);
             bluePlayer = new BluePlayer(board);
@@ -63,10 +63,6 @@ public class TrainCheckers extends JFrame {
                         winner = 1;
                         System.out.println("Blue Won");
                         blueGamesWon++;
-                    } else if (board.whoWon() instanceof DrawPlayer) {
-                        winner = 4;
-                        System.out.println("Weird draw impossible scenario");
-                        tieGameScenario++;
                     } else {
                         if (isBlueTurn) {
 //                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);

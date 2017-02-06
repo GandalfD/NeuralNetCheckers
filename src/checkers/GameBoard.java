@@ -168,16 +168,10 @@ public class GameBoard extends JPanel {
     // Returns null if game is still going on
     public Player whoWon() {
         if (redPlayer.getAllPossibleValidMoves().size() == 0) {
-            if (redPlayer.allPiecesCaptured())
-                return bluePlayer;
-            else
-                return new DrawPlayer();
+            return bluePlayer;
         }
         else if (bluePlayer.getAllPossibleValidMoves().size() == 0 ) {
-            if (bluePlayer.allPiecesCaptured())
-                return redPlayer;
-            else
-                return new DrawPlayer();
+            return redPlayer;
         }
         else
             return null;
