@@ -159,9 +159,4 @@ public class CheckersMainMenu extends JFrame {
         }
     }
 
-    /*TODO:
-        Get Move Random (NN)
-        Move Random
-     */
-
 }

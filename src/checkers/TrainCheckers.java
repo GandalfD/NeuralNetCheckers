@@ -44,15 +44,12 @@ public class TrainCheckers extends JFrame {
         int redGamesWon = 0;
         int blueGamesWon = 0;
         int tieGameScenario = 0;
-        while (i != 1000) {
+        while (i != 1500) {
             int winner = -2;
             redPlayer = new RedPlayer(board);
             bluePlayer = new BluePlayer(board);
             board = new GameBoard(redPlayer, bluePlayer);
             board.setUpGameBoard();
-            add(board);
-            repaint();
-            validate();
             Random rng = new Random();
 
             while (winner == -2) {
@@ -74,6 +71,7 @@ public class TrainCheckers extends JFrame {
                         if (isBlueTurn) {
 //                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
 //                            bluePlayer.movePiece(nextMove);
+                            // TODO Uncomment the lines above and comment the things below @Ethan
                             ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
                             int upperBound = possibleMoves.size();
                             LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
