@@ -1,14 +1,10 @@
 package checkers;
 
-import jdk.nashorn.internal.scripts.JO;
-import neural.NeuralNet;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -21,15 +17,24 @@ public class TrainCheckers extends JFrame {
     private BluePlayer bluePlayer;
 
     private JButton start = new JButton("Start");
+    private JButton startGUI = new JButton("Graphical Start");
+
+    private boolean isBlueTurn = true;
+
+    private int winner = -2;
+    private int redGamesWon = 0;
+    private int blueGamesWon = 0;
+
     public TrainCheckers() {
         super("Train Neural Network");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        //setLayout(new GridLayout());
+        setLayout(new GridLayout());
 
         start.addActionListener(new ButtonListener());
-
+        startGUI.addActionListener(new ButtonListener());
         add(start);
+        add(startGUI);
     }
 
     public void display() {
@@ -37,57 +42,66 @@ public class TrainCheckers extends JFrame {
         setVisible(true);
     }
 
-    private void startTraining() {
-        boolean isBlueTurn = true;
+    private void setUp() {
+        winner = -2;
+        redGamesWon = 0;
+        blueGamesWon = 0;
 
+        redPlayer = new RedPlayer(board);
+        bluePlayer = new BluePlayer(board);
+        board = new GameBoard(redPlayer, bluePlayer);
+        board.setUpGameBoard();
+    }
+
+    private void playGame() {
         int i = 0;
-        int redGamesWon = 0;
-        int blueGamesWon = 0;
-        int tieGameScenario = 0;
         while (i != 500) {
-            int winner = -2;
-            redPlayer = new RedPlayer(board);
-            bluePlayer = new BluePlayer(board);
-            board = new GameBoard(redPlayer, bluePlayer);
-            board.setUpGameBoard();
-            Random rng = new Random();
-
+            setUp();
             while (winner == -2) {
-                repaint();
-                try {
-                    if (board.whoWon() == redPlayer) {
-                        winner = -1;
-                        System.out.println("Red Won");
-                        redGamesWon++;
-                    } else if (board.whoWon() == bluePlayer) {
-                        winner = 1;
-                        System.out.println("Blue Won");
-                        blueGamesWon++;
-                    } else {
-                        if (isBlueTurn) {
-                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
-                            bluePlayer.movePiece(nextMove);
-                            // TODO Uncomment the lines above and comment the things below @Ethan
-//                            ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
-//                            int upperBound = possibleMoves.size();
-//                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-//                            bluePlayer.movePiece(randomMove); // executes random move
-//                            isBlueTurn = false;
-                        } else { // Red's turn
-                            ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
-                            int upperBound = possibleMoves.size();
-                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-                            redPlayer.movePiece(randomMove); // executes random move
-                            isBlueTurn = true;
-                        }
-                    }
-                } catch (InvalidMoveException ime) {
-                    ime.printCustomError();
-                }
+                takeTurn();
             }
 
-            // Comment this section to just run games forever
-            // This is just for debugging
+            i++;
+        }
+        System.out.println("Red Games: " + redGamesWon);
+        System.out.println("Blue Games: " + blueGamesWon);
+    }
+
+    private void takeTurn() {
+        Random rng = new Random();
+        try {
+            if (board.whoWon() == redPlayer) {
+                winner = -1;
+                System.out.println("Red Won");
+                redGamesWon++;
+            } else if (board.whoWon() == bluePlayer) {
+                winner = 1;
+                System.out.println("Blue Won");
+                blueGamesWon++;
+            } else {
+                if (isBlueTurn) {
+//                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
+//                            bluePlayer.movePiece(nextMove);
+                    // TODO Uncomment the lines above and comment the things below @Ethan
+                    ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
+                    int upperBound = possibleMoves.size();
+                    LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                    bluePlayer.movePiece(randomMove); // executes random move
+                    isBlueTurn = false;
+
+                } else { // Red's turn
+                    ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
+                    int upperBound = possibleMoves.size();
+                    LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                    redPlayer.movePiece(randomMove); // executes random move
+                    isBlueTurn = true;
+                }
+            }
+        } catch (InvalidMoveException ime) {
+            ime.printCustomError();
+        }
+    // Comment this section to just run games forever
+    // This is just for debugging
 //            int choice = JOptionPane.showConfirmDialog(this, "View game?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 //            if (choice == 0) {
 //                BoardViewer view = new BoardViewer(board);
@@ -96,11 +110,6 @@ public class TrainCheckers extends JFrame {
 //
 //                }
 //            }
-            i++;
-        }
-        System.out.println("Red Games: " + redGamesWon);
-        System.out.println("Blue Games: " + blueGamesWon);
-        System.out.println("Tie Games: " + tieGameScenario);
     }
 
     private class ButtonListener implements ActionListener {
@@ -108,7 +117,9 @@ public class TrainCheckers extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == start) {
-                startTraining();
+                playGame();
+            } else if (e.getSource() == startGUI) {
+                new PlayGUI();
             }
         }
     }
@@ -123,8 +134,42 @@ public class TrainCheckers extends JFrame {
 
         }
 
+    }
 
+    private class PlayGUI extends JFrame implements ActionListener {
 
+        private JButton turn = new JButton("Next Turn");
+
+        public PlayGUI() {
+             super("Checkers");
+             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+             setLayout(new GridLayout());
+
+             turn.addActionListener(this);
+             add(turn);
+
+             setUp();
+             add(board);
+
+             pack();
+             setVisible(true);
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == turn) {
+                if (winner == -2)
+                    takeTurn();
+                else {
+                    int choice = JOptionPane.showConfirmDialog(this, "Start new game?", "Question", JOptionPane.YES_NO_OPTION);
+                    if (choice == 0) {
+                        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                        new PlayGUI();
+                    }
+                }
+            }
+        }
     }
 
 }
