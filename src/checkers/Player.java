@@ -11,4 +11,5 @@ public interface Player  {
     CheckerPiece[] getPieces();
     ArrayList<LegalMove> getAllPossibleValidMoves();
     GameBoard getBoard();
+    boolean allPiecesCaptured();
 }

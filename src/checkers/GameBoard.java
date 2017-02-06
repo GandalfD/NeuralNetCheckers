@@ -19,6 +19,9 @@ public class GameBoard extends JPanel {
     private CheckerPiece[] bluePieces;
     private CheckerPiece[] redPieces;
 
+    private Player redPlayer;
+    private Player bluePlayer;
+
     // Layout manager *DONT USE GRIDLAYOUT*
     private GridBagConstraints c = new GridBagConstraints();
 
@@ -26,6 +29,9 @@ public class GameBoard extends JPanel {
     public GameBoard(Player redPlayer, Player bluePlayer) {
         this.bluePieces = bluePlayer.getPieces();
         this.redPieces = redPlayer.getPieces();
+
+        this.redPlayer = redPlayer;
+        this.bluePlayer = bluePlayer;
 
         setLayout(new GridBagLayout());
     }
@@ -126,7 +132,6 @@ public class GameBoard extends JPanel {
         for (int j = 1; j < 8; j += 2) {
             redPieces[counter] = new CheckerPiece(PieceColors.RED, tile[rowIndex][j], counter, this);
             tile[rowIndex][j].setUp(redPieces[counter]);
-            System.out.println(counter);
             counter++;
         }
     }
@@ -136,7 +141,6 @@ public class GameBoard extends JPanel {
         for (int j = 1; j < 8; j+=2) {
             bluePieces[counter] = new CheckerPiece(PieceColors.BLUE, tile[rowIndex][j], counter, this);
             tile[rowIndex][j].setUp(bluePieces[counter]);
-            System.out.println(counter);
             counter++;
         }
 
@@ -158,5 +162,24 @@ public class GameBoard extends JPanel {
         }
 
         return oneDTile;
+    }
+
+    // Returns winning player
+    // Returns null if game is still going on
+    public Player whoWon() {
+        if (redPlayer.getAllPossibleValidMoves().size() == 0) {
+            if (redPlayer.allPiecesCaptured())
+                return bluePlayer;
+            else
+                return new DrawPlayer();
+        }
+        else if (bluePlayer.getAllPossibleValidMoves().size() == 0 ) {
+            if (bluePlayer.allPiecesCaptured())
+                return redPlayer;
+            else
+                return new DrawPlayer();
+        }
+        else
+            return null;
     }
 }

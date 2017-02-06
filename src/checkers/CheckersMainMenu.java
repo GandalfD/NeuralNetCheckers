@@ -23,6 +23,7 @@ public class CheckersMainMenu extends JFrame {
     private JButton getAllBlue = new JButton("Blue Moves");
     private JButton generation = new JButton("Generation");
     private JButton capture = new JButton("Capture");
+    private JButton train = new JButton("Train");
 
     RedPlayer redPlayer = new RedPlayer(board);
     BluePlayer bluePlayer = new BluePlayer(board);
@@ -51,7 +52,9 @@ public class CheckersMainMenu extends JFrame {
         testPane.add(capture);
 
         generation.addActionListener(new ButtonListener());
+        train.addActionListener(new ButtonListener());
         add(generation);
+        add(train);
         add(testPane);
         add(board);
     }
@@ -113,24 +116,32 @@ public class CheckersMainMenu extends JFrame {
             } else if (e.getSource() == capture) {
                 Random rng = new Random();
                 try {
-                    if (!isRed) {
-                        ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
-                        int upperBound = possibleMoves.size();
-                        LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-                        bluePlayer.movePiece(randomMove); // executes random move
-                        isRed = !isRed;
-                    } else {
-                        ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
-                        int upperBound = possibleMoves.size();
-                        LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-                        redPlayer.movePiece(randomMove); // executes random move
-                        isRed = !isRed;
+                    if (board.whoWon() == redPlayer)
+                        System.out.println("red");
+                    else if (board.whoWon() == bluePlayer)
+                        System.out.println("blue");
+                    else {
+                        if (!isRed) {
+                            ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
+                            int upperBound = possibleMoves.size();
+                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                            bluePlayer.movePiece(randomMove); // executes random move
+                            isRed = !isRed;
+                        } else {
+                            ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
+                            int upperBound = possibleMoves.size();
+                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+                            redPlayer.movePiece(randomMove); // executes random move
+                            isRed = !isRed;
+                        }
                     }
 
                 } catch (InvalidMoveException ime) {
                     ime.printCustomError();
                 }
+
             }
+
         }
     }
 
@@ -141,7 +152,16 @@ public class CheckersMainMenu extends JFrame {
             if (e.getSource() == generation) {
                 GenerationViewer view = new GenerationViewer();
                 view.display();
+            } else if (e.getSource() == train) {
+                TrainCheckers view = new TrainCheckers();
+                view.display();
             }
         }
     }
+
+    /*TODO:
+        Get Move Random (NN)
+        Move Random
+     */
+
 }

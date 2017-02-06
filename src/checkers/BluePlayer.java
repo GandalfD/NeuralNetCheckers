@@ -4,6 +4,7 @@ import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
 import org.encog.neural.neat.NEATNetwork;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +37,7 @@ public class BluePlayer implements Player {
             ArrayList<LegalMove> temp = piece.getAllMoves();
 
             if (temp == null) {
-                System.out.println("Null moves");
+                //System.out.println("Null moves");
 
             } else if (!temp.isEmpty() && !piece.isCaptured()) {
                 allPossibleMoves.add(temp);
@@ -65,7 +66,12 @@ public class BluePlayer implements Player {
     public ArrayList<LegalMove> getAllPossibleValidMoves() {
         ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
 
-        for (ArrayList<LegalMove> movesArray : getAllPossibleMoves()) {
+        // If no moves available, return empty array
+        ArrayList<ArrayList<LegalMove>> possibleMoves = getAllPossibleMoves();
+        if (possibleMoves.size() == 0)
+            return allPossibleValidMoves;
+
+        for (ArrayList<LegalMove> movesArray : possibleMoves) {
             for (LegalMove moves : movesArray) {
                 if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1) // If move is "final move" (has no more jumps)
                     if (canJump) { //Am I forced to jump or not
@@ -119,5 +125,40 @@ public class BluePlayer implements Player {
         return teamColor;
     }
 
+    public double[] convertBoard() {
+        GameBoardTile[] tileArray = board.getTileOneArray();
 
+        double[] boardData = new double[tileArray.length];
+        for (int i = 0; i < tileArray.length; i++) {
+            CheckerPiece piece = tileArray[i].getCurrentPiece();
+
+            if (piece == null) {
+                boardData[i] = 0;
+            } else if (piece.getColor() == PieceColors.BLUE) {
+                if (piece.getIsKing())
+                    boardData[i] = 1;
+                else
+                    boardData[i] = 0.5; // normal piece
+            } else { // Tile has red piece
+                if (piece.getIsKing())
+                    boardData[i] = -1;
+                else
+                    boardData[i] = -0.5; // normal piece
+            }
+        }
+
+        return boardData;
+    }
+
+    public boolean allPiecesCaptured() {
+        for (CheckerPiece piece : bluePieces) {
+            if (!piece.isCaptured())
+                return false;
+        }
+        return true;
+    }
+
+    public NEATNetwork getNetwork() {
+        return network;
+    }
 }

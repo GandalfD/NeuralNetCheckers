@@ -35,7 +35,7 @@ public class RedPlayer implements Player {
             ArrayList<LegalMove> temp = piece.getAllMoves();
 
             if (temp == null) {
-                System.out.println("Null moves");
+                //System.out.println("Null moves");
 
             } else if (!temp.isEmpty() && !piece.isCaptured()) {
                 allPossibleMoves.add(temp);
@@ -119,4 +119,40 @@ public class RedPlayer implements Player {
         return teamColor;
     }
 
+    public double[] convertBoard() {
+        GameBoardTile[] tileArray = board.getTileOneArray();
+
+        double[] boardData = new double[tileArray.length];
+        for (int i = 0; i < tileArray.length; i++) {
+            CheckerPiece piece = tileArray[i].getCurrentPiece();
+
+            if (piece == null) {
+                boardData[i] = 0;
+            } else if (piece.getColor() == PieceColors.BLUE) {
+                if (piece.getIsKing())
+                    boardData[i] = -1;
+                else
+                    boardData[i] = -0.5; // normal piece
+            } else { // Tile has red piece
+                if (piece.getIsKing())
+                    boardData[i] = 1;
+                else
+                    boardData[i] = 0.5; // normal piece
+            }
+        }
+
+        return boardData;
+    }
+
+    public boolean allPiecesCaptured() {
+        for (CheckerPiece piece : redPieces) {
+            if (!piece.isCaptured())
+                return false;
+        }
+        return true;
+    }
+
+    public NEATNetwork getNetwork() {
+        return network;
+    }
 }
