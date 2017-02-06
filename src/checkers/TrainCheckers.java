@@ -65,14 +65,14 @@ public class TrainCheckers extends JFrame {
                         blueGamesWon++;
                     } else {
                         if (isBlueTurn) {
-//                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
-//                            bluePlayer.movePiece(nextMove);
+                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
+                            bluePlayer.movePiece(nextMove);
                             // TODO Uncomment the lines above and comment the things below @Ethan
-                            ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
-                            int upperBound = possibleMoves.size();
-                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-                            bluePlayer.movePiece(randomMove); // executes random move
-                            isBlueTurn = false;
+//                            ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
+//                            int upperBound = possibleMoves.size();
+//                            LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+//                            bluePlayer.movePiece(randomMove); // executes random move
+//                            isBlueTurn = false;
                         } else { // Red's turn
                             ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
                             int upperBound = possibleMoves.size();
