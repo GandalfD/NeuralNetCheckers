@@ -1,5 +1,8 @@
 package checkers;
 
+import neural.NeuralNet;
+import org.encog.neural.neat.NEATNetwork;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +14,7 @@ import java.util.Random;
 /**
  * Created by darwin on 2/5/17.
  */
-public class TrainCheckers extends JFrame {
+public class CheckersGame extends JFrame {
     private GameBoard board;
     private RedPlayer redPlayer;
     private BluePlayer bluePlayer;
@@ -25,7 +28,7 @@ public class TrainCheckers extends JFrame {
     private int redGamesWon = 0;
     private int blueGamesWon = 0;
 
-    public TrainCheckers() {
+    public CheckersGame() {
         super("Train Neural Network");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -42,7 +45,7 @@ public class TrainCheckers extends JFrame {
         setVisible(true);
     }
 
-    private void setUp() {
+    private void initializeGame() {
         winner = -2;
         redGamesWon = 0;
         blueGamesWon = 0;
@@ -53,12 +56,12 @@ public class TrainCheckers extends JFrame {
         board.setUpGameBoard();
     }
 
-    private void playGame() {
+    public void playGame() {
         int i = 0;
         while (i != 500) {
-            setUp();
+            initializeGame();
             while (winner == -2) {
-                takeTurn();
+                turn();
             }
 
             i++;
@@ -67,7 +70,7 @@ public class TrainCheckers extends JFrame {
         System.out.println("Blue Games: " + blueGamesWon);
     }
 
-    private void takeTurn() {
+    public void turn() {
         Random rng = new Random();
         try {
             if (board.whoWon() == redPlayer) {
@@ -79,17 +82,17 @@ public class TrainCheckers extends JFrame {
                 System.out.println("Blue Won");
                 blueGamesWon++;
             } else {
-                if (isBlueTurn) {
-//                            LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
-//                            bluePlayer.movePiece(nextMove);
+                if (isBlueTurn) { //Blue turn (NN)
+                    LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
+                    bluePlayer.movePiece(nextMove);
                     // TODO Uncomment the lines above and comment the things below @Ethan
-                    ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
+                    /*ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
                     int upperBound = possibleMoves.size();
                     LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
                     bluePlayer.movePiece(randomMove); // executes random move
-                    isBlueTurn = false;
+                    isBlueTurn = false;*/
 
-                } else { // Red's turn
+                } else { // Red's turn (random)
                     ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
                     int upperBound = possibleMoves.size();
                     LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
@@ -100,8 +103,9 @@ public class TrainCheckers extends JFrame {
         } catch (InvalidMoveException ime) {
             ime.printCustomError();
         }
-    // Comment this section to just run games forever
-    // This is just for debugging
+
+        // Comment this section to just run games forever
+        // This is just for debugging
 //            int choice = JOptionPane.showConfirmDialog(this, "View game?", "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 //            if (choice == 0) {
 //                BoardViewer view = new BoardViewer(board);
@@ -141,18 +145,18 @@ public class TrainCheckers extends JFrame {
         private JButton turn = new JButton("Next Turn");
 
         public PlayGUI() {
-             super("Checkers");
-             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-             setLayout(new GridLayout());
+            super("Checkers");
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLayout(new GridLayout());
 
-             turn.addActionListener(this);
-             add(turn);
+            turn.addActionListener(this);
+            add(turn);
 
-             setUp();
-             add(board);
+            initializeGame();
+            add(board);
 
-             pack();
-             setVisible(true);
+            pack();
+            setVisible(true);
 
         }
 
@@ -160,7 +164,7 @@ public class TrainCheckers extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == turn) {
                 if (winner == -2)
-                    takeTurn();
+                    turn();
                 else {
                     int choice = JOptionPane.showConfirmDialog(this, "Start new game?", "Question", JOptionPane.YES_NO_OPTION);
                     if (choice == 0) {

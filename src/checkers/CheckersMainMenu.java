@@ -153,7 +153,7 @@ public class CheckersMainMenu extends JFrame {
                 GenerationViewer view = new GenerationViewer();
                 view.display();
             } else if (e.getSource() == train) {
-                TrainCheckers view = new TrainCheckers();
+                CheckersGame view = new CheckersGame();
                 view.display();
             }
         }
