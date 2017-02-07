@@ -30,6 +30,7 @@ public class MainTrain {
     public static void main(String[] args) {
         readFiles();
         //Train
+        System.out.println("Starting to train");
         actuallyTrain();
     }
 
@@ -77,6 +78,7 @@ public class MainTrain {
         train = NEATUtil.constructNEATTrainer(pop, new PlayerScoreRandom());
 
         //Train to beat
+        System.out.println("Beat");
         while (true) {
             train.iteration();
             playerData.pop = pop;

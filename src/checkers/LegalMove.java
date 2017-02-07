@@ -116,7 +116,7 @@ public class LegalMove {
 
                 moveToCheck = moveToCheck.getMoveBefore();
             } else {
-                System.out.println("Move " + this + " has no jumped pieces");
+                //System.out.println("Move " + this + " has no jumped pieces");
                 moveToCheck = moveToCheck.getMoveBefore();
             }
         }
