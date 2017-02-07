@@ -24,6 +24,10 @@ public class BluePlayer implements Player {
         this.board = board;
     }
 
+    public BluePlayer() {
+
+    }
+
     @Override
     public CheckerPiece[] getPieces() {
         return bluePieces;
@@ -128,22 +132,35 @@ public class BluePlayer implements Player {
     public double[] convertBoard() {
         GameBoardTile[] tileArray = board.getTileOneArray();
 
-        double[] boardData = new double[tileArray.length];
+        int count = 0;
+        double[] boardData = new double[(tileArray.length / 2)];
         for (int i = 0; i < tileArray.length; i++) {
             CheckerPiece piece = tileArray[i].getCurrentPiece();
 
             if (piece == null) {
-                boardData[i] = 0;
+                if (tileArray[i].isMoveableTile()) {
+                    boardData[count] = 0;
+                    count++;
+                }
+                else;
             } else if (piece.getColor() == PieceColors.BLUE) {
-                if (piece.getIsKing())
-                    boardData[i] = 1;
-                else
-                    boardData[i] = 0.5; // normal piece
+                if (piece.getIsKing()) {
+                    boardData[count] = 1;
+                    count++;
+                }
+                else {
+                    boardData[count] = 0.5; // normal piece
+                    count++;
+                }
             } else { // Tile has red piece
-                if (piece.getIsKing())
-                    boardData[i] = -1;
-                else
-                    boardData[i] = -0.5; // normal piece
+                if (piece.getIsKing()) {
+                    boardData[count] = -1;
+                    count++;
+                }
+                else {
+                    boardData[count] = -0.5; // normal piece
+                    count++;
+                }
             }
         }
 
@@ -160,5 +177,13 @@ public class BluePlayer implements Player {
 
     public NEATNetwork getNetwork() {
         return network;
+    }
+
+    public void setNetwork(NEATNetwork network) {
+        this.network = network;
+    }
+
+    public void setBoard(GameBoard board) {
+        this.board = board;
     }
 }

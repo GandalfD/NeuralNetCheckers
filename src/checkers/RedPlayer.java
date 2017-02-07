@@ -22,6 +22,10 @@ public class RedPlayer implements Player {
         this.board = board;
     }
 
+    public RedPlayer() {
+
+    }
+
     @Override
     public CheckerPiece[] getPieces() {
         return redPieces;
@@ -152,7 +156,18 @@ public class RedPlayer implements Player {
         return true;
     }
 
+
+    @Override
+    public void setNetwork(NEATNetwork network) {
+        this.network = network;
+    }
+
+    @Override
     public NEATNetwork getNetwork() {
         return network;
+    }
+
+    public void setBoard(GameBoard board) {
+        this.board = board;
     }
 }

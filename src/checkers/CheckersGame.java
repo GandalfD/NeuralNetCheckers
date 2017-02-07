@@ -45,14 +45,16 @@ public class CheckersGame extends JFrame {
         setVisible(true);
     }
 
-    private void initializeGame() {
+    public void initializeGame() {
         winner = -2;
         redGamesWon = 0;
         blueGamesWon = 0;
-
-        redPlayer = new RedPlayer(board);
-        bluePlayer = new BluePlayer(board);
+        redPlayer = new RedPlayer();
+        bluePlayer = new BluePlayer();
         board = new GameBoard(redPlayer, bluePlayer);
+        redPlayer.setBoard(board);
+        bluePlayer.setBoard(board);
+
         board.setUpGameBoard();
     }
 
@@ -114,6 +116,18 @@ public class CheckersGame extends JFrame {
 //
 //                }
 //            }
+    }
+
+    public Player getRedPlayer() {
+        return redPlayer;
+    }
+
+    public Player getBluePlayer() {
+        return bluePlayer;
+    }
+
+    public int getWinner() {
+        return winner;
     }
 
     private class ButtonListener implements ActionListener {

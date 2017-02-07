@@ -32,6 +32,8 @@ public class GameBoardTile extends JLabel {
     private boolean isSelected = false;
     private LegalMove possibleTileMove;
 
+    private boolean isMoveableTile;
+
     public GameBoardTile(TileColors color, int yGrid, int xGrid) {
         tilecolor = color;
         this.yGrid = yGrid;
@@ -41,8 +43,10 @@ public class GameBoardTile extends JLabel {
         try {
             if (tilecolor.equals(TileColors.BLACK)) {
                 tile = ImageIO.read(getClass().getResource("BlackTile.png"));
+                isMoveableTile = false;
             } else {
                 tile = ImageIO.read(getClass().getResource("GreyTile.png"));
+                isMoveableTile = true;
             }
             selected = ImageIO.read(getClass().getResource("Selected.png"));
         } catch (IOException io) {
@@ -119,6 +123,10 @@ public class GameBoardTile extends JLabel {
 
     public int returnY() {
         return yGrid;
+    }
+
+    public boolean isMoveableTile() {
+        return isMoveableTile;
     }
 
     @Override

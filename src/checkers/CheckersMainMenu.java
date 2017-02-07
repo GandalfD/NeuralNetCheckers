@@ -25,8 +25,8 @@ public class CheckersMainMenu extends JFrame {
     private JButton capture = new JButton("Capture");
     private JButton train = new JButton("Train");
 
-    RedPlayer redPlayer = new RedPlayer(board);
-    BluePlayer bluePlayer = new BluePlayer(board);
+    private RedPlayer redPlayer = new RedPlayer(board);
+    private BluePlayer bluePlayer = new BluePlayer(board);
 
     // temp variable to control whose turn it is
     private boolean isRed = false;
