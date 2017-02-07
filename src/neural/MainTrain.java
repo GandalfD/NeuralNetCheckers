@@ -78,7 +78,7 @@ public class MainTrain {
         train = NEATUtil.constructNEATTrainer(pop, new PlayerScoreRandom());
 
         //Train to beat
-        System.out.println("Beat");
+
         while (true) {
             train.iteration();
             playerData.pop = pop;
@@ -86,6 +86,7 @@ public class MainTrain {
             playerData.epoch++;
 
             NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.best);
+            System.out.println("Beat");
             playerData.bestFitness = testScore.scorePlayer();
 
             System.out.println("Epoch "+playerData.epoch+" Score: "+playerData.bestFitness);

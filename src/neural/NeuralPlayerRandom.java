@@ -27,9 +27,10 @@ public class NeuralPlayerRandom {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(this.network);
-        for (int i = 0; i < 9; i++)
-            if (game.getWinner() == -2)
-                game.turn();
+        //game.playGUI();
+        while (game.getWinner() == -2) {
+            game.turn();
+        }
         return game.getWinner();
     }
 }

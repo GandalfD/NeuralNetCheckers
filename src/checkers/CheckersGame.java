@@ -22,7 +22,7 @@ public class CheckersGame extends JFrame {
     private JButton start = new JButton("Start");
     private JButton startGUI = new JButton("Graphical Start");
 
-    private boolean isBlueTurn = true;
+    private boolean isBlueTurn;
 
     private int winner = -2;
     private int redGamesWon = 0;
@@ -55,6 +55,7 @@ public class CheckersGame extends JFrame {
         redPlayer.setBoard(board);
         bluePlayer.setBoard(board);
 
+        isBlueTurn = false;
         board.setUpGameBoard();
     }
 
@@ -87,6 +88,7 @@ public class CheckersGame extends JFrame {
                 if (isBlueTurn) { //Blue turn (NN)
                     LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
                     bluePlayer.movePiece(nextMove);
+                    isBlueTurn = false;
                     // TODO Uncomment the lines above and comment the things below @Ethan
                     /*ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
                     int upperBound = possibleMoves.size();
@@ -116,6 +118,10 @@ public class CheckersGame extends JFrame {
 //
 //                }
 //            }
+    }
+
+    public void playGUI() {
+        new PlayGUI();
     }
 
     public Player getRedPlayer() {
@@ -166,7 +172,6 @@ public class CheckersGame extends JFrame {
             turn.addActionListener(this);
             add(turn);
 
-            initializeGame();
             add(board);
 
             pack();
@@ -182,8 +187,8 @@ public class CheckersGame extends JFrame {
                 else {
                     int choice = JOptionPane.showConfirmDialog(this, "Start new game?", "Question", JOptionPane.YES_NO_OPTION);
                     if (choice == 0) {
-                        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-                        new PlayGUI();
+//                        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+//                        new PlayGUI();
                     }
                 }
             }
