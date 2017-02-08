@@ -13,7 +13,8 @@ import java.util.ArrayList;
  * Created by darwin on 2/4/17.
  */
 public class NeuralNet {
-
+    public static int testint = 0;
+    public static int otherint = 0;
     public static LegalMove getMoveNN(NEATNetwork network, double[] board, Player player) {
         ArrayList<LegalMove> possibleValidMoves = player.getAllPossibleValidMoves();
 
@@ -45,14 +46,18 @@ public class NeuralNet {
             isFirstIteration = false;
 
             //If nothing was found, return first valid move
-            if(!foundAnything)
+            if(!foundAnything) {
+                otherint++;
                 return possibleValidMoves.get(0);
+            }
 
             // Checks if highest move is valid
             GameBoardTile tileToCheck = player.getBoard().getTileOneArray()[indexOfHighestValue];
             for (LegalMove moveToCheck : possibleValidMoves) {
-                if (moveToCheck.getNewTile().equals(tileToCheck))
+                if (moveToCheck.getNewTile().equals(tileToCheck)) {
+                    testint++;
                     return moveToCheck;
+                }
             }
 
         } while (true);

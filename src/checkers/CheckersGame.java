@@ -82,15 +82,21 @@ public class CheckersGame extends JFrame {
         try {
             if (turnNumber == 150) {
                 winner = 0;
-                System.out.println("Tie");
+                System.out.println("Tie " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                NeuralNet.testint = 0;
+                NeuralNet.otherint = 0;
             }
             if (board.whoWon() == redPlayer) {
                 winner = -1;
-                System.out.println("Red Won");
+                System.out.println("Red Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                NeuralNet.testint = 0;
+                NeuralNet.otherint = 0;
                 redGamesWon++;
             } else if (board.whoWon() == bluePlayer) {
                 winner = 1;
-                System.out.println("Blue Won");
+                System.out.println("Blue Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                NeuralNet.testint = 0;
+                NeuralNet.otherint = 0;
                 blueGamesWon++;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
