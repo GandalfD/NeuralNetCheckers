@@ -16,8 +16,8 @@ import java.util.Random;
  */
 public class CheckersGame extends JFrame {
     private GameBoard board;
-    private RedPlayer redPlayer;
-    private BluePlayer bluePlayer;
+    private Player redPlayer;
+    private Player bluePlayer;
 
     private JButton start = new JButton("Start");
     private JButton startGUI = new JButton("Graphical Start");

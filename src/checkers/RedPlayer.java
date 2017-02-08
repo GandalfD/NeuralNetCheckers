@@ -10,20 +10,16 @@ import java.util.ArrayList;
  */
 public class RedPlayer extends Player {
 
-    private CheckerPiece[] redPieces = new CheckerPiece[12];
-    private GameBoard board;
-    private boolean canJump = false;
-
     private final PieceColors teamColor = PieceColors.RED;
 
     private NEATNetwork network;
 
     public RedPlayer(GameBoard board) {
-        this.board = board;
+        super(board);
     }
 
     public RedPlayer() {
-
+        super();
     }
 
     @Override
@@ -33,7 +29,7 @@ public class RedPlayer extends Player {
 
     @Override
     public double[] convertBoard() {
-        GameBoardTile[] tileArray = board.getTileOneArray();
+        GameBoardTile[] tileArray = getBoard().getTileOneArray();
 
         double[] boardData = new double[tileArray.length];
         for (int i = 0; i < tileArray.length; i++) {
@@ -55,6 +51,11 @@ public class RedPlayer extends Player {
         }
 
         return boardData;
+    }
+
+    @Override
+    protected boolean checkKing(GameBoardTile tile) {
+        return (tile.returnY() == 7);
     }
 
 

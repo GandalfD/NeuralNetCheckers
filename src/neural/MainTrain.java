@@ -83,7 +83,7 @@ public class MainTrain {
         while (true) {
             train.iteration();
             playerData.setPop(pop);
-            playerData.setBest((MLMethod) train.getCODEC().decode(pop.getBestGenome()));
+            playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
             playerData.incrementEpoch();
 
             NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());

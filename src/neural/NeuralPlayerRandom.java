@@ -22,14 +22,14 @@ public class NeuralPlayerRandom {
         return n/2;
     }
 
-    public int doIteration() {
+    private int doIteration() {
 
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(this.network);
-        //game.playGUI();
+        game.playGUI();
         while (game.getWinner() == -2) {
-            game.turn();
+            //game.turn();
         }
         return game.getWinner();
     }

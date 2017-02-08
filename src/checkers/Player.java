@@ -118,7 +118,7 @@ public abstract class Player  {
             currentPiece.movePiece(move.getNewTile());
 
             // Piece has reached king spot!
-            if (move.getNewTile().returnY() == 0) {
+            if (checkKing(move.getNewTile())) {
                 currentPiece.makeKing();
             }
         } else { // Not valid
@@ -138,7 +138,9 @@ public abstract class Player  {
         return network;
     }
 
-    abstract PieceColors getTeamColor();
+    public abstract PieceColors getTeamColor();
 
-    abstract double[] convertBoard();
+    public abstract double[] convertBoard();
+
+    protected abstract boolean checkKing(GameBoardTile tile);
 }
