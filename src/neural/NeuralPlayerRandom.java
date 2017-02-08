@@ -17,6 +17,7 @@ public class NeuralPlayerRandom {
     public int scorePlayer() {
         int n = 0;
         for (int i=0; i<100; i++) {
+            System.out.print("I: " + i + " ");
             n += this.doIteration();
         }
         return n/2;
@@ -27,9 +28,9 @@ public class NeuralPlayerRandom {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(this.network);
-        game.playGUI();
+        //game.playGUI();
         while (game.getWinner() == -2) {
-            //game.turn();
+            game.turn();
         }
         return game.getWinner();
     }

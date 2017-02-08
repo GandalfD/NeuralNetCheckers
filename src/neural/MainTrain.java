@@ -28,7 +28,7 @@ public class MainTrain {
     private static final int numExtraRounds = 250;
 
     public static final int INPUT_NEURONS = 32;
-    public static final int OUTPUT_NEURONS = 10;
+    public static final int OUTPUT_NEURONS = 32;
 
     public static void main(String[] args) {
         readFiles();
@@ -81,11 +81,14 @@ public class MainTrain {
         //Train to beat
 
         while (true) {
+            System.out.println("Starting iteration");
             train.iteration();
+            System.out.println("Iteration Complete");
             playerData.setPop(pop);
             playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
             playerData.incrementEpoch();
 
+            System.out.println("Creating testScore");
             NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
             System.out.println("Beat");
             playerData.setBestFitness(testScore.scorePlayer());

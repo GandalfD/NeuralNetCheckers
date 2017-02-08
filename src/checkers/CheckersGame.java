@@ -28,6 +28,8 @@ public class CheckersGame extends JFrame {
     private int redGamesWon = 0;
     private int blueGamesWon = 0;
 
+    private int turnNumber = 0;
+
     public CheckersGame() {
         super("Train Neural Network");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,6 +51,8 @@ public class CheckersGame extends JFrame {
         winner = -2;
         redGamesWon = 0;
         blueGamesWon = 0;
+        turnNumber = 0;
+
         redPlayer = new RedPlayer();
         bluePlayer = new BluePlayer();
         board = new GameBoard(redPlayer, bluePlayer);
@@ -76,6 +80,10 @@ public class CheckersGame extends JFrame {
     public void turn() {
         Random rng = new Random();
         try {
+            if (turnNumber == 150) {
+                winner = 0;
+                System.out.println("Tie");
+            }
             if (board.whoWon() == redPlayer) {
                 winner = -1;
                 System.out.println("Red Won");
@@ -103,6 +111,7 @@ public class CheckersGame extends JFrame {
                     redPlayer.movePiece(randomMove); // executes random move
                     isBlueTurn = true;
                 }
+                turnNumber++;
             }
         } catch (InvalidMoveException ime) {
             ime.printCustomError();
