@@ -27,6 +27,9 @@ public class MainTrain {
     private static final int popSize = 2500;
     private static final int numExtraRounds = 250;
 
+    public static final int INPUT_NEURONS = 32;
+    public static final int OUTPUT_NEURONS = 10;
+
     public static void main(String[] args) {
         readFiles();
         //Train
@@ -62,9 +65,7 @@ public class MainTrain {
     }
 
     public static NEATPopulation createPop(int size) { //Generate a template population
-        int inputNeurons = 32;
-        int outputNeurons = 10;
-        NEATPopulation network = new NEATPopulation(inputNeurons, outputNeurons, size);
+        NEATPopulation network = new NEATPopulation(INPUT_NEURONS, OUTPUT_NEURONS, size);
         network.reset();
         return network;
     }
@@ -81,15 +82,15 @@ public class MainTrain {
 
         while (true) {
             train.iteration();
-            playerData.pop = pop;
-            playerData.best = (MLMethod) train.getCODEC().decode(pop.getBestGenome());
-            playerData.epoch++;
+            playerData.setPop(pop);
+            playerData.setBest((MLMethod) train.getCODEC().decode(pop.getBestGenome()));
+            playerData.incrementEpoch();
 
-            NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.best);
+            NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
             System.out.println("Beat");
-            playerData.bestFitness = testScore.scorePlayer();
+            playerData.setBestFitness(testScore.scorePlayer());
 
-            System.out.println("Epoch "+playerData.epoch+" Score: "+playerData.bestFitness);
+            System.out.println("Epoch "+playerData.getEpoch()+" Score: "+playerData.getBestFitness());
             writeFiles();
         }
     }

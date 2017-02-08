@@ -33,7 +33,7 @@ public class NeuralNet {
             currentHighestValue = -1;
             foundAnything = false;
             //Find highest that's not excluded
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < MainTrain.OUTPUT_NEURONS; i++) {
                 double weight = moveData.getData(i);
                 if (weight > currentHighestValue && weight < ignoreValuesAbove) {
                     indexOfHighestValue = i;

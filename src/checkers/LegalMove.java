@@ -14,19 +14,23 @@ public class LegalMove {
     private LegalMove moveBefore;
     private ArrayList<LegalMove> moveAfter = new ArrayList<>();
 
-    public LegalMove(GameBoardTile oldTile, GameBoardTile newTile, LegalMove moveBefore, LegalMove moveAfter, GameBoardTile jumpedTile) {
+    private MoveDirections direction;
+
+    public LegalMove(GameBoardTile oldTile, GameBoardTile newTile, LegalMove moveBefore, LegalMove moveAfter, GameBoardTile jumpedTile, MoveDirections direction) {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
         this.moveAfter.add(moveAfter);
         this.jumpedTile = jumpedTile;
+        this.direction = direction;
     }
 
-    public LegalMove(GameBoardTile oldTile, GameBoardTile newTile, LegalMove moveBefore, LegalMove moveAfter) {
+    public LegalMove(GameBoardTile oldTile, GameBoardTile newTile, LegalMove moveBefore, LegalMove moveAfter, MoveDirections direction) {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
         this.moveAfter.add(moveAfter);
+        this.direction = direction;
     }
 
     public ArrayList<GameBoardTile> getTotalJumpedTiles() {

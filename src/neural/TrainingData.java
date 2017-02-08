@@ -11,15 +11,47 @@ import java.io.Serializable;
  * Stores data for training
  */
 public class TrainingData implements Serializable{
-    public int epoch;
-    public int bestFitness;
-    public MLMethod best;
-    public NEATPopulation pop;
+    private int epoch;
+    private int bestFitness;
+    private MLMethod best;
+    private NEATPopulation pop;
 
     public void reset() {
         this.epoch = 0;
         this.bestFitness = -100;
         this.best = null;
         this.pop  = null;
+    }
+
+    public int getEpoch() {
+        return epoch;
+    }
+
+    public int getBestFitness() {
+        return bestFitness;
+    }
+
+    public MLMethod getBest() {
+        return best;
+    }
+
+    public NEATPopulation getPop() {
+        return pop;
+    }
+
+    public void incrementEpoch() {
+        this.epoch++;
+    }
+
+    public void setBestFitness(int bestFitness) {
+        this.bestFitness = bestFitness;
+    }
+
+    public void setBest(MLMethod best) {
+        this.best = best;
+    }
+
+    public void setPop(NEATPopulation pop) {
+        this.pop = pop;
     }
 }
