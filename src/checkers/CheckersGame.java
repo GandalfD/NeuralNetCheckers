@@ -29,6 +29,7 @@ public class CheckersGame extends JFrame {
     private int blueGamesWon = 0;
 
     private int turnNumber = 0;
+    private int blueTurnNumber = 0;
 
     public CheckersGame() {
         super("Train Neural Network");
@@ -52,6 +53,7 @@ public class CheckersGame extends JFrame {
         redGamesWon = 0;
         blueGamesWon = 0;
         turnNumber = 0;
+        blueTurnNumber = 0;
 
         redPlayer = new RedPlayer();
         bluePlayer = new BluePlayer();
@@ -82,19 +84,19 @@ public class CheckersGame extends JFrame {
         try {
             if (turnNumber == 150) {
                 winner = 0;
-                System.out.println("Tie " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                System.out.println("Tie " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
                 NeuralNet.otherint = 0;
             }
             if (board.whoWon() == redPlayer) {
                 winner = -1;
-                System.out.println("Red Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                System.out.println("Red Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
                 NeuralNet.otherint = 0;
                 redGamesWon++;
             } else if (board.whoWon() == bluePlayer) {
                 winner = 1;
-                System.out.println("Blue Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + turnNumber);
+                System.out.println("Blue Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
                 NeuralNet.otherint = 0;
                 blueGamesWon++;
@@ -103,6 +105,7 @@ public class CheckersGame extends JFrame {
                     LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
                     bluePlayer.movePiece(nextMove);
                     isBlueTurn = false;
+                    blueTurnNumber++;
                     // TODO Uncomment the lines above and comment the things below @Ethan
                     /*ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
                     int upperBound = possibleMoves.size();

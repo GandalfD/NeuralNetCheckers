@@ -132,8 +132,12 @@ public class LegalMove {
         return oldTile.getCurrentPiece();
     }
 
+    public MoveDirections getDirection() {
+        return direction;
+    }
+
     public boolean equals(LegalMove move) {
-        return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile);
+        return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile && direction == move.getDirection());
     }
 
 

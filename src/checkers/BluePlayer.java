@@ -1,11 +1,13 @@
 package checkers;
 
+import neural.NeuralNet;
 import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
 import org.encog.neural.neat.NEATNetwork;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents the Blue checkers.Player
@@ -30,9 +32,10 @@ public class BluePlayer extends Player {
     @Override
     public double[] convertBoard() {
         GameBoardTile[] tileArray = getBoard().getTileOneArray();
+        List<LegalMove> movesList = getAllPossibleValidMoves();
 
         int count = 0;
-        double[] boardData = new double[(tileArray.length / 2)];
+        double[] boardData = new double[(tileArray.length / 2) + 1];
         for (int i = 0; i < tileArray.length; i++) {
             CheckerPiece piece = tileArray[i].getCurrentPiece();
 
@@ -62,6 +65,15 @@ public class BluePlayer extends Player {
                 }
             }
         }
+
+        int kingMoveCount = 0;
+        for (LegalMove move : movesList) {
+            if (checkKing(move.getNewTile())) {
+                kingMoveCount++;
+            }
+        }
+        double kingInput = NeuralNet.normalize((double) kingMoveCount, 0, 4, -1, 1);
+        boardData[boardData.length-1] = kingInput;
 
         return boardData;
     }

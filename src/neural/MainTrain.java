@@ -28,7 +28,7 @@ public class MainTrain {
     private static final int numExtraRounds = 250;
 
     public static final int INPUT_NEURONS = 32;
-    public static final int OUTPUT_NEURONS = 32;
+    public static final int OUTPUT_NEURONS = 32*5;
 
     public static void main(String[] args) {
         readFiles();
