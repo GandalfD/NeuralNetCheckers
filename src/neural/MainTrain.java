@@ -24,11 +24,13 @@ public class MainTrain {
     private static TrainingData playerData;
 
     private static final int numPops = 15;
-    private static final int popSize = 2500;
+    private static final int popSize = 10;
     private static final int numExtraRounds = 250;
 
     public static final int INPUT_NEURONS = 32;
     public static final int OUTPUT_NEURONS = 32*5;
+
+    private static boolean AM_DEBUGGING = true;
 
     public static void main(String[] args) {
         readFiles();
@@ -81,20 +83,24 @@ public class MainTrain {
         //Train to beat
 
         while (true) {
-            System.out.println("Starting iteration");
-            train.iteration();
-            System.out.println("Iteration Complete");
-            playerData.setPop(pop);
-            playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
-            playerData.incrementEpoch();
+            if (AM_DEBUGGING) {
 
-            System.out.println("Creating testScore");
-            NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
-            System.out.println("Beat");
-            playerData.setBestFitness(testScore.scorePlayer());
+            } else {
+                System.out.println("Starting iteration");
+                train.iteration();
+                System.out.println("Iteration Complete");
+                playerData.setPop(pop);
+                playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
+                playerData.incrementEpoch();
 
-            System.out.println("Epoch "+playerData.getEpoch()+" Score: "+playerData.getBestFitness());
-            writeFiles();
+                System.out.println("Creating testScore");
+                NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
+                System.out.println("Beat");
+                playerData.setBestFitness(testScore.scorePlayer());
+
+                System.out.println("Epoch " + playerData.getEpoch() + " Score: " + playerData.getBestFitness());
+                writeFiles();
+            }
         }
     }
 

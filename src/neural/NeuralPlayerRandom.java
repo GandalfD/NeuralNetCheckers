@@ -8,6 +8,7 @@ import org.encog.neural.networks.BasicNetwork;
 
 public class NeuralPlayerRandom {
     private NEATNetwork network;
+    private static int playerIteration = 1;
 
     public NeuralPlayerRandom(NEATNetwork network) {
         this.network = network;
@@ -16,10 +17,12 @@ public class NeuralPlayerRandom {
 
     public int scorePlayer() {
         int n = 0;
+        System.out.println("Player Iteration: " + playerIteration);
         for (int i=0; i<100; i++) {
             System.out.print("I: " + i + " ");
             n += this.doIteration();
         }
+        playerIteration++;
         return n/2;
     }
 
@@ -28,11 +31,13 @@ public class NeuralPlayerRandom {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(this.network);
-        //game.playGUI();
+        game.playGUI();
         while (game.getWinner() == -2) {
-            game.turn();
+            //game.turn();
         }
+        System.out.println("Exited game");
         return game.getWinner();
     }
+
 }
 

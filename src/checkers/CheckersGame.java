@@ -31,6 +31,8 @@ public class CheckersGame extends JFrame {
     private int turnNumber = 0;
     private int blueTurnNumber = 0;
 
+    public boolean gameover = false;
+
     public CheckersGame() {
         super("Train Neural Network");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -205,8 +207,9 @@ public class CheckersGame extends JFrame {
                 else {
                     int choice = JOptionPane.showConfirmDialog(this, "Start new game?", "Question", JOptionPane.YES_NO_OPTION);
                     if (choice == 0) {
-//                        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 //                        new PlayGUI();
+                        gameover = true;
                     }
                 }
             }
