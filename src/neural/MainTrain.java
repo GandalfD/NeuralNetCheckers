@@ -45,10 +45,12 @@ public class MainTrain {
             //Get player data
             in = new ObjectInputStream(new FileInputStream("training-data.td"));
             playerData  = (TrainingData) in.readObject();
+            System.out.println("Found Training Data!");
         } catch (IOException e) {
             //When nothing found
             playerData = new TrainingData();
             playerData.reset();
+            System.out.println("Using New Training Data");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -84,21 +86,20 @@ public class MainTrain {
         //Train to beat
 
         while (true) {
+            System.out.println("Starting iteration");
+            train.iteration();
+            System.out.println("Iteration Complete");
+            playerData.setPop(pop);
+            playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
+            playerData.incrementEpoch();
 
-                System.out.println("Starting iteration");
-                train.iteration();
-                System.out.println("Iteration Complete");
-                playerData.setPop(pop);
-                playerData.setBest(train.getCODEC().decode(pop.getBestGenome()));
-                playerData.incrementEpoch();
+            System.out.println("Creating testScore");
+            NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
+            System.out.println("Beat");
+            playerData.setBestFitness(testScore.scorePlayer());
 
-                System.out.println("Creating testScore");
-                NeuralPlayerRandom testScore = new NeuralPlayerRandom((NEATNetwork) playerData.getBest());
-                System.out.println("Beat");
-                playerData.setBestFitness(testScore.scorePlayer());
-
-                System.out.println("Epoch " + playerData.getEpoch() + " Score: " + playerData.getBestFitness());
-                writeFiles();
+            System.out.println("Epoch " + playerData.getEpoch() + " Score: " + playerData.getBestFitness());
+            writeFiles();
 
         }
     }

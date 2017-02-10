@@ -31,16 +31,26 @@ public class NeuralPlayerRandom {
     }
 
     private int doIteration() {
-
-        CheckersGame game = new CheckersGame();
-        game.initializeGame();
-        game.getBluePlayer().setNetwork(this.network);
-        game.playGUI();
-        while (game.getWinner() == -2) {
-            //game.turn();
+        if (MainTrain.AM_DEBUGGING) {
+            CheckersGame game = new CheckersGame();
+            game.initializeGame();
+            game.getBluePlayer().setNetwork(this.network);
+            game.playGUI();
+            while (game.getWinner() == -2) {
+                //game.turn();
+            }
+            System.out.println("Exited game");
+            return game.getWinner();
+        } else {
+            CheckersGame game = new CheckersGame();
+            game.initializeGame();
+            game.getBluePlayer().setNetwork(this.network);
+            //game.playGUI();
+            while (game.getWinner() == -2) {
+                game.turn();
+            }
+            return game.getWinner();
         }
-        System.out.println("Exited game");
-        return game.getWinner();
     }
 
 }
