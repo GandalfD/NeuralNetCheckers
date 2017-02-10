@@ -16,14 +16,18 @@ public class NeuralPlayerRandom {
 
 
     public int scorePlayer() {
-        int n = 0;
-        System.out.println("Player Iteration: " + playerIteration);
-        for (int i=0; i<100; i++) {
-            System.out.print("I: " + i + " ");
-            n += this.doIteration();
+        if (MainTrain.AM_DEBUGGING) {
+            return doIteration();
+        } else {
+            int n = 0;
+            System.out.println("Player Iteration: " + playerIteration);
+            for (int i = 0; i < 100; i++) {
+                System.out.print("I: " + i + " ");
+                n += this.doIteration();
+            }
+            playerIteration++;
+            return n / 2;
         }
-        playerIteration++;
-        return n/2;
     }
 
     private int doIteration() {

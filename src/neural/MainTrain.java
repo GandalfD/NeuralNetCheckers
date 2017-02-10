@@ -30,7 +30,7 @@ public class MainTrain {
     public static final int INPUT_NEURONS = 32;
     public static final int OUTPUT_NEURONS = 32*5;
 
-    private static boolean AM_DEBUGGING = true;
+    public static boolean AM_DEBUGGING = true;
 
     public static void main(String[] args) {
         readFiles();
@@ -80,12 +80,11 @@ public class MainTrain {
         EvolutionaryAlgorithm train; //Create training
         train = NEATUtil.constructNEATTrainer(pop, new PlayerScoreRandom());
 
+
         //Train to beat
 
         while (true) {
-            if (AM_DEBUGGING) {
 
-            } else {
                 System.out.println("Starting iteration");
                 train.iteration();
                 System.out.println("Iteration Complete");
@@ -100,7 +99,7 @@ public class MainTrain {
 
                 System.out.println("Epoch " + playerData.getEpoch() + " Score: " + playerData.getBestFitness());
                 writeFiles();
-            }
+
         }
     }
 

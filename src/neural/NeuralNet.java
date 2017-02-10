@@ -91,6 +91,10 @@ public class NeuralNet {
             for (LegalMove moveToCheck : possibleValidMoves) {
                 if (moveToCheck.getOldTile().equals(tileToCheck) && moveToCheck.getDirection() == direction) {
                     testint++;
+                    if (MainTrain.AM_DEBUGGING) {
+                        System.out.println("I am doing move " + moveToCheck);
+                        System.out.println("Which is my " + i + " choice");
+                    }
                     return moveToCheck;
                 }
             }
@@ -98,6 +102,8 @@ public class NeuralNet {
 
         // No legal move found, return first possible move
         otherint++;
+        if (MainTrain.AM_DEBUGGING)
+            System.out.println("First Move: " + possibleValidMoves.get(0));
         return possibleValidMoves.get(0);
     }
 

@@ -170,7 +170,7 @@ public class GameBoardTile extends JLabel {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
+            //System.out.println("(Row: " + yGrid + " Col: " + xGrid + ") \t" + "Current: " + currentPiece);
         }
 
         @Override
