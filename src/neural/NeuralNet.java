@@ -17,8 +17,7 @@ public class NeuralNet {
     public static int testint = 0;
     public static int otherint = 0;
 
-    public static LegalMove getMoveNN(NEATNetwork network, double[] board, Player player) {
-        ArrayList<LegalMove> possibleValidMoves = player.getAllPossibleValidMoves();
+    public static LegalMove getMoveNN(NEATNetwork network, double[] board, ArrayList<LegalMove> possibleValidMoves, Player player) {
 
         MLData boardData = new BasicMLData(board);
         MLData moveData = network.compute(boardData);

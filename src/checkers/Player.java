@@ -16,6 +16,9 @@ public abstract class Player  {
 
     private NEATNetwork network;
 
+    private ArrayList<ArrayList<LegalMove>> allPossibleMoves = new ArrayList<>();
+    private ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
+
     public Player(GameBoard board) {
         this.board = board;
     }
@@ -38,7 +41,7 @@ public abstract class Player  {
 
     // Returns array of valid moves (factoring in force jumping)
     public ArrayList<LegalMove> getAllPossibleValidMoves() {
-        ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
+        allPossibleValidMoves.clear();
 
         // If no moves available, return empty array
         ArrayList<ArrayList<LegalMove>> possibleMoves = getAllPossibleMoves();
@@ -65,7 +68,7 @@ public abstract class Player  {
 
     // Returns every single move that every single piece can make
     private ArrayList<ArrayList<LegalMove>> getAllPossibleMoves() {
-        ArrayList<ArrayList<LegalMove>> allPossibleMoves = new ArrayList<>();
+        allPossibleMoves.clear();
 
         for (CheckerPiece piece : pieces) {
             ArrayList<LegalMove> temp = piece.getAllMoves();

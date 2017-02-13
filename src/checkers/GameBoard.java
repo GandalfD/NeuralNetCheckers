@@ -2,6 +2,7 @@ package checkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Represents the whole gameboard
@@ -166,11 +167,11 @@ public class GameBoard extends JPanel {
 
     // Returns winning player
     // Returns null if game is still going on
-    public Player whoWon() {
-        if (redPlayer.getAllPossibleValidMoves().size() == 0) {
+    public Player whoWon(ArrayList<LegalMove> blueMoves, ArrayList<LegalMove> redMoves) {
+        if (redMoves.size() == 0) {
             return bluePlayer;
         }
-        else if (bluePlayer.getAllPossibleValidMoves().size() == 0 ) {
+        else if (blueMoves.size() == 0 ) {
             return redPlayer;
         }
         else

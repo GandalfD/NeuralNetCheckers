@@ -140,5 +140,21 @@ public class LegalMove {
         return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile && direction == move.getDirection());
     }
 
+    public void clearTree() {
+        LegalMove moveToCheck = moveBefore;
+
+        while (moveToCheck != null) {
+            LegalMove temp = moveToCheck;
+            moveToCheck = moveToCheck.getMoveBefore();
+
+            if (temp.getMoveAfter() != null)
+                temp.getMoveAfter().clear();
+
+            temp.moveAfter = null;
+            temp = null;
+        }
+    }
+
+
 
 }

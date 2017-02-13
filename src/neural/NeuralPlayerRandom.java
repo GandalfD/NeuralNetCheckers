@@ -21,6 +21,7 @@ public class NeuralPlayerRandom {
         } else {
             int n = 0;
             System.out.println("Player Iteration: " + playerIteration);
+
             for (int i = 0; i < 100; i++) {
                 System.out.print("I: " + i + " ");
                 n += this.doIteration();
@@ -41,6 +42,7 @@ public class NeuralPlayerRandom {
             }
             System.out.println("Exited game");
             return game.getWinner();
+
         } else {
             CheckersGame game = new CheckersGame();
             game.initializeGame();
@@ -49,7 +51,13 @@ public class NeuralPlayerRandom {
             while (game.getWinner() == -2) {
                 game.turn();
             }
-            return game.getWinner();
+            int winStatus = game.getWinner();
+            game = null;
+
+
+            // UNCOMMENT IN TIMES OF STRESS
+            //System.gc();
+            return winStatus;
         }
     }
 

@@ -89,9 +89,11 @@ public class CheckerPiece extends JLabel {
     // Grabs all the available moves and piece on a specific tile can make
     private ArrayList<LegalMove> checkAvailableTiles(GameBoardTile tile) {
         ArrayList<LegalMove> recursiveCheck = new ArrayList<>();
+
         if (availableTileClearFlag) {
             // Clear array to find new available tiles
             availableLegalMoves.clear();
+            recursiveCheck.clear();
             availableTileClearFlag = false;
         }
 
@@ -187,7 +189,7 @@ public class CheckerPiece extends JLabel {
 
     private void checkAvailableTilesRecursion(GameBoardTile oldTile, LegalMove newMove) {
         boolean edgePiece = false;
-        ArrayList<LegalMove> recursiveCheck = new ArrayList<>();
+        ArrayList<LegalMove> recursiveCheckRecursive = new ArrayList<>();
         int oldRow = oldTile.returnY();
         int oldCol = oldTile.returnX();
         int newRow = newMove.returnNewY();
@@ -226,18 +228,18 @@ public class CheckerPiece extends JLabel {
             GameBoardTile downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
             if (legalMoveCheckerPiece.getIsKing()) {
                 // Up right
-                if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
+                 if (moveSign != DOWN_LEFT && upRight.getIsOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
                     LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight, MoveDirections.UP_RIGHT);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheck.add(move);
+                    recursiveCheckRecursive.add(move);
                 }
                 // Up left
                 if (moveSign != DOWN_RIGHT && upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
                     LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft, MoveDirections.UP_LEFT);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheck.add(move);
+                    recursiveCheckRecursive.add(move);
                 }
 
                 // Down right
@@ -245,7 +247,7 @@ public class CheckerPiece extends JLabel {
                     LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight, MoveDirections.DOWN_RIGHT);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheck.add(move);
+                    recursiveCheckRecursive.add(move);
                 }
 
                 //Down left
@@ -253,7 +255,7 @@ public class CheckerPiece extends JLabel {
                     LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft, MoveDirections.DOWN_LEFT);
                     newMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheck.add(move);
+                    recursiveCheckRecursive.add(move);
                 }
 
             } else {
@@ -266,14 +268,14 @@ public class CheckerPiece extends JLabel {
                         LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight, MoveDirections.UP_RIGHT);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheck.add(move);
+                        recursiveCheckRecursive.add(move);
                     }
                     // Up left
                     if (upLeft.getIsOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
                         LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft, MoveDirections.UP_LEFT);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheck.add(move);
+                        recursiveCheckRecursive.add(move);
                     }
 
                 } else {
@@ -283,7 +285,7 @@ public class CheckerPiece extends JLabel {
                         LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight, MoveDirections.DOWN_RIGHT);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheck.add(move);
+                        recursiveCheckRecursive.add(move);
                     }
 
                     //Down left
@@ -291,16 +293,21 @@ public class CheckerPiece extends JLabel {
                         LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft, MoveDirections.DOWN_LEFT);
                         newMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheck.add(move);
+                        recursiveCheckRecursive.add(move);
                     }
                 }
             }
         }
 
-        if (recursiveCheck.size() > 0) {
-            for (LegalMove moveToCheck : recursiveCheck) {
+        if (recursiveCheckRecursive.size() > 0) {
+            for (LegalMove moveToCheck : recursiveCheckRecursive) {
+                //System.out.println(recursiveCheck);
                 checkAvailableTilesRecursion(newMove.getNewTile(), moveToCheck);
             }
+            //System.out.println("Hi");
+            recursiveCheckRecursive.clear();
+            recursiveCheckRecursive = null; // gc
+            return;
         }
     }
 

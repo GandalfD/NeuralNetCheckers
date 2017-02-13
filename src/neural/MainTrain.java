@@ -24,13 +24,13 @@ public class MainTrain {
     private static TrainingData playerData;
 
     private static final int numPops = 15;
-    private static final int popSize = 10;
+    private static final int popSize = 1000;
     private static final int numExtraRounds = 250;
 
     public static final int INPUT_NEURONS = 32;
     public static final int OUTPUT_NEURONS = 32*5;
 
-    public static boolean AM_DEBUGGING = true;
+    public static boolean AM_DEBUGGING = false;
 
     public static void main(String[] args) {
         readFiles();

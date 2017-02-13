@@ -1,7 +1,9 @@
 package checkers;
 
+import neural.MainTrain;
 import neural.NeuralNet;
 import org.encog.neural.neat.NEATNetwork;
+import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,19 +86,22 @@ public class CheckersGame extends JFrame {
     public void turn() {
         Random rng = new Random();
         try {
+            ArrayList<LegalMove> possibleMovesRed = redPlayer.getAllPossibleValidMoves();
+            ArrayList<LegalMove> possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
+
             if (turnNumber == 150) {
                 winner = 0;
                 System.out.println("Tie " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
                 NeuralNet.otherint = 0;
             }
-            if (board.whoWon() == redPlayer) {
+            if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
                 winner = -1;
                 System.out.println("Red Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
                 NeuralNet.otherint = 0;
                 redGamesWon++;
-            } else if (board.whoWon() == bluePlayer) {
+            } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
                 winner = 1;
                 System.out.println("Blue Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
                 NeuralNet.testint = 0;
@@ -104,7 +109,7 @@ public class CheckersGame extends JFrame {
                 blueGamesWon++;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
-                    LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), bluePlayer);
+                    LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), possibleMovesBlue, bluePlayer);
                     bluePlayer.movePiece(nextMove);
                     isBlueTurn = false;
                     blueTurnNumber++;
@@ -116,12 +121,27 @@ public class CheckersGame extends JFrame {
                     isBlueTurn = false;*/
 
                 } else { // Red's turn (random)
-                    ArrayList<LegalMove> possibleMoves = redPlayer.getAllPossibleValidMoves();
-                    int upperBound = possibleMoves.size();
-                    LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
+
+                    int upperBound = possibleMovesRed.size();
+                    LegalMove randomMove = possibleMovesRed.get(rng.nextInt(upperBound));
                     redPlayer.movePiece(randomMove); // executes random move
                     isBlueTurn = true;
                 }
+
+
+                // gc
+                for (LegalMove move : possibleMovesBlue) {
+                    move.clearTree();
+                }
+
+                for (LegalMove move : possibleMovesRed) {
+                    move.clearTree();
+                }
+
+                possibleMovesBlue.clear();
+                possibleMovesBlue = null;
+                possibleMovesRed.clear();
+                possibleMovesRed = null;
                 turnNumber++;
             }
         } catch (InvalidMoveException ime) {
