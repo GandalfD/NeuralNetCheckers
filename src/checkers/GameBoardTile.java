@@ -109,7 +109,7 @@ public class GameBoardTile extends JLabel {
         add(piece);
     }
 
-    public boolean getIsOccupied() {
+    public boolean isOccupied() {
         return isOccupied;
     }
 
