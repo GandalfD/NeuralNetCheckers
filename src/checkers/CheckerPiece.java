@@ -180,229 +180,161 @@ public class CheckerPiece extends JLabel {
             }
         }
         for (LegalMove tileToCheck : recursiveCheck) {
-            checkAvailableTilesRecursion(tile, tileToCheck);
+            checkAvailableTilesRecursion(tileToCheck);
         }
         availableTileClearFlag = true;
 
         return availableLegalMoves;
     }
 
-    private void checkAvailableTilesRecursion(GameBoardTile oldTile, LegalMove newMove) {
+    private void checkAvailableTilesRecursion(LegalMove newMove) {
 
-        GameBoardTile newTile = newMove.getNewTile();
         ArrayList<LegalMove> jumpedMoves = new ArrayList<>();
         jumpedMoves.add(newMove);
 
         // If its a king
         int i = 0;
-        if (this.getIsKing()) {
-            while (i < jumpedMoves.size()) {
-                LegalMove currentMove = jumpedMoves.get(i);
-                int oldRow = currentMove.getOldTile().returnY();
-                int oldCol = currentMove.getOldTile().returnX();
-                int newRow = currentMove.returnNewY();
-                int newCol = currentMove.returnNewX();
+        while (i < jumpedMoves.size()) {
+            LegalMove currentMove = jumpedMoves.get(i);
 
-                final int UP_LEFT = 0;
-                final int UP_RIGHT = 1;
-                final int DOWN_LEFT = 2;
-                final int DOWN_RIGHT = 3;
-                int moveSign = 1000; // temporary garbage value
+            int oldRow = currentMove.getOldTile().returnY();
+            int oldCol = currentMove.getOldTile().returnX();
+            int newRow = currentMove.returnNewY();
+            int newCol = currentMove.returnNewX();
 
-                if (newRow > oldRow) { // Move down
-                    if (newCol > oldCol) { // Move right
-                        moveSign = DOWN_RIGHT;
-                    } else {
-                        moveSign = DOWN_LEFT;
-                    }
+            final int UP_LEFT = 0;
+            final int UP_RIGHT = 1;
+            final int DOWN_LEFT = 2;
+            final int DOWN_RIGHT = 3;
+            int moveSign = 1000; // temporary garbage value
+
+            if (newRow > oldRow) { // Move down
+                if (newCol > oldCol) { // Move right
+                    moveSign = DOWN_RIGHT;
                 } else {
-                    if (newCol > oldCol) { // Move right
-                        moveSign = UP_RIGHT;
-                    } else {
-                        moveSign = UP_LEFT;
-                    }
+                    moveSign = DOWN_LEFT;
                 }
-
-                GameBoardTile upRight;
-                GameBoardTile upLeft;
-                GameBoardTile downRight;
-                GameBoardTile downLeft;
-
-                if (currentMove.returnNewX() == 0) {
-                    if (currentMove.returnNewY() == 0 || currentMove.returnNewY() == 7) {
-                        break;
-                    } else {
-                        upRight = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
-                        upLeft = null;
-                        downRight = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
-                        downLeft = null;
-                    }
-                } else if (currentMove.returnNewX() == 7) {
-                    if (currentMove.returnNewY() == 0 || currentMove.returnNewY() == 7) {
-                        break;
-                    } else {
-                        upRight = null;
-                        upLeft = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
-                        downRight = null;
-                        downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
-                    }
-                } else if (currentMove.returnNewY() == 0) {
-                    if (currentMove.returnNewX() == 0 || currentMove.returnNewY() == 7) {
-                        break;
-                    } else {
-                        upRight = null;
-                        upLeft = null;
-                        downRight = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
-                        downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
-                    }
-                } else if (currentMove.returnNewY() == 7) {
-                    if (currentMove.returnNewX() == 0 || currentMove.returnNewY() == 7) {
-                        break;
-                    } else {
-                        upRight = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
-                        upLeft = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
-                        downRight = null;
-                        downLeft = null;
-                    }
+            } else {
+                if (newCol > oldCol) { // Move right
+                    moveSign = UP_RIGHT;
                 } else {
-                    upRight = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
-                    upLeft = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
-                    downRight = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
-                    downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
-                }
-
-
-                if (moveSign != DOWN_LEFT && upRight != null && upRight.isOccupied() && canJump(currentMove.getOldTile(), currentMove.getNewTile()) == 1) { // Check Up right
-                    LegalMove move = new LegalMove(currentMove.getOldTile(), currentMove.getNewTile(), )
+                    moveSign = UP_LEFT;
                 }
             }
-        } else {
 
-        }
+            GameBoardTile upRight;
+            GameBoardTile upLeft;
+            GameBoardTile downRight;
+            GameBoardTile downLeft;
 
-
-
-        boolean edgePiece = false;
-        ArrayList<LegalMove> recursiveCheckRecursive = new ArrayList<>();
-        int oldRow = oldTile.returnY();
-        int oldCol = oldTile.returnX();
-        int newRow = newMove.returnNewY();
-        int newCol = newMove.returnNewX();
-        final int UP_LEFT = 0;
-        final int UP_RIGHT = 1;
-        final int DOWN_LEFT = 2;
-        final int DOWN_RIGHT = 3;
-        int moveSign = 1000; // temporary garbage value
-
-        if (newRow > oldRow) { // Move down
-            if (newCol > oldCol) { // Move right
-                moveSign = DOWN_RIGHT;
+            if (currentMove.returnNewX() <= 1) {
+                if (currentMove.returnNewY() <= 1 || currentMove.returnNewY() >= 6) {
+                    break;
+                } else {
+                    upRight = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() + 1];
+                    upLeft = null;
+                    downRight = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() + 1];
+                    downLeft = null;
+                }
+            } else if (currentMove.returnNewX() >= 6) {
+                if (currentMove.returnNewY() <= 1 || currentMove.returnNewY() >= 6) {
+                    break;
+                } else {
+                    upRight = null;
+                    upLeft = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() - 1];
+                    downRight = null;
+                    downLeft = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() - 1];
+                }
+            } else if (currentMove.returnNewY() <= 1) {
+                if (currentMove.returnNewX() <= 1 || currentMove.returnNewY() >= 6) {
+                    break;
+                } else {
+                    upRight = null;
+                    upLeft = null;
+                    downRight = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() + 1];
+                    downLeft = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() - 1];
+                }
+            } else if (currentMove.returnNewY() >= 6) {
+                if (currentMove.returnNewX() <= 1 || currentMove.returnNewY() >= 6) {
+                    break;
+                } else {
+                    upRight = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() + 1];
+                    upLeft = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() - 1];
+                    downRight = null;
+                    downLeft = null;
+                }
             } else {
-                moveSign = DOWN_LEFT;
+                upRight = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() + 1];
+                upLeft = board.getTile()[currentMove.returnNewY() - 1][currentMove.returnNewX() - 1];
+                downRight = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() + 1];
+                downLeft = board.getTile()[currentMove.returnNewY() + 1][currentMove.returnNewX() - 1];
             }
-        } else {
-            if (newCol > oldCol) { // Move right
-                moveSign = UP_RIGHT;
-            } else {
-                moveSign = UP_LEFT;
-            }
-        }
 
-        if (newRow == 7 || newRow == 0 || newCol == 7 || newCol == 0) {
-            //availableLegalMoves.add(newTile);
-            edgePiece = true;
-        }
-
-
-        // Find available pieces if piece is king
-        if (!edgePiece) {
-            GameBoardTile upRight = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() + 1];
-            GameBoardTile upLeft = board.getTile()[newMove.returnNewY() - 1][newMove.returnNewX() - 1];
-            GameBoardTile downRight = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() + 1];
-            GameBoardTile downLeft = board.getTile()[newMove.returnNewY() + 1][newMove.returnNewX() - 1];
-            if (legalMoveCheckerPiece.getIsKing()) {
-                // Up right
-                 if (moveSign != DOWN_LEFT && upRight.isOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight, MoveDirections.UP_RIGHT);
-                    newMove.setMoveAfter(move);
+            // Is king
+            if (this.isKing) {
+                if (moveSign != DOWN_LEFT && upRight != null && upRight.isOccupied() && canJump(currentMove.getNewTile(), upRight) == 1) { // Check Up right
+                    LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() + 2], currentMove, null, upRight, MoveDirections.UP_RIGHT);
+                    currentMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheckRecursive.add(move);
-                }
-                // Up left
-                if (moveSign != DOWN_RIGHT && upLeft.isOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft, MoveDirections.UP_LEFT);
-                    newMove.setMoveAfter(move);
-                    availableLegalMoves.add(move);
-                    recursiveCheckRecursive.add(move);
+                    jumpedMoves.add(move);
                 }
 
-                // Down right
-                if (moveSign != UP_LEFT && downRight.isOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight, MoveDirections.DOWN_RIGHT);
-                    newMove.setMoveAfter(move);
+                if (moveSign != DOWN_RIGHT && upLeft != null && upLeft.isOccupied() && canJump(currentMove.getNewTile(), upLeft) == 1) { // Check up left
+                    LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() - 2], currentMove, null, upLeft, MoveDirections.UP_LEFT);
+                    currentMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheckRecursive.add(move);
+                    jumpedMoves.add(move);
                 }
 
-                //Down left
-                if (moveSign != UP_RIGHT && downLeft.isOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
-                    LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft, MoveDirections.DOWN_LEFT);
-                    newMove.setMoveAfter(move);
+                if (moveSign != UP_LEFT && downRight != null && downRight.isOccupied() && canJump(currentMove.getNewTile(), downRight) == 1) { // Check down right
+                    LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() + 2], currentMove, null, downRight, MoveDirections.DOWN_RIGHT);
+                    currentMove.setMoveAfter(move);
                     availableLegalMoves.add(move);
-                    recursiveCheckRecursive.add(move);
+                    jumpedMoves.add(move);
+                }
+
+                if (moveSign != UP_RIGHT && downLeft != null && downLeft.isOccupied() && canJump(currentMove.getNewTile(), downLeft) == 1) { // Check down left
+                    LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() - 2], currentMove, null, downLeft, MoveDirections.DOWN_LEFT);
+                    currentMove.setMoveAfter(move);
+                    availableLegalMoves.add(move);
+                    jumpedMoves.add(move);
                 }
 
             } else {
-
-                // Find available tiles for normal pieces
-                if (legalMoveCheckerPiece.getColor() == PieceColors.BLUE) {
-
-                    // Up right
-                    if (upRight.isOccupied() && canJump(newMove.getNewTile(), upRight) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() + 2], newMove, null, upRight, MoveDirections.UP_RIGHT);
-                        newMove.setMoveAfter(move);
+                if (this.color == PieceColors.BLUE) {
+                    if (moveSign != DOWN_LEFT && upRight != null && upRight.isOccupied() && canJump(currentMove.getNewTile(), upRight) == 1) { // Check Up right
+                        LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() + 2], currentMove, null, upRight, MoveDirections.UP_RIGHT);
+                        currentMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheckRecursive.add(move);
-                    }
-                    // Up left
-                    if (upLeft.isOccupied() && canJump(newMove.getNewTile(), upLeft) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() - 2][newMove.returnNewX() - 2], newMove, null, upLeft, MoveDirections.UP_LEFT);
-                        newMove.setMoveAfter(move);
-                        availableLegalMoves.add(move);
-                        recursiveCheckRecursive.add(move);
+                        jumpedMoves.add(move);
                     }
 
-                } else {
-                    // Red Team
-                    // Down right
-                    if (downRight.isOccupied() && canJump(newMove.getNewTile(), downRight) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() + 2], newMove, null, downRight, MoveDirections.DOWN_RIGHT);
-                        newMove.setMoveAfter(move);
+                    if (moveSign != DOWN_RIGHT && upLeft != null && upLeft.isOccupied() && canJump(currentMove.getNewTile(), upLeft) == 1) { // Check up left
+                        LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() - 2], currentMove, null, upLeft, MoveDirections.UP_LEFT);
+                        currentMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheckRecursive.add(move);
+                        jumpedMoves.add(move);
+                    }
+                } else { // Red team
+                    if (moveSign != UP_LEFT && downRight != null && downRight.isOccupied() && canJump(currentMove.getNewTile(), downRight) == 1) { // Check down right
+                        LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() + 2], currentMove, null, downRight, MoveDirections.DOWN_RIGHT);
+                        currentMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        jumpedMoves.add(move);
                     }
 
-                    //Down left
-                    if (downLeft.isOccupied() && canJump(newMove.getNewTile(), downLeft) == 1) {
-                        LegalMove move = new LegalMove(newMove.getNewTile(), board.getTile()[newMove.returnNewY() + 2][newMove.returnNewX() - 2], newMove, null, downLeft, MoveDirections.DOWN_LEFT);
-                        newMove.setMoveAfter(move);
+                    if (moveSign != UP_RIGHT && downLeft != null && downLeft.isOccupied() && canJump(currentMove.getNewTile(), downLeft) == 1) { // Check down left
+                        LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() - 2], currentMove, null, downLeft, MoveDirections.DOWN_LEFT);
+                        currentMove.setMoveAfter(move);
                         availableLegalMoves.add(move);
-                        recursiveCheckRecursive.add(move);
+                        jumpedMoves.add(move);
                     }
                 }
             }
+            i++;
         }
-
-        if (recursiveCheckRecursive.size() > 0) {
-            for (LegalMove moveToCheck : recursiveCheckRecursive) {
-                //System.out.println(recursiveCheck);
-                checkAvailableTilesRecursion(newMove.getNewTile(), moveToCheck);
-            }
-            //System.out.println("Hi");
-            recursiveCheckRecursive.clear();
-            recursiveCheckRecursive = null; // gc
-            return;
-        }
+        jumpedMoves.clear();
+        jumpedMoves = null;
     }
 
     // Returns whether occupied tile can be jumped
