@@ -16,7 +16,6 @@ public abstract class Player  {
 
     private NEATNetwork network;
 
-    private ArrayList<ArrayList<LegalMove>> allPossibleMoves = new ArrayList<>();
     private ArrayList<LegalMove> allPossibleValidMoves = new ArrayList<>();
 
     public Player(GameBoard board) {
@@ -40,15 +39,17 @@ public abstract class Player  {
     }
 
     // Returns array of valid moves (factoring in force jumping)
-    public ArrayList<LegalMove> getAllPossibleValidMoves() {
+    public LegalMove[] getAllPossibleValidMoves() {
         allPossibleValidMoves.clear();
 
         // If no moves available, return empty array
-        ArrayList<ArrayList<LegalMove>> possibleMoves = getAllPossibleMoves();
-        if (possibleMoves.size() == 0)
-            return allPossibleValidMoves;
+        ArrayList<LegalMove[]> possibleMoves = getAllPossibleMoves();
+        if (possibleMoves.size() == 0) {
+            LegalMove[] noMove = new LegalMove[allPossibleValidMoves.size()];
+            return allPossibleValidMoves.toArray(noMove);
+        }
 
-        for (ArrayList<LegalMove> movesArray : possibleMoves) {
+        for (LegalMove[] movesArray : possibleMoves) {
             for (LegalMove moves : movesArray) {
                 if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1) // If move is "final move" (has no more jumps)
                     if (canJump) { //Am I forced to jump or not
@@ -63,20 +64,22 @@ public abstract class Player  {
 
         // Return values and reset jump flag
         canJump = false;
-        return allPossibleValidMoves;
+        LegalMove[] moveArray = new LegalMove[allPossibleValidMoves.size()];
+        return allPossibleValidMoves.toArray(moveArray);
     }
 
     // Returns every single move that every single piece can make
-    private ArrayList<ArrayList<LegalMove>> getAllPossibleMoves() {
+    private ArrayList<LegalMove[]> getAllPossibleMoves() {
+        ArrayList<LegalMove[]> allPossibleMoves = new ArrayList<>();
         allPossibleMoves.clear();
 
         for (CheckerPiece piece : pieces) {
-            ArrayList<LegalMove> temp = piece.getAllMoves();
+            LegalMove[] temp = piece.getAllMoves();
 
             if (temp == null) {
                 //System.out.println("Null moves");
 
-            } else if (!temp.isEmpty() && !piece.isCaptured()) {
+            } else if (temp.length > 0 && !piece.isCaptured()) {
                 allPossibleMoves.add(temp);
 
                 for (LegalMove move : temp) {
@@ -105,7 +108,7 @@ public abstract class Player  {
     public void movePiece(LegalMove move) throws InvalidMoveException {
         boolean isValid = false;
 
-        if (getAllPossibleValidMoves().isEmpty())
+        if (getAllPossibleValidMoves().length == 0)
             throw new InvalidMoveException("Player has no possible moves");
 
         for (LegalMove validMove : getAllPossibleValidMoves()) {

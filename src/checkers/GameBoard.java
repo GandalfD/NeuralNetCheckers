@@ -167,11 +167,11 @@ public class GameBoard extends JPanel {
 
     // Returns winning player
     // Returns null if game is still going on
-    public Player whoWon(ArrayList<LegalMove> blueMoves, ArrayList<LegalMove> redMoves) {
-        if (redMoves.size() == 0) {
+    public Player whoWon(LegalMove[] blueMoves, LegalMove[] redMoves) {
+        if (redMoves.length == 0) {
             return bluePlayer;
         }
-        else if (blueMoves.size() == 0 ) {
+        else if (blueMoves.length == 0 ) {
             return redPlayer;
         }
         else

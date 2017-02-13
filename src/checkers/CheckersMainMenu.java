@@ -116,8 +116,8 @@ public class CheckersMainMenu extends JFrame {
             } else if (e.getSource() == capture) {
                 Random rng = new Random();
                 try {
-                    ArrayList<LegalMove> possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
-                    ArrayList<LegalMove> possibleMovesRed = redPlayer.getAllPossibleValidMoves();
+                    LegalMove[] possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
+                    LegalMove[] possibleMovesRed = redPlayer.getAllPossibleValidMoves();
 
                     if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer)
                         System.out.println("red");
@@ -126,14 +126,14 @@ public class CheckersMainMenu extends JFrame {
                     else {
                         if (!isRed) {
 
-                            int upperBound = possibleMovesBlue.size();
-                            LegalMove randomMove = possibleMovesBlue.get(rng.nextInt(upperBound));
+                            int upperBound = possibleMovesBlue.length;
+                            LegalMove randomMove = possibleMovesBlue[(rng.nextInt(upperBound))];
                             bluePlayer.movePiece(randomMove); // executes random move
                             isRed = !isRed;
                         } else {
 
-                            int upperBound = possibleMovesRed.size();
-                            LegalMove randomMove = possibleMovesRed.get(rng.nextInt(upperBound));
+                            int upperBound = possibleMovesRed.length;
+                            LegalMove randomMove = possibleMovesRed[(rng.nextInt(upperBound))];
                             redPlayer.movePiece(randomMove); // executes random move
                             isRed = !isRed;
                         }

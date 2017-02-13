@@ -32,7 +32,7 @@ public class BluePlayer extends Player {
     @Override
     public double[] convertBoard() {
         GameBoardTile[] tileArray = getBoard().getTileOneArray();
-        List<LegalMove> movesList = getAllPossibleValidMoves();
+        LegalMove[] movesList = getAllPossibleValidMoves();
 
         int count = 0;
         double[] boardData = new double[(tileArray.length / 2) + 1];

@@ -150,6 +150,9 @@ public class LegalMove {
             if (temp.getMoveAfter() != null)
                 temp.getMoveAfter().clear();
 
+            if (temp.jumpedTile != null)
+                temp.jumpedTile = null;
+
             temp.moveAfter = null;
             temp = null;
         }

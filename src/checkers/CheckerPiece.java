@@ -81,13 +81,13 @@ public class CheckerPiece extends JLabel {
         }
     }
 
-    public ArrayList<LegalMove> getAllMoves() {
+    public LegalMove[] getAllMoves() {
         if (!isCaptured)
             return checkAvailableTiles(getCurrentTile());
         else return null;
     }
     // Grabs all the available moves and piece on a specific tile can make
-    private ArrayList<LegalMove> checkAvailableTiles(GameBoardTile tile) {
+    private LegalMove[] checkAvailableTiles(GameBoardTile tile) {
         ArrayList<LegalMove> recursiveCheck = new ArrayList<>();
 
         if (availableTileClearFlag) {
@@ -183,8 +183,8 @@ public class CheckerPiece extends JLabel {
             checkAvailableTilesRecursion(tileToCheck);
         }
         availableTileClearFlag = true;
-
-        return availableLegalMoves;
+        LegalMove[] arrayMove = new LegalMove[availableLegalMoves.size()];
+        return availableLegalMoves.toArray(arrayMove);
     }
 
     private void checkAvailableTilesRecursion(LegalMove newMove) {

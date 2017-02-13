@@ -86,8 +86,8 @@ public class CheckersGame extends JFrame {
     public void turn() {
         Random rng = new Random();
         try {
-            ArrayList<LegalMove> possibleMovesRed = redPlayer.getAllPossibleValidMoves();
-            ArrayList<LegalMove> possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
+            LegalMove[] possibleMovesRed = redPlayer.getAllPossibleValidMoves();
+            LegalMove[] possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
 
             if (turnNumber == 150) {
                 winner = 0;
@@ -122,8 +122,8 @@ public class CheckersGame extends JFrame {
 
                 } else { // Red's turn (random)
 
-                    int upperBound = possibleMovesRed.size();
-                    LegalMove randomMove = possibleMovesRed.get(rng.nextInt(upperBound));
+                    int upperBound = possibleMovesRed.length;
+                    LegalMove randomMove = possibleMovesRed[(rng.nextInt(upperBound))];
                     redPlayer.movePiece(randomMove); // executes random move
                     isBlueTurn = true;
                 }
@@ -138,9 +138,7 @@ public class CheckersGame extends JFrame {
                     move.clearTree();
                 }
 
-                possibleMovesBlue.clear();
                 possibleMovesBlue = null;
-                possibleMovesRed.clear();
                 possibleMovesRed = null;
                 turnNumber++;
             }
