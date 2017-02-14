@@ -54,4 +54,9 @@ public class TrainingData implements Serializable{
     public void setPop(NEATPopulation pop) {
         this.pop = pop;
     }
+
+    @Override
+    public String toString() {
+        return "Epoch: " + epoch + "\nBest Fitness: " + bestFitness + "\nNetwork: " + best + "\nPopulation: " + pop;
+    }
 }

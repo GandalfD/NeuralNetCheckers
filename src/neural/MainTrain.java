@@ -46,6 +46,7 @@ public class MainTrain {
             in = new ObjectInputStream(new FileInputStream("training-data.td"));
             playerData  = (TrainingData) in.readObject();
             System.out.println("Found Training Data!");
+            System.out.println(playerData);
         } catch (IOException e) {
             //When nothing found
             playerData = new TrainingData();
