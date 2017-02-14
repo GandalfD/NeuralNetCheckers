@@ -12,7 +12,7 @@ public class LegalMove {
     private GameBoardTile jumpedTile;
 
     private LegalMove moveBefore;
-    private ArrayList<LegalMove> moveAfter = new ArrayList<>();
+    private LegalMove moveAfter;
 
     private MoveDirections direction;
 
@@ -20,7 +20,7 @@ public class LegalMove {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
-        this.moveAfter.add(moveAfter);
+        this.moveAfter = moveAfter;
         this.jumpedTile = jumpedTile;
         this.direction = direction;
     }
@@ -29,7 +29,7 @@ public class LegalMove {
         this.oldTile = oldTile;
         this.newTile = newTile;
         this.moveBefore = moveBefore;
-        this.moveAfter.add(moveAfter);
+        this.moveAfter = moveAfter;
         this.direction = direction;
     }
 
@@ -66,7 +66,7 @@ public class LegalMove {
     }
 
     public void setMoveAfter(LegalMove moveAfter) {
-        this.moveAfter.add(moveAfter);
+        this.moveAfter = moveAfter;
     }
 
     public ArrayList<LegalMove> getPastMoves() {
@@ -86,7 +86,7 @@ public class LegalMove {
         return moveBefore;
     }
 
-    public ArrayList<LegalMove> getMoveAfter() {
+    public LegalMove getMoveAfter() {
         return moveAfter;
     }
 
@@ -147,17 +147,12 @@ public class LegalMove {
             LegalMove temp = moveToCheck;
             moveToCheck = moveToCheck.getMoveBefore();
 
-            if (temp.getMoveAfter() != null)
-                temp.getMoveAfter().clear();
-
-            if (temp.jumpedTile != null)
-                temp.jumpedTile = null;
-
+            temp.moveAfter = null;
+            temp.jumpedTile = null;
+            temp.oldTile = null;
+            temp.newTile = null;
             temp.moveAfter = null;
             temp = null;
         }
     }
-
-
-
 }

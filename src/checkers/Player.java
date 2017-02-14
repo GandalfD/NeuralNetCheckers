@@ -51,7 +51,7 @@ public abstract class Player  {
 
         for (LegalMove[] movesArray : possibleMoves) {
             for (LegalMove moves : movesArray) {
-                if (moves.getMoveAfter().get(0) == null && moves.getMoveAfter().size() == 1) // If move is "final move" (has no more jumps)
+                if (moves.getMoveAfter() == null) // If move is "final move" (has no more jumps)
                     if (canJump) { //Am I forced to jump or not
                         if (moves.getJumpedTile() != null) { // Am forced to jump, only add pieces that can jump
                             allPossibleValidMoves.add(moves);
