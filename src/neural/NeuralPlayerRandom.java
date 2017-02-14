@@ -56,7 +56,7 @@ public class NeuralPlayerRandom {
 
 
             // UNCOMMENT IN TIMES OF STRESS
-            System.gc();
+            //System.gc();
             return winStatus;
         }
     }

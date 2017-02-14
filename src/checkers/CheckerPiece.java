@@ -331,6 +331,9 @@ public class CheckerPiece extends JLabel {
                     }
                 }
             }
+            if (i > 30) {
+                break;
+            }
             i++;
         }
         jumpedMoves.clear();
