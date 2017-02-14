@@ -274,60 +274,76 @@ public class CheckerPiece extends JLabel {
             if (this.isKing) {
                 if (moveSign != DOWN_LEFT && upRight != null && upRight.isOccupied() && canJump(currentMove.getNewTile(), upRight) == 1) { // Check Up right
                     LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() + 2], currentMove, null, upRight, MoveDirections.UP_RIGHT);
-                    currentMove.setMoveAfter(move);
-                    availableLegalMoves.add(move);
-                    jumpedMoves.add(move);
+                    if (!sameMove(move)) {
+                        currentMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        jumpedMoves.add(move);
+                    }
                 }
 
                 if (moveSign != DOWN_RIGHT && upLeft != null && upLeft.isOccupied() && canJump(currentMove.getNewTile(), upLeft) == 1) { // Check up left
                     LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() - 2], currentMove, null, upLeft, MoveDirections.UP_LEFT);
-                    currentMove.setMoveAfter(move);
-                    availableLegalMoves.add(move);
-                    jumpedMoves.add(move);
+                    if (!sameMove(move)) {
+                        currentMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        jumpedMoves.add(move);
+                    }
                 }
 
                 if (moveSign != UP_LEFT && downRight != null && downRight.isOccupied() && canJump(currentMove.getNewTile(), downRight) == 1) { // Check down right
                     LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() + 2], currentMove, null, downRight, MoveDirections.DOWN_RIGHT);
-                    currentMove.setMoveAfter(move);
-                    availableLegalMoves.add(move);
-                    jumpedMoves.add(move);
+                    if (!sameMove(move)) {
+                        currentMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        jumpedMoves.add(move);
+                    }
                 }
 
                 if (moveSign != UP_RIGHT && downLeft != null && downLeft.isOccupied() && canJump(currentMove.getNewTile(), downLeft) == 1) { // Check down left
                     LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() - 2], currentMove, null, downLeft, MoveDirections.DOWN_LEFT);
-                    currentMove.setMoveAfter(move);
-                    availableLegalMoves.add(move);
-                    jumpedMoves.add(move);
+                    if (!sameMove(move)) {
+                        currentMove.setMoveAfter(move);
+                        availableLegalMoves.add(move);
+                        jumpedMoves.add(move);
+                    }
                 }
 
             } else {
                 if (this.color == PieceColors.BLUE) {
                     if (moveSign != DOWN_LEFT && upRight != null && upRight.isOccupied() && canJump(currentMove.getNewTile(), upRight) == 1) { // Check Up right
                         LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() + 2], currentMove, null, upRight, MoveDirections.UP_RIGHT);
-                        currentMove.setMoveAfter(move);
-                        availableLegalMoves.add(move);
-                        jumpedMoves.add(move);
+                        if (!sameMove(move)) {
+                            currentMove.setMoveAfter(move);
+                            availableLegalMoves.add(move);
+                            jumpedMoves.add(move);
+                        }
                     }
 
                     if (moveSign != DOWN_RIGHT && upLeft != null && upLeft.isOccupied() && canJump(currentMove.getNewTile(), upLeft) == 1) { // Check up left
                         LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() - 2][currentMove.returnNewX() - 2], currentMove, null, upLeft, MoveDirections.UP_LEFT);
-                        currentMove.setMoveAfter(move);
-                        availableLegalMoves.add(move);
-                        jumpedMoves.add(move);
+                        if (!sameMove(move)) {
+                            currentMove.setMoveAfter(move);
+                            availableLegalMoves.add(move);
+                            jumpedMoves.add(move);
+                        }
                     }
                 } else { // Red team
                     if (moveSign != UP_LEFT && downRight != null && downRight.isOccupied() && canJump(currentMove.getNewTile(), downRight) == 1) { // Check down right
                         LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() + 2], currentMove, null, downRight, MoveDirections.DOWN_RIGHT);
-                        currentMove.setMoveAfter(move);
-                        availableLegalMoves.add(move);
-                        jumpedMoves.add(move);
+                        if (!sameMove(move)) {
+                            currentMove.setMoveAfter(move);
+                            availableLegalMoves.add(move);
+                            jumpedMoves.add(move);
+                        }
                     }
 
                     if (moveSign != UP_RIGHT && downLeft != null && downLeft.isOccupied() && canJump(currentMove.getNewTile(), downLeft) == 1) { // Check down left
                         LegalMove move = new LegalMove(currentMove.getNewTile(), board.getTile()[currentMove.returnNewY() + 2][currentMove.returnNewX() - 2], currentMove, null, downLeft, MoveDirections.DOWN_LEFT);
-                        currentMove.setMoveAfter(move);
-                        availableLegalMoves.add(move);
-                        jumpedMoves.add(move);
+                        if (!sameMove(move)) {
+                            currentMove.setMoveAfter(move);
+                            availableLegalMoves.add(move);
+                            jumpedMoves.add(move);
+                        }
                     }
                 }
             }
@@ -559,6 +575,14 @@ public class CheckerPiece extends JLabel {
 
     public boolean isCaptured () {
         return isCaptured;
+    }
+
+    private boolean sameMove(LegalMove moveToCheck) {
+        for (LegalMove move : availableLegalMoves) {
+            if (move.equals(moveToCheck))
+                return true;
+        }
+        return false;
     }
 }
 

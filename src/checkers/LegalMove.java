@@ -136,8 +136,14 @@ public class LegalMove {
         return direction;
     }
 
-    public boolean equals(LegalMove move) {
-        return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile && direction == move.getDirection());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof LegalMove) {
+            LegalMove move = (LegalMove) obj;
+            return (oldTile == move.oldTile && newTile == move.newTile && jumpedTile == move.jumpedTile && direction == move.getDirection());
+        } else {
+            return false;
+        }
     }
 
     public void clearTree() {
