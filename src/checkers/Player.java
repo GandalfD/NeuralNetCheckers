@@ -107,11 +107,12 @@ public abstract class Player  {
 
     public void movePiece(LegalMove move) throws InvalidMoveException {
         boolean isValid = false;
+        LegalMove[] moves = getAllPossibleValidMoves();
 
-        if (getAllPossibleValidMoves().length == 0)
+        if (moves.length == 0)
             throw new InvalidMoveException("Player has no possible moves");
 
-        for (LegalMove validMove : getAllPossibleValidMoves()) {
+        for (LegalMove validMove : moves) {
             if (validMove.equals(move)) {
                 isValid = true;
                 break;
@@ -130,6 +131,11 @@ public abstract class Player  {
         } else { // Not valid
             throw new InvalidMoveException("Move is not valid!");
         }
+
+        for (LegalMove moveToCheck : moves) {
+            moveToCheck.clearTree();
+        }
+
     }
 
     public void setNetwork(NEATNetwork network) {

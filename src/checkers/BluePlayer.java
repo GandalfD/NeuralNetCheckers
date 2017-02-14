@@ -71,7 +71,9 @@ public class BluePlayer extends Player {
             if (checkKing(move.getNewTile())) {
                 kingMoveCount++;
             }
+            move.clearTree();
         }
+
         double kingInput = NeuralNet.normalize((double) kingMoveCount, 0, 4, -1, 1);
         boardData[boardData.length-1] = kingInput;
 
