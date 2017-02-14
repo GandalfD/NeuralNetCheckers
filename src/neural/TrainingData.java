@@ -16,6 +16,8 @@ public class TrainingData implements Serializable{
     private MLMethod best;
     private NEATPopulation pop;
 
+    private static final long serialVersionUID = 666L;
+
     public void reset() {
         this.epoch = 0;
         this.bestFitness = -100;

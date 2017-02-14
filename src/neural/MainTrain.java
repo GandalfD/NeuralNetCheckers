@@ -27,7 +27,7 @@ public class MainTrain {
     private static final int popSize = 1000;
     private static final int numExtraRounds = 250;
 
-    public static final int INPUT_NEURONS = 32;
+    public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
 
     public static boolean AM_DEBUGGING = false;

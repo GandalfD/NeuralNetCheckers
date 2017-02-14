@@ -1,5 +1,6 @@
 package checkers;
 
+import neural.MainTrain;
 import neural.NeuralNet;
 import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
@@ -35,7 +36,7 @@ public class BluePlayer extends Player {
         LegalMove[] movesList = getAllPossibleValidMoves();
 
         int count = 0;
-        double[] boardData = new double[(tileArray.length / 2) + 1];
+        double[] boardData = new double[MainTrain.INPUT_NEURONS];
         for (int i = 0; i < tileArray.length; i++) {
             CheckerPiece piece = tileArray[i].getCurrentPiece();
 
