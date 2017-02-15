@@ -3,6 +3,7 @@ package neural;
 import org.encog.ml.MLMethod;
 import org.encog.ml.ea.genome.Genome;
 import org.encog.ml.ea.species.Species;
+import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 
 import org.encog.ml.ea.train.EvolutionaryAlgorithm;
@@ -30,12 +31,13 @@ public class MainTrain {
 
     private static TrainingData playerData;
 
-    private static final int popSize = 5;
+    private static final int popSize = 50;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
 
-    public static boolean AM_DEBUGGING = false;
+    public static boolean AM_DEBUGGING = true;
+    public static boolean RANDOM_PLAYER = false;
 
     public static void main(String[] args) {
         readFiles();
@@ -43,6 +45,9 @@ public class MainTrain {
         while(true) {
             System.out.println("Epoch "+ playerData.epoch);
             trainIteration();
+
+            if (RANDOM_PLAYER) break;
+
             playerData.epoch++;
             System.out.println("Writing files...");
             writeFiles();
@@ -95,14 +100,21 @@ public class MainTrain {
         train.setSpeciation(speciation);
         trainingScore.setTrain(train);
 
-        //Run an iteration of training
-        train.iteration();
+        // Random player
+        if (RANDOM_PLAYER) {
+            PlayerScore testScore2 = new PlayerScore(playerData.pop);
+            testScore2.setTrain(train);
+            NeuralPlayerRandom npr = new NeuralPlayerRandom((NEATNetwork)customGetBestGenome(playerData.pop, testScore2, train));
+            System.out.println(npr.scorePlayer());
+        } else {
+            //Run an iteration of training
+            train.iteration();
 
-        //This is just some stuff to show how it's going, comment out if you want
-        PlayerScore testScore = new PlayerScore(playerData.pop);
-        testScore.setTrain(train);
-        System.out.println("Competitive - " + " Score:" + testScore.calculateScore(customGetBestGenome(playerData.pop, testScore, train)) + " Population size: " + getPopSize(playerData.pop));
-
+            //This is just some stuff to show how it's going, comment out if you want
+            PlayerScore testScore = new PlayerScore(playerData.pop);
+            testScore.setTrain(train);
+            System.out.println("Competitive - " + " Score:" + testScore.calculateScore(customGetBestGenome(playerData.pop, testScore, train)) + " Population size: " + getPopSize(playerData.pop));
+        }
         //Cleanup
         //train.finishTraining();
     }

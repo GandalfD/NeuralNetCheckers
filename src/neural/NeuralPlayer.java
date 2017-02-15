@@ -37,10 +37,20 @@ public class NeuralPlayer {
         game.getBluePlayer().setNetwork(network1);
         game.getRedPlayer().setNetwork(network2);
 
-        //game.playGUI();
-        while (game.getWinner() == -2) {
-            game.turn();
+        if (MainTrain.AM_DEBUGGING) {
+            game.playGUI();
+
+            while (game.getWinner() == -2);
+
+        } else {
+
+            //game.playGUI();
+            while (game.getWinner() == -2) {
+                game.turn();
+            }
+
         }
+
         int winStatus = game.getWinner();
         game = null;
 
