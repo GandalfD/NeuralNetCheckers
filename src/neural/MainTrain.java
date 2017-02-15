@@ -21,12 +21,16 @@ import java.util.List;
 /**
  * Created by ethanm on 1/25/17.
  * Trains network using competitive unsupervised learning with NEAT
+ *
+ *
+ * Handy guide to console output:
+ * Winner    #moves from NN/#moves 1st | how many turns taken
  */
 public class MainTrain {
 
     private static TrainingData playerData;
 
-    private static final int popSize = 50;
+    private static final int popSize = 5;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
@@ -49,7 +53,7 @@ public class MainTrain {
         ObjectInputStream in;
         try {
             //Get player data
-            in = new ObjectInputStream(new FileInputStream("training-data.td.hi"));
+            in = new ObjectInputStream(new FileInputStream("training-data.td"));
             playerData  = (TrainingData) in.readObject();
             System.out.println("Found Training Data!");
             System.out.println(playerData);
@@ -69,7 +73,7 @@ public class MainTrain {
 
         try {
             //Write previous bests
-            out = new ObjectOutputStream(new FileOutputStream("training-data.td.hit"));
+            out = new ObjectOutputStream(new FileOutputStream("training-data.td"));
             out.writeObject(playerData);
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,10 +87,10 @@ public class MainTrain {
     }
 
     private static void trainIteration() {
-        //Set up training & Score
+        ShittyPopCopyThing popClone = new ShittyPopCopyThing(playerData.pop);//Set up training & Score
         EvolutionaryAlgorithm train; //Create training
-        PlayerScore trainingScore = new PlayerScore(playerData.pop);
-        train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
+        PlayerScore trainingScore = new PlayerScore(popClone.getPop());
+        train = NEATUtil.constructNEATTrainer(popClone.getPop(), trainingScore);
         OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
         train.setSpeciation(speciation);
         trainingScore.setTrain(train);

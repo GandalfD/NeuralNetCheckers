@@ -8,6 +8,8 @@ import org.encog.ml.ea.train.EvolutionaryAlgorithm;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.NEATPopulation;
 
+import java.io.*;
+
 /**
  * Created by ethanm on 1/25/17.
  */
@@ -30,6 +32,7 @@ public class PlayerScore implements CalculateScore {
     @Override
     public double calculateScore(MLMethod network) {
         MLMethod[] opponents = new MLMethod[0];
+        ObjectInputStream in;
 
         for (int i=0; i< pop.getSpecies().size(); i++) {
             Species species = pop.getSpecies().get(i);
