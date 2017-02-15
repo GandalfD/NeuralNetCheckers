@@ -26,7 +26,7 @@ public class MainTrain {
 
     private static TrainingData playerData;
 
-    private static final int popSize = 250;
+    private static final int popSize = 50;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
