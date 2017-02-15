@@ -17,8 +17,8 @@ public class NeuralPlayer {
     public int scorePlayer() {
         int n = 0;
         for (int i = 0; i < this.opponents.length; i++) {
-            n += this.playGame(this.network, this.opponents[i]);
-            n -= this.playGame(this.opponents[i], this.network);
+            n += wl(this.playGame(this.network, this.opponents[i]), +1);
+            n -= wl(this.playGame(this.opponents[i], this.network), -1);
         }
         //System.out.print(n + " '");
         return n;
