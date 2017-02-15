@@ -24,24 +24,23 @@ import java.util.List;
  */
 public class MainTrain {
 
-    private static final int INT_LIMIT = 2147483647;
-
     private static TrainingData playerData;
-    private static final int popSize = 250;
 
-    public static final boolean AM_DEBUGGING = false;
+    private static final int popSize = 250;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
 
+    public static boolean AM_DEBUGGING = false;
+
     public static void main(String[] args) {
         readFiles();
-
         //Train
-        while (true) {
-            System.out.println("\nEpoch: " + playerData.epoch);
+        while(true) {
+            System.out.println("Epoch "+ playerData.epoch);
             trainIteration();
             playerData.epoch++;
+            System.out.println("Writing files...");
             writeFiles();
         }
     }
@@ -51,12 +50,15 @@ public class MainTrain {
         try {
             //Get player data
             in = new ObjectInputStream(new FileInputStream("training-data.td"));
-            playerData = (TrainingData) in.readObject();
+            playerData  = (TrainingData) in.readObject();
+            System.out.println("Found Training Data!");
+            System.out.println(playerData);
         } catch (IOException e) {
             //When nothing found
-            playerData  = new TrainingData();
-            playerData .reset();
+            playerData = new TrainingData();
+            playerData.reset();
             playerData.pop = createPop(popSize);
+            System.out.println("Using New Training Data");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -64,6 +66,7 @@ public class MainTrain {
 
     public static void writeFiles() {
         ObjectOutputStream out;
+
         try {
             //Write previous bests
             out = new ObjectOutputStream(new FileOutputStream("training-data.td"));
@@ -74,9 +77,7 @@ public class MainTrain {
     }
 
     public static NEATPopulation createPop(int size) { //Generate a template population
-        int inputNeurons = 10;
-        int outputNeurons = 9;
-        NEATPopulation network = new NEATPopulation(inputNeurons, outputNeurons, size);
+        NEATPopulation network = new NEATPopulation(INPUT_NEURONS, OUTPUT_NEURONS, size);
         network.reset();
         return network;
     }
@@ -120,7 +121,7 @@ public class MainTrain {
 
     private static MLMethod customGetBestGenome(NEATPopulation pop, PlayerScore score, EvolutionaryAlgorithm train) {
         MLMethod bestNet = null;
-        int bestFitness = -INT_LIMIT;
+        int bestFitness = Integer.MIN_VALUE;
         List<Species> speciesList = pop.getSpecies();
 
         for (int i=0; i<speciesList.size(); i++) {

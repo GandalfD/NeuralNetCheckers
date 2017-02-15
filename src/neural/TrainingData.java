@@ -13,6 +13,8 @@ public class TrainingData implements Serializable {
     public int bestFitness;
     public NEATPopulation pop;
 
+    private static final long serialVersionUID = 666L;
+
     public void reset() {
         this.epoch = 0;
         this.bestFitness = -100;

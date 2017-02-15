@@ -94,18 +94,18 @@ public class CheckersGame extends JFrame {
 
             if (turnNumber == 150) {
                 winner = 0;
-                System.out.format("%10s%15s%15s", "Tie", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                System.out.format("%15s%15s%15s", "Tie", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
                         NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
 
             }
             if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
                 winner = -1;
-                System.out.format("%10s%15s%15s", "Red Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                System.out.format("%15s%15s%15s", "Red Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
                         NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
                 redGamesWon++;
             } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
                 winner = 1;
-                System.out.format("%10s%15s%15s", "Blue Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                System.out.format("%15s%15s%15s", "Blue Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
                         NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
                 blueGamesWon++;
             } else {
