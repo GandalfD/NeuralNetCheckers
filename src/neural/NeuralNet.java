@@ -1,21 +1,18 @@
 package neural;
 
-import checkers.GameBoardTile;
-import checkers.LegalMove;
-import checkers.MoveDirections;
-import checkers.Player;
+import checkers.*;
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.neat.NEATNetwork;
-
-import java.util.ArrayList;
 
 /**
  * Created by darwin on 2/4/17.
  */
 public class NeuralNet {
-    public static int testint = 0;
-    public static int otherint = 0;
+    public static int chosenMoveBlue = 0;
+    public static int defaultMoveBlue = 0;
+    public static int chosenMoveRed = 0;
+    public static int defaultMoveRed = 0;
 
     public static LegalMove getMoveNN(NEATNetwork network, double[] board, LegalMove[] possibleValidMoves, Player player) {
 
@@ -89,7 +86,10 @@ public class NeuralNet {
             // Is the desired move legal?
             for (LegalMove moveToCheck : possibleValidMoves) {
                 if (moveToCheck.getOldTile().equals(tileToCheck) && moveToCheck.getDirection() == direction) {
-                    testint++;
+                    if (player.getTeamColor() == PieceColors.BLUE)
+                        chosenMoveBlue++;
+                    else
+                        chosenMoveRed++;
                     if (MainTrain.AM_DEBUGGING) {
                         System.out.println("I am doing move " + moveToCheck);
                         System.out.println("Which is my " + i + " choice");
@@ -100,7 +100,11 @@ public class NeuralNet {
         }
 
         // No legal move found, return first possible move
-        otherint++;
+        if (player.getTeamColor() == PieceColors.BLUE)
+            defaultMoveBlue++;
+        else
+            defaultMoveRed++;
+
         if (MainTrain.AM_DEBUGGING)
             System.out.println("First Move: " + possibleValidMoves[0]);
         return possibleValidMoves[0];

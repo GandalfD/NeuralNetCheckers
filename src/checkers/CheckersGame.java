@@ -1,16 +1,12 @@
 package checkers;
 
-import neural.MainTrain;
 import neural.NeuralNet;
-import org.encog.neural.neat.NEATNetwork;
-import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -32,6 +28,7 @@ public class CheckersGame extends JFrame {
 
     private int turnNumber = 0;
     private int blueTurnNumber = 0;
+    private int redTurnNumber = 0;
 
     public boolean gameover = false;
 
@@ -58,6 +55,12 @@ public class CheckersGame extends JFrame {
         blueGamesWon = 0;
         turnNumber = 0;
         blueTurnNumber = 0;
+        redTurnNumber = 0;
+
+        NeuralNet.chosenMoveBlue = 0;
+        NeuralNet.defaultMoveBlue = 0;
+        NeuralNet.chosenMoveRed = 0;
+        NeuralNet.defaultMoveRed = 0;
 
         redPlayer = new RedPlayer();
         bluePlayer = new BluePlayer();
@@ -91,21 +94,19 @@ public class CheckersGame extends JFrame {
 
             if (turnNumber == 150) {
                 winner = 0;
-                System.out.println("Tie " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
-                NeuralNet.testint = 0;
-                NeuralNet.otherint = 0;
+                System.out.format("%10s%15s%15s", "Tie", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
+
             }
             if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
                 winner = -1;
-                System.out.println("Red Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
-                NeuralNet.testint = 0;
-                NeuralNet.otherint = 0;
+                System.out.format("%10s%15s%15s", "Red Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
                 redGamesWon++;
             } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
                 winner = 1;
-                System.out.println("Blue Won " + NeuralNet.testint + "/" + NeuralNet.otherint + " | " + blueTurnNumber);
-                NeuralNet.testint = 0;
-                NeuralNet.otherint = 0;
+                System.out.format("%10s%15s%15s", "Blue Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
+                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
                 blueGamesWon++;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
@@ -113,19 +114,19 @@ public class CheckersGame extends JFrame {
                     bluePlayer.movePiece(nextMove);
                     isBlueTurn = false;
                     blueTurnNumber++;
-                    // TODO Uncomment the lines above and comment the things below @Ethan
-                    /*ArrayList<LegalMove> possibleMoves = bluePlayer.getAllPossibleValidMoves();
-                    int upperBound = possibleMoves.size();
-                    LegalMove randomMove = possibleMoves.get(rng.nextInt(upperBound));
-                    bluePlayer.movePiece(randomMove); // executes random move
-                    isBlueTurn = false;*/
-
                 } else { // Red's turn (random)
-
-                    int upperBound = possibleMovesRed.length;
-                    LegalMove randomMove = possibleMovesRed[(rng.nextInt(upperBound))];
-                    redPlayer.movePiece(randomMove); // executes random move
-                    isBlueTurn = true;
+                    if (redPlayer.getNetwork() != null) {
+                        LegalMove nextMove = NeuralNet.getMoveNN(redPlayer.getNetwork(), redPlayer.convertBoard(), possibleMovesRed, redPlayer);
+                        redPlayer.movePiece(nextMove);
+                        isBlueTurn = true;
+                        redTurnNumber++;
+                    } else {
+                        int upperBound = possibleMovesRed.length;
+                        LegalMove randomMove = possibleMovesRed[(rng.nextInt(upperBound))];
+                        redPlayer.movePiece(randomMove); // executes random move
+                        isBlueTurn = true;
+                        redTurnNumber++;
+                    }
                 }
 
 

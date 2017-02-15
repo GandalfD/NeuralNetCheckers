@@ -37,7 +37,7 @@ public class BluePlayer extends Player {
 
         int count = 0;
         double[] boardData = new double[MainTrain.INPUT_NEURONS];
-        for (int i = 0; i < tileArray.length; i++) {
+        for (int i = 0; i < tileArray.length-1; i++) {
             CheckerPiece piece = tileArray[i].getCurrentPiece();
 
             if (piece == null) {

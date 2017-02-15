@@ -13,16 +13,14 @@ import java.io.Serializable;
 public class TrainingData implements Serializable{
     private int epoch;
     private int bestFitness;
-    private MLMethod best;
-    private NEATPopulation pop;
+    private MLMethod[] best;
 
     private static final long serialVersionUID = 666L;
 
     public void reset() {
         this.epoch = 0;
         this.bestFitness = -100;
-        this.best = null;
-        this.pop  = null;
+        this.best = new BasicNetwork[0];
     }
 
     public int getEpoch() {
@@ -33,12 +31,8 @@ public class TrainingData implements Serializable{
         return bestFitness;
     }
 
-    public MLMethod getBest() {
+    public MLMethod[] getBest() {
         return best;
-    }
-
-    public NEATPopulation getPop() {
-        return pop;
     }
 
     public void incrementEpoch() {
@@ -49,16 +43,12 @@ public class TrainingData implements Serializable{
         this.bestFitness = bestFitness;
     }
 
-    public void setBest(MLMethod best) {
+    public void setBest(MLMethod[] best) {
         this.best = best;
-    }
-
-    public void setPop(NEATPopulation pop) {
-        this.pop = pop;
     }
 
     @Override
     public String toString() {
-        return "Epoch: " + epoch + "\nBest Fitness: " + bestFitness + "\nNetwork: " + best + "\nPopulation: " + pop;
+        return "Epoch: " + epoch + "\nBest Fitness: " + bestFitness + "\nNetwork: " + best;
     }
 }
