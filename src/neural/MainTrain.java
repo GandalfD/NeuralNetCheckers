@@ -49,7 +49,7 @@ public class MainTrain {
         ObjectInputStream in;
         try {
             //Get player data
-            in = new ObjectInputStream(new FileInputStream("training-data.td"));
+            in = new ObjectInputStream(new FileInputStream("training-data.td.hi"));
             playerData  = (TrainingData) in.readObject();
             System.out.println("Found Training Data!");
             System.out.println(playerData);
@@ -69,7 +69,7 @@ public class MainTrain {
 
         try {
             //Write previous bests
-            out = new ObjectOutputStream(new FileOutputStream("training-data.td"));
+            out = new ObjectOutputStream(new FileOutputStream("training-data.td.hit"));
             out.writeObject(playerData);
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,7 +100,7 @@ public class MainTrain {
         System.out.println("Competitive - " + " Score:" + testScore.calculateScore(customGetBestGenome(playerData.pop, testScore, train)) + " Population size: " + getPopSize(playerData.pop));
 
         //Cleanup
-        train.finishTraining();
+        //train.finishTraining();
     }
 
     private static int getPopSize(NEATPopulation pop) {
@@ -116,6 +116,7 @@ public class MainTrain {
                 }
             }
         }
+
         return num;
     }
 

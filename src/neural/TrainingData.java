@@ -19,4 +19,9 @@ public class TrainingData implements Serializable {
         this.epoch = 0;
         this.bestFitness = -100;
     }
+
+    @Override
+    public String toString() {
+        return "Best Fitness: " + bestFitness + "\nPop: " + pop;
+    }
 }
