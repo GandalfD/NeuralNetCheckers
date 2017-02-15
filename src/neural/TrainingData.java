@@ -1,8 +1,6 @@
 package neural;
 
-import org.encog.ml.MLMethod;
 import org.encog.neural.neat.NEATPopulation;
-import org.encog.neural.networks.BasicNetwork;
 
 import java.io.Serializable;
 
@@ -10,45 +8,13 @@ import java.io.Serializable;
  * Created by Ethan on 1/31/2017.
  * Stores data for training
  */
-public class TrainingData implements Serializable{
-    private int epoch;
-    private int bestFitness;
-    private MLMethod[] best;
-
-    private static final long serialVersionUID = 666L;
+public class TrainingData implements Serializable {
+    public int epoch;
+    public int bestFitness;
+    public NEATPopulation pop;
 
     public void reset() {
         this.epoch = 0;
         this.bestFitness = -100;
-        this.best = new BasicNetwork[0];
-    }
-
-    public int getEpoch() {
-        return epoch;
-    }
-
-    public int getBestFitness() {
-        return bestFitness;
-    }
-
-    public MLMethod[] getBest() {
-        return best;
-    }
-
-    public void incrementEpoch() {
-        this.epoch++;
-    }
-
-    public void setBestFitness(int bestFitness) {
-        this.bestFitness = bestFitness;
-    }
-
-    public void setBest(MLMethod[] best) {
-        this.best = best;
-    }
-
-    @Override
-    public String toString() {
-        return "Epoch: " + epoch + "\nBest Fitness: " + bestFitness + "\nNetwork: " + best;
     }
 }
