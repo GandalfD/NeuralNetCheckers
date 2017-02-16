@@ -42,6 +42,24 @@ public class MainTrain {
     public static void main(String[] args) {
         readFiles();
         //Train
+        EvolutionaryAlgorithm train; //Create training
+        PlayerScoreRandom trainingScore = new PlayerScoreRandom();
+        train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
+        OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
+        train.setSpeciation(speciation);
+
+        while(true) {
+            System.out.println("Epoch " + playerData.epoch + " started.");
+            train.iteration();
+            System.out.println("Epoch " + playerData.epoch + " finished with error of " + train.getError());
+            playerData.epoch++;
+            writeFiles();
+        }
+    }
+
+    public static void mainNNvNN(String[] args) {
+        readFiles();
+        //Train
         while(true) {
             System.out.println("Epoch "+ playerData.epoch);
             trainIteration();
