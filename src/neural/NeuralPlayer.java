@@ -8,13 +8,6 @@ import org.encog.neural.neat.NEATNetwork;
 public class NeuralPlayer {
     private NEATNetwork network;
     private NEATNetwork[] opponents;
-    private int wins = 0;
-    private int losses = 0;
-    private int ties = 0;
-    private int wins2 = 0;
-    private int losses2 = 0;
-    private int ties2 = 0;
-
 
     public NeuralPlayer(NEATNetwork network, NEATNetwork[] opponents) {
         this.opponents = opponents;
@@ -24,42 +17,11 @@ public class NeuralPlayer {
     public int scorePlayer() {
         int n = 0;
         for (int i = 0; i < this.opponents.length; i++) {
-            n += doIterationA();
-            n -= doIterationB();
+            n += wl(this.playGame(this.network, this.opponents[i]), +1);
+            n -= wl(this.playGame(this.opponents[i], this.network), -1);
         }
-        //System.out.println("W1:" + wins + " T1:" + ties + " L1:" + losses );
-        //System.out.println("W2:" + wins2+ " T2:" + ties2+ " L2:" + losses2);
-        //System.out.print(n/2+"\n\n");
-        return n/2;
-    }
-
-    public int doIterationA() {
-
-        TicTacToeGame game = new TicTacToeGame();
-        game.initializeGame();
-        for(int i = 0; i<9;i++)
-            if(game.winner ==-2)
-                game.turnR(this.network);
-        //Test stuff
-        if (game.winner == 1) wins++;
-        if (game.winner == 0) ties++;
-        if (game.winner == -1)losses++;
-
-        return game.winner;
-    }
-
-    public int doIterationB() {
-
-        TicTacToeGame game = new TicTacToeGame();
-        game.initializeGame();
-        for(int i = 0; i<9;i++)
-            if(game.winner ==-2)
-                game.turnR2(this.network);
-        //Test stuff
-        if (game.winner == -1)wins2++;
-        if (game.winner == 0) ties2++;
-        if (game.winner == 1) losses2++;
-        return game.winner;
+        //System.out.print(n + " '");
+        return n;
     }
 
     private int wl (int gameResult, int player) {
@@ -93,7 +55,7 @@ public class NeuralPlayer {
         game = null;
 
 
-        // UNCOMMENT IN TIMES OF STRESS <-lol
+        // UNCOMMENT IN TIMES OF STRESS
         //System.gc();
         return winStatus;
     }
