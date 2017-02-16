@@ -5,6 +5,8 @@ import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.neat.NEATNetwork;
 
+import java.util.Random;
+
 /**
  * Created by darwin on 2/4/17.
  */
@@ -105,9 +107,13 @@ public class NeuralNet {
         else
             defaultMoveRed++;
 
+        Random rng = new Random();
+        int rngMoveIndex = rng.nextInt(possibleValidMoves.length);
+        LegalMove randomMove = possibleValidMoves[rngMoveIndex];
+
         if (MainTrain.AM_DEBUGGING)
-            System.out.println("First Move: " + possibleValidMoves[0]);
-        return possibleValidMoves[0];
+            System.out.println("First Move: " + randomMove);
+        return randomMove;
     }
 
     public static double normalize(double x, double in_min, double in_max, double out_min, double out_max)

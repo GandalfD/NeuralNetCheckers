@@ -92,7 +92,7 @@ public class CheckersGame extends JFrame {
             LegalMove[] possibleMovesRed = redPlayer.getAllPossibleValidMoves();
             LegalMove[] possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
 
-            if (turnNumber == 200) {
+            if (turnNumber == 100) {
                 winner = 0;
                 System.out.format("%15s%15s%15s", "Tie", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
                         NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
