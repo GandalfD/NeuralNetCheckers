@@ -89,7 +89,7 @@ public class MainTrain {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
+    }//
 
     public static void writeFiles() {
         ObjectOutputStream out;
