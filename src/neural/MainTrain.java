@@ -36,7 +36,7 @@ public class MainTrain {
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
 
-    public static boolean AM_DEBUGGING = true;
+    public static boolean AM_DEBUGGING = false;
     public static boolean RANDOM_PLAYER = false;
 
     public static void main(String[] args) {
@@ -95,7 +95,7 @@ public class MainTrain {
         ShittyPopCopyThing popClone = new ShittyPopCopyThing(playerData.pop);//Set up training & Score
         EvolutionaryAlgorithm train; //Create training
         PlayerScore trainingScore = new PlayerScore(popClone.getPop());
-        train = NEATUtil.constructNEATTrainer(popClone.getPop(), trainingScore);
+        train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
         OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
         train.setSpeciation(speciation);
         trainingScore.setTrain(train);
@@ -111,7 +111,7 @@ public class MainTrain {
             train.iteration();
 
             //This is just some stuff to show how it's going, comment out if you want
-            PlayerScore testScore = new PlayerScore(playerData.pop);
+            PlayerScore testScore = new PlayerScore(popClone.getPop());
             testScore.setTrain(train);
             System.out.println("Competitive - " + " Score:" + testScore.calculateScore(customGetBestGenome(playerData.pop, testScore, train)) + " Population size: " + getPopSize(playerData.pop));
         }
