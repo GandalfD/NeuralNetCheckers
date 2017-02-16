@@ -10,17 +10,18 @@ import java.io.Serializable;
  */
 public class TrainingData implements Serializable {
     public int epoch;
+    public int bestFitness;
     public NEATPopulation pop;
 
     private static final long serialVersionUID = 666L;
 
     public void reset() {
         this.epoch = 0;
-        this.pop = null;
+        this.bestFitness = -100;
     }
 
     @Override
     public String toString() {
-        return "Epoch: " + epoch + "\nPop: " + pop;
+        return "Best Fitness: " + bestFitness + "\nPop: " + pop;
     }
 }
