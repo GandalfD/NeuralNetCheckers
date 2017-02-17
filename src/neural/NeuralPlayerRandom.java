@@ -4,7 +4,6 @@ package neural; /**
 
 import checkers.CheckersGame;
 import org.encog.neural.neat.NEATNetwork;
-import org.encog.neural.networks.BasicNetwork;
 
 public class NeuralPlayerRandom {
     private int wins = 0;
@@ -24,10 +23,11 @@ public class NeuralPlayerRandom {
         int n = 0;
         for (int i=0; i<100; i++) {
             n += this.doIterationA();
-            n -= this.doIterationB();
+           // n -= this.doIterationB();
         }
         System.out.println("W1:" + wins + " T1:" + ties + " L1:" + losses );
         System.out.println("W2:" + wins2+ " T2:" + ties2+ " L2:" + losses2);
+        System.out.println();
         return n/2;
     }
 
@@ -40,18 +40,19 @@ public class NeuralPlayerRandom {
             game.playGUI();
         }
 
-        while (game.getWinner() == -2) {
+        while (!game.hasGameEnded()) {
             if (MainTrain.AM_DEBUGGING);
 
             else
                 game.turn();
         }
         //Test stuff
-        if (game.getWinner() == 1) wins++;
-        if (game.getWinner() == 0) ties++;
-        if (game.getWinner() == -1)losses++;
-
-        return game.getWinner();
+        if (game.getWinner() == game.getBluePlayer()) wins++;
+        if (game.getWinner() == null) ties++;
+        if (game.getWinner() == game.getRedPlayer())losses++;
+        if (MainTrain.AM_DEBUGGING)
+            System.out.println(game.getBluePlayer());
+        return game.getBlueScore();
     }
 
     public int doIterationB() {
@@ -63,7 +64,7 @@ public class NeuralPlayerRandom {
             game.playGUI();
         }
 
-        while (game.getWinner() == -2) {
+        while (!game.hasGameEnded()) {
             if (MainTrain.AM_DEBUGGING);
 
             else
@@ -71,10 +72,12 @@ public class NeuralPlayerRandom {
         }
 
         //Test stuff
-        if (game.getWinner() == -1)wins2++;
-        if (game.getWinner() == 0) ties2++;
-        if (game.getWinner() == 1) losses2++;
-        return game.getWinner();
+        if (game.getWinner() == game.getBluePlayer()) wins2++;
+        if (game.getWinner() == null) ties2++;
+        if (game.getWinner() == game.getRedPlayer())losses2++;
+        if (MainTrain.AM_DEBUGGING)
+            System.out.println(game.getBluePlayer());
+        return game.getBlueScore();
     }
 }
 

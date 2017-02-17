@@ -22,7 +22,7 @@ public class CheckersGame extends JFrame {
 
     private boolean isBlueTurn;
 
-    private int winner = -2;
+    private int winnerScore = -2;
     private int redGamesWon = 0;
     private int blueGamesWon = 0;
 
@@ -32,7 +32,8 @@ public class CheckersGame extends JFrame {
     
     private NeuralNet net = new NeuralNet();
 
-    public boolean gameover = false;
+    public boolean gameOver = false;
+    private Player winner;
 
     public CheckersGame() {
         super("Train Neural Network");
@@ -52,12 +53,14 @@ public class CheckersGame extends JFrame {
     }
 
     public void initializeGame() {
-        winner = -2;
+        winnerScore = -2;
         redGamesWon = 0;
         blueGamesWon = 0;
         turnNumber = 0;
         blueTurnNumber = 0;
         redTurnNumber = 0;
+        gameOver = false;
+        winner = null;
 
         net.chosenMoveBlue = 0;
         net.defaultMoveBlue = 0;
@@ -78,7 +81,7 @@ public class CheckersGame extends JFrame {
         int i = 0;
         while (i != 500) {
             initializeGame();
-            while (winner == -2) {
+            while (winnerScore == -2) {
                 turn();
             }
 
@@ -95,21 +98,27 @@ public class CheckersGame extends JFrame {
             LegalMove[] possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
 
             if (turnNumber == 100) {
-                winner = 0;
+                winnerScore = 0;
                 System.out.format("%15s%15s%15s", "Tie", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
                         net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
+                gameOver = true;
+                winner = bluePlayer;
 
             }
             if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
-                winner = -1;
+                winnerScore = -1;
                 System.out.format("%15s%15s%15s", "Red Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
                         net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
                 redGamesWon++;
+                gameOver = true;
+                winner = redPlayer;
             } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
-                winner = 1;
+                winnerScore = 1;
                 System.out.format("%15s%15s%15s", "Blue Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
                         net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
                 blueGamesWon++;
+                gameOver = true;
+                winner = null;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
                     LegalMove nextMove = net.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), possibleMovesBlue, bluePlayer);
@@ -173,10 +182,45 @@ public class CheckersGame extends JFrame {
         return bluePlayer;
     }
 
-    public int getWinner() {
-        return winner;
+    public int getBlueScore() {
+        int score = 0;
+
+        if (winner == bluePlayer)
+            score += 20;
+        else if (winner == redPlayer)
+            score -= 20;
+        else
+            score -= 5;
+
+        score += net.chosenMoveBlue;
+        score -= net.defaultMoveBlue;
+
+        return score;
     }
 
+    public int getRedScore() {
+        int score = 0;
+
+        if (winner == bluePlayer)
+            score -= 20;
+        else if (winner == redPlayer)
+            score += 20;
+        else
+            score -= 5;
+
+        score += net.chosenMoveRed;
+        score -= net.defaultMoveRed;
+
+        return score;
+    }
+
+    public Player getWinner() {
+            return winner;
+    }
+
+    public boolean hasGameEnded() {
+        return gameOver;
+    }
     private class ButtonListener implements ActionListener {
 
         @Override
@@ -223,14 +267,14 @@ public class CheckersGame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == turn) {
-                if (winner == -2)
+                if (winnerScore == -2)
                     turn();
                 else {
                     int choice = JOptionPane.showConfirmDialog(this, "Start new game?", "Question", JOptionPane.YES_NO_OPTION);
                     if (choice == 0) {
                         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 //                        new PlayGUI();
-                        gameover = true;
+                        gameOver = true;
                     }
                 }
             }

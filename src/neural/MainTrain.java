@@ -36,7 +36,7 @@ public class MainTrain {
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
 
-    public static boolean AM_DEBUGGING = false;
+    public static boolean AM_DEBUGGING = true;
     public static boolean RANDOM_PLAYER = false;
 
     public static void main(String[] args) {

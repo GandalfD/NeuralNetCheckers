@@ -40,24 +40,27 @@ public class NeuralPlayer {
         if (MainTrain.AM_DEBUGGING) {
             game.playGUI();
 
-            while (game.getWinner() == -2);
+            while (!game.hasGameEnded());
 
         } else {
 
             //game.playGUI();
-            while (game.getWinner() == -2) {
+            while (!game.hasGameEnded()) {
                 game.turn();
             }
 
         }
 
-        int winStatus = game.getWinner();
+        // lmao did we forget to change this during nn vs nn?
+        //int winStatus = game.getWinnerScore();
         game = null;
 
 
         // UNCOMMENT IN TIMES OF STRESS
         //System.gc();
-        return winStatus;
+        //return winStatus;
+
+        return 0;
     }
 }
 
