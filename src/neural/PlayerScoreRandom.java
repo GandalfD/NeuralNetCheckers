@@ -30,6 +30,6 @@ public class PlayerScoreRandom implements CalculateScore {
 
     @Override
     public boolean requireSingleThreaded() {
-        return false;
+        return MainTrain.AM_DEBUGGING;
     }
 }

@@ -35,9 +35,16 @@ public class NeuralPlayerRandom {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(network);
+        
+        if (MainTrain.AM_DEBUGGING) {
+            game.playGUI();
+        }
 
         while (game.getWinner() == -2) {
-            game.turn();
+            if (MainTrain.AM_DEBUGGING);
+
+            else
+                game.turn();
         }
         //Test stuff
         if (game.getWinner() == 1) wins++;
@@ -52,8 +59,15 @@ public class NeuralPlayerRandom {
         game.initializeGame();
         game.getBluePlayer().setNetwork(network);
 
+        if (MainTrain.AM_DEBUGGING) {
+            game.playGUI();
+        }
+
         while (game.getWinner() == -2) {
-            game.turn();
+            if (MainTrain.AM_DEBUGGING);
+
+            else
+                game.turn();
         }
 
         //Test stuff

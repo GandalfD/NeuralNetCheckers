@@ -29,6 +29,8 @@ public class CheckersGame extends JFrame {
     private int turnNumber = 0;
     private int blueTurnNumber = 0;
     private int redTurnNumber = 0;
+    
+    private NeuralNet net = new NeuralNet();
 
     public boolean gameover = false;
 
@@ -57,10 +59,10 @@ public class CheckersGame extends JFrame {
         blueTurnNumber = 0;
         redTurnNumber = 0;
 
-        NeuralNet.chosenMoveBlue = 0;
-        NeuralNet.defaultMoveBlue = 0;
-        NeuralNet.chosenMoveRed = 0;
-        NeuralNet.defaultMoveRed = 0;
+        net.chosenMoveBlue = 0;
+        net.defaultMoveBlue = 0;
+        net.chosenMoveRed = 0;
+        net.defaultMoveRed = 0;
 
         redPlayer = new RedPlayer();
         bluePlayer = new BluePlayer();
@@ -94,29 +96,29 @@ public class CheckersGame extends JFrame {
 
             if (turnNumber == 100) {
                 winner = 0;
-                System.out.format("%15s%15s%15s", "Tie", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
-                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s", "Tie", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
 
             }
             if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
                 winner = -1;
-                System.out.format("%15s%15s%15s", "Red Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
-                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s", "Red Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
                 redGamesWon++;
             } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
                 winner = 1;
-                System.out.format("%15s%15s%15s", "Blue Won", NeuralNet.chosenMoveBlue + "/" + NeuralNet.defaultMoveBlue + " | " + blueTurnNumber,
-                        NeuralNet.chosenMoveRed + "/" + NeuralNet.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s", "Blue Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
                 blueGamesWon++;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
-                    LegalMove nextMove = NeuralNet.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), possibleMovesBlue, bluePlayer);
+                    LegalMove nextMove = net.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), possibleMovesBlue, bluePlayer);
                     bluePlayer.movePiece(nextMove);
                     isBlueTurn = false;
                     blueTurnNumber++;
                 } else { // Red's turn (random)
                     if (redPlayer.getNetwork() != null) {
-                        LegalMove nextMove = NeuralNet.getMoveNN(redPlayer.getNetwork(), redPlayer.convertBoard(), possibleMovesRed, redPlayer);
+                        LegalMove nextMove = net.getMoveNN(redPlayer.getNetwork(), redPlayer.convertBoard(), possibleMovesRed, redPlayer);
                         redPlayer.movePiece(nextMove);
                         isBlueTurn = true;
                         redTurnNumber++;

@@ -11,12 +11,12 @@ import java.util.Random;
  * Created by darwin on 2/4/17.
  */
 public class NeuralNet {
-    public static int chosenMoveBlue = 0;
-    public static int defaultMoveBlue = 0;
-    public static int chosenMoveRed = 0;
-    public static int defaultMoveRed = 0;
+    public int chosenMoveBlue = 0;
+    public int defaultMoveBlue = 0;
+    public int chosenMoveRed = 0;
+    public int defaultMoveRed = 0;
 
-    public static LegalMove getMoveNN(NEATNetwork network, double[] board, LegalMove[] possibleValidMoves, Player player) {
+    public LegalMove getMoveNN(NEATNetwork network, double[] board, LegalMove[] possibleValidMoves, Player player) {
 
         MLData boardData = new BasicMLData(board);
         MLData moveData = network.compute(boardData);
@@ -107,13 +107,9 @@ public class NeuralNet {
         else
             defaultMoveRed++;
 
-        Random rng = new Random();
-        int rngMoveIndex = rng.nextInt(possibleValidMoves.length);
-        LegalMove randomMove = possibleValidMoves[rngMoveIndex];
-
         if (MainTrain.AM_DEBUGGING)
-            System.out.println("First Move: " + randomMove);
-        return randomMove;
+            System.out.println("First Move: " + possibleValidMoves[0]);
+        return possibleValidMoves[0];
     }
 
     public static double normalize(double x, double in_min, double in_max, double out_min, double out_max)
