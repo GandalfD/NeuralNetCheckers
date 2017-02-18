@@ -98,27 +98,29 @@ public class CheckersGame extends JFrame {
             LegalMove[] possibleMovesBlue = bluePlayer.getAllPossibleValidMoves();
 
             if (turnNumber == 100) {
+                winner = null;
                 winnerScore = 0;
-                System.out.format("%15s%15s%15s", "Tie", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
-                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s%20s", "Tie", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber, "Score: " + getBlueScore() + "!\n");
                 gameOver = true;
-                winner = bluePlayer;
+
 
             }
             if (board.whoWon(possibleMovesBlue, possibleMovesRed) == redPlayer) {
+                winner = redPlayer;
                 winnerScore = -1;
-                System.out.format("%15s%15s%15s", "Red Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
-                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s%20s", "Red Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber, "Score: " + getBlueScore() + "!\n");
                 redGamesWon++;
                 gameOver = true;
-                winner = redPlayer;
+
             } else if (board.whoWon(possibleMovesBlue, possibleMovesRed) == bluePlayer) {
+                winner = bluePlayer;
                 winnerScore = 1;
-                System.out.format("%15s%15s%15s", "Blue Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
-                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber + '\n');
+                System.out.format("%15s%15s%15s%20s", "Blue Won", net.chosenMoveBlue + "/" + net.defaultMoveBlue + " | " + blueTurnNumber,
+                        net.chosenMoveRed + "/" + net.defaultMoveRed + " | " + redTurnNumber, "Score: " + getBlueScore() + "!\n");
                 blueGamesWon++;
                 gameOver = true;
-                winner = null;
             } else {
                 if (isBlueTurn) { //Blue turn (NN)
                     LegalMove nextMove = net.getMoveNN(bluePlayer.getNetwork(), bluePlayer.convertBoard(), possibleMovesBlue, bluePlayer);
@@ -190,10 +192,12 @@ public class CheckersGame extends JFrame {
         else if (winner == redPlayer)
             score -= 20;
         else
-            score -= 5;
+            score -= 10;
 
-        score += net.chosenMoveBlue;
-        score -= net.defaultMoveBlue;
+        //score += net.chosenMoveBlue;
+        //score -= net.defaultMoveBlue;
+
+        score += (net.chosenMoveBlue - net.defaultMoveBlue);
 
         return score;
     }

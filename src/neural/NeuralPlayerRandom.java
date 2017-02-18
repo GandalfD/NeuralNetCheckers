@@ -12,6 +12,8 @@ public class NeuralPlayerRandom {
     private int wins2 = 0;
     private int losses2 = 0;
     private int ties2 = 0;
+
+    private int totalScore = 0;
     private NEATNetwork network;
 
     public NeuralPlayerRandom(NEATNetwork network) {
@@ -25,8 +27,10 @@ public class NeuralPlayerRandom {
             n += this.doIterationA();
            // n -= this.doIterationB();
         }
+        System.out.println();
         System.out.println("W1:" + wins + " T1:" + ties + " L1:" + losses );
         System.out.println("W2:" + wins2+ " T2:" + ties2+ " L2:" + losses2);
+        System.out.println("Average Score: " + totalScore / 100);
         System.out.println();
         return n/2;
     }
@@ -52,6 +56,8 @@ public class NeuralPlayerRandom {
         if (game.getWinner() == game.getRedPlayer())losses++;
         if (MainTrain.AM_DEBUGGING)
             System.out.println(game.getBluePlayer());
+
+        totalScore += game.getBlueScore();
         return game.getBlueScore();
     }
 
@@ -77,6 +83,8 @@ public class NeuralPlayerRandom {
         if (game.getWinner() == game.getRedPlayer())losses2++;
         if (MainTrain.AM_DEBUGGING)
             System.out.println(game.getBluePlayer());
+
+        totalScore += game.getBlueScore();
         return game.getBlueScore();
     }
 }

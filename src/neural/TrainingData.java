@@ -21,6 +21,6 @@ public class TrainingData implements Serializable {
 
     @Override
     public String toString() {
-        return "Epoch: " + epoch + "\nPop: " + pop;
+        return "Epoch: " + epoch + "\nSurvive: " + pop.getSurvivalRate();
     }
 }

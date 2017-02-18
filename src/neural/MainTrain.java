@@ -11,11 +11,8 @@ import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.neat.NEATUtil;
 
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
+import javax.sound.sampled.*;
+import java.io.*;
 import java.util.List;
 
 
@@ -30,8 +27,9 @@ import java.util.List;
 public class MainTrain {
 
     private static TrainingData playerData;
+    private static TrainingHistory history;
 
-    private static final int popSize = 50;
+    private static final int popSize = 1000;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
@@ -39,7 +37,22 @@ public class MainTrain {
     public static boolean AM_DEBUGGING = false;
     public static boolean RANDOM_PLAYER = false;
 
+    private static AudioInputStream in;
+    private static Clip clip;
+
     public static void main(String[] args) {
+        try {
+            in = AudioSystem.getAudioInputStream(new File("done.wav"));
+            clip = AudioSystem.getClip();
+            clip.open(in);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
         readFiles();
         //Train
         EvolutionaryAlgorithm train; //Create training
@@ -52,7 +65,13 @@ public class MainTrain {
             System.out.println("Epoch " + playerData.epoch + " started.");
             train.iteration();
             System.out.println("Epoch " + playerData.epoch + " finished with error of " + train.getError());
+
+            // Add epoch history to archive
+            history.addElement(playerData.epoch, train.getError(), playerData.pop.getBestGenome(), playerData.pop.determineBestSpecies(), playerData.pop.getSpecies());
+
             playerData.epoch++;
+            clip.setFramePosition(0);
+            clip.start();
             writeFiles();
         }
     }
@@ -85,9 +104,20 @@ public class MainTrain {
             playerData = new TrainingData();
             playerData.reset();
             playerData.pop = createPop(popSize);
+
             System.out.println("Using New Training Data");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+
+        try {
+            in = new ObjectInputStream(new FileInputStream("training-history.ser"));
+            history = (TrainingHistory) in.readObject();
+        } catch (IOException ioe) {
+            history = new TrainingHistory();
+            System.out.println("Creating new training history");
+        } catch (ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
         }
     }
 
@@ -99,6 +129,10 @@ public class MainTrain {
             System.out.println("Writing Data...");
             out = new ObjectOutputStream(new FileOutputStream("training-data.td"));
             out.writeObject(playerData);
+            System.out.println(playerData);
+
+            out = new ObjectOutputStream(new FileOutputStream("training-history.ser"));
+            out.writeObject(history);
         } catch (IOException e) {
             e.printStackTrace();
         }
