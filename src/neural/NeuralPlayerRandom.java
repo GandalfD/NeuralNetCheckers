@@ -13,6 +13,7 @@ public class NeuralPlayerRandom {
     private int losses2 = 0;
     private int ties2 = 0;
 
+    private static int iteration = 0;
     private int totalScore = 0;
     private NEATNetwork network;
 
@@ -23,16 +24,19 @@ public class NeuralPlayerRandom {
 
     public int scorePlayer() {
         int n = 0;
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<10; i++) {
             n += this.doIterationA();
            // n -= this.doIterationB();
         }
+        iteration++;
+        System.out.println("Game Iteration: " + iteration);
+
         System.out.println();
         System.out.println("W1:" + wins + " T1:" + ties + " L1:" + losses );
         System.out.println("W2:" + wins2+ " T2:" + ties2+ " L2:" + losses2);
-        System.out.println("Average Score: " + totalScore / 100);
+        System.out.println("Average Score: " + n);
         System.out.println();
-        return n/2;
+        return n;
     }
 
     public int doIterationA() {
@@ -61,6 +65,9 @@ public class NeuralPlayerRandom {
         return game.getBlueScore();
     }
 
+    public static void epochDone() {
+        iteration = 0;
+    }
     public int doIterationB() {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
@@ -87,5 +94,7 @@ public class NeuralPlayerRandom {
         totalScore += game.getBlueScore();
         return game.getBlueScore();
     }
+
+
 }
 

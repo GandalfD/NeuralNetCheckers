@@ -3,13 +3,13 @@ package neural;
 import org.encog.ml.MLMethod;
 import org.encog.ml.ea.genome.Genome;
 import org.encog.ml.ea.species.Species;
+import org.encog.ml.ea.train.basic.BasicEA;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 
 import org.encog.ml.ea.train.EvolutionaryAlgorithm;
 import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.neat.NEATUtil;
-
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -40,6 +40,8 @@ public class MainTrain {
     private static AudioInputStream in;
     private static Clip clip;
 
+    private static BasicEA train;
+
     public static void main(String[] args) {
         try {
             in = AudioSystem.getAudioInputStream(new File("done.wav"));
@@ -55,24 +57,25 @@ public class MainTrain {
 
         readFiles();
         //Train
-        EvolutionaryAlgorithm train; //Create training
-        PlayerScoreRandom trainingScore = new PlayerScoreRandom();
-        train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
-        OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
-        train.setSpeciation(speciation);
+         //Create training
 
         while(true) {
             System.out.println("Epoch " + playerData.epoch + " started.");
+            System.out.println("Best Genome: " + playerData.pop.getBestGenome());
+
             train.iteration();
             System.out.println("Epoch " + playerData.epoch + " finished with error of " + train.getError());
 
+            writeFiles();
             // Add epoch history to archive
-            history.addElement(playerData.epoch, train.getError(), playerData.pop.getBestGenome(), playerData.pop.determineBestSpecies(), playerData.pop.getSpecies());
+            history.addElement(playerData.epoch, train.getError(), playerData.pop.getBestGenome(), playerData.pop.determineBestSpecies());
 
+            NeuralPlayerRandom.epochDone();
             playerData.epoch++;
+
             clip.setFramePosition(0);
             clip.start();
-            writeFiles();
+
         }
     }
 
@@ -99,6 +102,7 @@ public class MainTrain {
             playerData  = (TrainingData) in.readObject();
             System.out.println("Found Training Data!");
             System.out.println(playerData);
+            in.close();
         } catch (IOException e) {
             //When nothing found
             playerData = new TrainingData();
@@ -111,14 +115,36 @@ public class MainTrain {
         }
 
         try {
-            in = new ObjectInputStream(new FileInputStream("training-history.ser"));
+            in = new ObjectInputStream(new FileInputStream("training-history1.ser"));
             history = (TrainingHistory) in.readObject();
+            System.out.println("Found training history");
+            in.close();
+        } catch (EOFException eof) {
+            eof.printStackTrace();
         } catch (IOException ioe) {
             history = new TrainingHistory();
             System.out.println("Creating new training history");
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
         }
+
+        try {
+            in = new ObjectInputStream(new FileInputStream("train-object.ser"));
+            train = (BasicEA) in.readObject();
+            System.out.println("Found trainer");
+            in.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Creating new trainer");
+            PlayerScoreRandom trainingScore = new PlayerScoreRandom();
+            train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
+            OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
+            train.setSpeciation(speciation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void writeFiles() {
@@ -130,9 +156,15 @@ public class MainTrain {
             out = new ObjectOutputStream(new FileOutputStream("training-data.td"));
             out.writeObject(playerData);
             System.out.println(playerData);
+            out.close();
 
-            out = new ObjectOutputStream(new FileOutputStream("training-history.ser"));
+            out = new ObjectOutputStream(new FileOutputStream("training-history1.ser"));
             out.writeObject(history);
+            out.close();
+
+            out = new ObjectOutputStream(new FileOutputStream("train-object.ser"));
+            out.writeObject(train);
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

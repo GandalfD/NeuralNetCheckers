@@ -4,11 +4,15 @@ import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
 import org.encog.neural.neat.NEATNetwork;
 
+import java.io.Serializable;
+
 
 /**
  * Created by ethanm on 1/25/17.
  */
-public class PlayerScoreRandom implements CalculateScore {
+public class PlayerScoreRandom implements CalculateScore, Serializable {
+
+    public static final long serialVersionUID = 411L;
 
     @Override
     public double calculateScore(MLMethod network) {
