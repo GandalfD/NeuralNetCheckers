@@ -4,12 +4,14 @@ import org.encog.ml.MLMethod;
 import org.encog.ml.ea.genome.Genome;
 import org.encog.ml.ea.species.Species;
 import org.encog.ml.ea.train.basic.BasicEA;
+import org.encog.ml.ea.train.basic.TrainEA;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 
 import org.encog.ml.ea.train.EvolutionaryAlgorithm;
 import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.neat.NEATUtil;
+import org.encog.neural.networks.training.Train;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -29,7 +31,7 @@ public class MainTrain {
     private static TrainingData playerData;
     private static TrainingHistory history;
 
-    private static final int popSize = 1000;
+    private static final int popSize = 5000;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
@@ -40,7 +42,7 @@ public class MainTrain {
     private static AudioInputStream in;
     private static Clip clip;
 
-    private static BasicEA train;
+    private static TrainEA train;
 
     public static void main(String[] args) {
         try {
@@ -59,13 +61,17 @@ public class MainTrain {
         //Train
          //Create training
 
+        if (AM_DEBUGGING) {
+
+        }
+
         while(true) {
             System.out.println("Epoch " + playerData.epoch + " started.");
             System.out.println("Best Genome: " + playerData.pop.getBestGenome());
+            System.out.println("Threads: " + train.getThreadCount());
 
             train.iteration();
             System.out.println("Epoch " + playerData.epoch + " finished with error of " + train.getError());
-
             writeFiles();
             // Add epoch history to archive
             history.addElement(playerData.epoch, train.getError(), playerData.pop.getBestGenome(), playerData.pop.determineBestSpecies());
@@ -130,7 +136,7 @@ public class MainTrain {
 
         try {
             in = new ObjectInputStream(new FileInputStream("train-object.ser"));
-            train = (BasicEA) in.readObject();
+            train = (TrainEA) in.readObject();
             System.out.println("Found trainer");
             in.close();
         } catch (FileNotFoundException e) {
