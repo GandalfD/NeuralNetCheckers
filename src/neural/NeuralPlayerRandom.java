@@ -24,7 +24,7 @@ public class NeuralPlayerRandom {
 
     public int scorePlayer() {
         int n = 0;
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<100; i++) {
             n += this.doIterationA();
            // n -= this.doIterationB();
         }

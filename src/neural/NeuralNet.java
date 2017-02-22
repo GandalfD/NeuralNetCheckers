@@ -16,6 +16,7 @@ public class NeuralNet {
     public int chosenMoveRed = 0;
     public int defaultMoveRed = 0;
 
+    Random rng = new Random();
     public LegalMove getMoveNN(NEATNetwork network, double[] board, LegalMove[] possibleValidMoves, Player player) {
 
         MLData boardData = new BasicMLData(board);
@@ -107,9 +108,12 @@ public class NeuralNet {
         else
             defaultMoveRed++;
 
+        int upperBound = rng.nextInt(possibleValidMoves.length);
+        LegalMove move = possibleValidMoves[upperBound];
         if (MainTrain.AM_DEBUGGING)
-            System.out.println("First Move: " + possibleValidMoves[0]);
-        return possibleValidMoves[0];
+            System.out.println("First Move: " + move);
+
+        return move;
     }
 
     public static double normalize(double x, double in_min, double in_max, double out_min, double out_max)

@@ -17,6 +17,7 @@ public class TrainingData implements Serializable {
     public void reset() {
         this.epoch = 0;
         this.pop = null;
+
     }
 
     @Override
