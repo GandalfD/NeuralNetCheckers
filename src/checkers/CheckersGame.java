@@ -198,6 +198,7 @@ public class CheckersGame extends JFrame {
         //score -= net.defaultMoveBlue;
 
         score += (net.chosenMoveBlue - net.defaultMoveBlue);
+        score -= (turnNumber / 2);
 
         return score;
     }

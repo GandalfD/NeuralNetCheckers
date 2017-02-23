@@ -30,7 +30,7 @@ public class MainTrain {
     private static TrainingData playerData;
     private static TrainingHistory history;
 
-    private static final int popSize = 500;
+    private static final int popSize = 1000;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
@@ -45,8 +45,19 @@ public class MainTrain {
 
     public static void main(String[] args) {
 
+        try {
+            in = AudioSystem.getAudioInputStream(new File("done.wav"));
+            clip = AudioSystem.getClip();
+            clip.open(in);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
         readFiles();
-        playerData.pop.setSurvivalRate(50);
+        playerData.pop.setSurvivalRate(0.5);
         //Train
          //Create training
         System.out.println("Creating new trainer");
@@ -54,14 +65,20 @@ public class MainTrain {
         train = NEATUtil.constructNEATTrainer(playerData.pop, trainingScore);
         OriginalNEATSpeciation speciation = new OriginalNEATSpeciation();
         train.setSpeciation(speciation);
+
+        if (AM_DEBUGGING) {
+            NeuralPlayerRandom bestPlayer = new NeuralPlayerRandom((NEATNetwork) playerData.pop.getCODEC().decode(playerData.pop.getBestGenome()));
+            bestPlayer.scorePlayer();
+        }
+
         while(true) {
             System.out.println("Epoch " + playerData.epoch + " started.");
             System.out.println("Best Genome: " + playerData.pop.getBestGenome());
             System.out.println("Threads: " + train.getThreadCount());
 
             train.iteration();
-            if (train.getBestGenome().getAdjustedScore() > playerData.pop.getBestGenome().getAdjustedScore())
-                playerData.pop = (NEATPopulation) train.getPopulation();
+//            if (train.getBestGenome().getAdjustedScore() > playerData.pop.getBestGenome().getAdjustedScore())
+//                playerData.pop = (NEATPopulation) train.getPopulation();
             System.out.println("Epoch " + playerData.epoch + " finished with error of " + train.getError());
 
             writeFiles();
@@ -71,6 +88,8 @@ public class MainTrain {
             NeuralPlayerRandom.epochDone();
             playerData.epoch++;
 
+            clip.setFramePosition(0);
+            clip.start();
 
         }
     }

@@ -4,6 +4,7 @@ package neural; /**
 
 import checkers.CheckersGame;
 import org.encog.neural.neat.NEATNetwork;
+import sun.applet.Main;
 
 public class NeuralPlayerRandom {
     private int wins = 0;
@@ -43,6 +44,9 @@ public class NeuralPlayerRandom {
         CheckersGame game = new CheckersGame();
         game.initializeGame();
         game.getBluePlayer().setNetwork(network);
+
+        if (MainTrain.AM_DEBUGGING)
+            System.out.println(network);
         
         if (MainTrain.AM_DEBUGGING) {
             game.playGUI();
