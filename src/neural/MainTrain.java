@@ -30,7 +30,7 @@ public class MainTrain {
     private static TrainingData playerData;
     private static TrainingHistory history;
 
-    private static final int popSize = 1000;
+    private static final int popSize = 2500;
 
     public static final int INPUT_NEURONS = 33;
     public static final int OUTPUT_NEURONS = 32*5;
@@ -113,7 +113,7 @@ public class MainTrain {
         ObjectInputStream in;
         try {
             //Get player data
-            in = new ObjectInputStream(new FileInputStream("training-data.td-new"));
+            in = new ObjectInputStream(new FileInputStream("training-data.td-new2500"));
             playerData  = (TrainingData) in.readObject();
             System.out.println("Found Training Data!");
             System.out.println(playerData);
@@ -130,7 +130,7 @@ public class MainTrain {
         }
 
         try {
-            in = new ObjectInputStream(new FileInputStream("training-history1.ser-new"));
+            in = new ObjectInputStream(new FileInputStream("training-history1.ser-new2500"));
             history = (TrainingHistory) in.readObject();
             System.out.println("Found training history");
             in.close();
@@ -151,12 +151,12 @@ public class MainTrain {
         try {
             //Write previous bests
             System.out.println("Writing Data...");
-            out = new ObjectOutputStream(new FileOutputStream("training-data.td-new"));
+            out = new ObjectOutputStream(new FileOutputStream("training-data.td-new2500"));
             out.writeObject(playerData);
             System.out.println(playerData);
             out.close();
 
-            out = new ObjectOutputStream(new FileOutputStream("training-history1.ser-new"));
+            out = new ObjectOutputStream(new FileOutputStream("training-history1.ser-new2500"));
             out.writeObject(history);
             out.close();
 
