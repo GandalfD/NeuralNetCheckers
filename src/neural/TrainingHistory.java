@@ -27,6 +27,14 @@ public class TrainingHistory implements Serializable{
         bestSpecieList.add(bestSpecies);
     }
 
+    public String GetElement(int i) {
+        return epochList.get(i) + ", " + (-3796-errorList.get(i));
+    }
+
+    public int getLength() {
+        return epochList.size();
+    }
+
     public Population getBestPop() {
         Species bestSpecies = bestSpecieList.get(0);
         for (Species s : bestSpecieList) {

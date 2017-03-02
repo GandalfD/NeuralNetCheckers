@@ -55,7 +55,7 @@ public class GameBoardTile extends JLabel {
 
         selectedLabel.setIcon(new ImageIcon(selected));
         setIcon(new ImageIcon(tile));
-        addMouseListener(new MouseComponentListener());
+        //addMouseListener(new MouseComponentListener());
         setLayout(new GridBagLayout());
     }
 
@@ -71,7 +71,7 @@ public class GameBoardTile extends JLabel {
         repaint();
     }
 
-    private void selectTile(LegalMove possibleTileMove) {
+    public void selectTile(LegalMove possibleTileMove) {
         this.possibleTileMove = possibleTileMove;
 
         isSelected = true;
@@ -80,7 +80,7 @@ public class GameBoardTile extends JLabel {
         validate();
     }
 
-    private void unselectTile() {
+    public void unselectTile() {
         if (!isSelected)
             System.out.println("Tile already clear");
         else {
@@ -89,6 +89,14 @@ public class GameBoardTile extends JLabel {
             validate();
             isSelected = false;
         }
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public LegalMove getPossibleTileMove() {
+        return possibleTileMove;
     }
 
     // Removes the piece from this tile
@@ -151,10 +159,12 @@ public class GameBoardTile extends JLabel {
                     for (LegalMove move : currentPiece.getAllMoves()) {
                         System.out.println("Legal Move: " + move.getNewTile());
                         move.getNewTile().selectTile(move);
+                        System.out.println(getLocationOnScreen());
                     }
                 } else {
                     System.out.println(possibleTileMove.getPastMoves());
                 }
+
             }
 
              else if (e.getButton() == MouseEvent.BUTTON2) { // Middle Mouse Button

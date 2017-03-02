@@ -2,6 +2,8 @@ package checkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -26,6 +28,8 @@ public class GameBoard extends JPanel {
     // Layout manager *DONT USE GRIDLAYOUT*
     private GridBagConstraints c = new GridBagConstraints();
 
+    private CheckersGameHuman badcoding;
+
     // Constructor
     public GameBoard(Player redPlayer, Player bluePlayer) {
         this.bluePieces = bluePlayer.getPieces();
@@ -35,6 +39,20 @@ public class GameBoard extends JPanel {
         this.bluePlayer = bluePlayer;
 
         setLayout(new GridBagLayout());
+        addMouseListener(new Mouse());
+    }
+
+    public GameBoard(Player redPlayer, Player bluePlayer, CheckersGameHuman bad) {
+        this.bluePieces = bluePlayer.getPieces();
+        this.redPieces = redPlayer.getPieces();
+
+        this.redPlayer = redPlayer;
+        this.bluePlayer = bluePlayer;
+
+        setLayout(new GridBagLayout());
+        addMouseListener(new Mouse());
+
+        this.badcoding = bad;
     }
 
     // Set up the tiles on the gameboard (not the pieces)
@@ -165,6 +183,62 @@ public class GameBoard extends JPanel {
         return oneDTile;
     }
 
+    private void tileClicked(GameBoardTile tile) {
+
+        ArrayList<GameBoardTile> tileToRemove = new ArrayList<>();
+
+        boolean unselect = false;
+        for (GameBoardTile[] tileArray : this.tile)
+            for(GameBoardTile theTile : tileArray)
+                if (theTile.isSelected()) {
+                    unselect = true;
+                    tileToRemove.add(theTile);
+                }
+
+        if (!unselect) { // Should I check for tiles, or should I examine a checkers.LegalMove
+            for (LegalMove move : tile.getCurrentPiece().getAllMoves()) {
+                //System.out.println("Legal Move: " + move.getNewTile());
+                move.getNewTile().selectTile(move);
+            }
+        } else if (!tile.isSelected()){
+            for (GameBoardTile theTile : tileToRemove)
+                theTile.unselectTile();
+        } else {
+            try {
+                if (!badcoding.isBlueTurn) {
+                    redPlayer.movePiece(tile.getPossibleTileMove());
+
+                    for (GameBoardTile theTile : tileToRemove)
+                        theTile.unselectTile();
+
+                    if (tile.getPossibleTileMove().getTotalJumpedTiles().get(0) != null)
+                        forceJump(tile.getPossibleTileMove().getNewTile());
+
+
+                        if (badcoding != null)
+                            badcoding.isBlueTurn = true;
+
+                } else
+                    System.out.println("Neural Network Turn!");
+            } catch (InvalidMoveException ime) {
+                ime.printCustomError();
+            }
+        }
+    }
+
+    // more bad coding
+    private void forceJump(GameBoardTile afterJump) {
+        ArrayList<GameBoardTile> recursionJump = new ArrayList<>();
+        for (LegalMove move : afterJump.getCurrentPiece().getAllMoves()) {
+            if (move.getTotalJumpedTiles().get(0) != null) {
+                recursionJump.add(move.getNewTile());
+                move.getNewTile().selectTile(move);
+            }
+        }
+
+        for (GameBoardTile tileRecrusion : recursionJump)
+            forceJump(tileRecrusion);
+    }
     // Returns winning player
     // Returns null if game is still going on
     public Player whoWon(LegalMove[] blueMoves, LegalMove[] redMoves) {
@@ -177,4 +251,51 @@ public class GameBoard extends JPanel {
         else
             return null;
     }
+
+    private class Mouse implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                GameBoardTile tile = null;
+                Component comp = findComponentAt(e.getPoint());
+                if (comp instanceof CheckerPiece)
+                    tile = ((CheckerPiece) comp).getCurrentTile();
+                else if (comp instanceof GameBoardTile)
+                    tile = (GameBoardTile) comp;
+                else if (comp instanceof JLabel){
+                    comp = comp.getParent();
+                    while (!(comp instanceof GameBoardTile)) {
+                        comp = comp.getParent();
+                    }
+                    tile = (GameBoardTile) comp;
+                }
+
+
+                System.out.println(tile);
+                tileClicked(tile);
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
 }
+

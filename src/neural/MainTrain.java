@@ -130,7 +130,7 @@ public class MainTrain {
         }
 
         try {
-            in = new ObjectInputStream(new FileInputStream("training-history1.ser-new2500"));
+            in = new ObjectInputStream(new FileInputStream("training-history1.ser-new2500v2"));
             history = (TrainingHistory) in.readObject();
             System.out.println("Found training history");
             in.close();
@@ -156,7 +156,7 @@ public class MainTrain {
             System.out.println(playerData);
             out.close();
 
-            out = new ObjectOutputStream(new FileOutputStream("training-history1.ser-new2500"));
+            out = new ObjectOutputStream(new FileOutputStream("training-history1.ser-new2500v2"));
             out.writeObject(history);
             out.close();
 

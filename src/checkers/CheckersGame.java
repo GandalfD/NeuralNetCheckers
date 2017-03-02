@@ -35,6 +35,8 @@ public class CheckersGame extends JFrame {
     public boolean gameOver = false;
     private Player winner;
 
+
+
     public CheckersGame() {
         super("Train Neural Network");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

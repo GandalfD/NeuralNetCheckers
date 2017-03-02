@@ -179,9 +179,13 @@ public class CheckerPiece extends JLabel {
                 }
             }
         }
-        for (LegalMove tileToCheck : recursiveCheck) {
-            checkAvailableTilesRecursion(tileToCheck);
+
+        if (color == PieceColors.BLUE || !MainDriver.HUMAN) {
+            for (LegalMove tileToCheck : recursiveCheck) {
+                checkAvailableTilesRecursion(tileToCheck);
+            }
         }
+
         availableTileClearFlag = true;
         LegalMove[] arrayMove = new LegalMove[availableLegalMoves.size()];
         return availableLegalMoves.toArray(arrayMove);
