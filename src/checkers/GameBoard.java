@@ -277,7 +277,7 @@ public class GameBoard extends JPanel {
                 }
 
 
-                System.out.println(tile);
+                //System.out.println(tile);
                 tileClicked(tile);
             }
         }
